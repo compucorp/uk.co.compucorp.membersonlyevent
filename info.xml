@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<extension key="uk.co.compucorp.membersonlyevent" type="module">
+  <file>membersonlyevent</file>
+  <name>Members Only Event</name>
+  <description>Allow some events to be accessible only by users with CiviCRM Memberships, you can also allow users with certain membership types to access certain events.</description>
+  <maintainer>
+    <author>Compucorp</author>
+    <email>info@compucorp.co.uk</email>
+  </maintainer>
+  <releaseDate>2020-08-20</releaseDate>
+  <version>1.0.0</version>
+  <develStage>stable</develStage>
+  <compatibility>
+    <ver>5.24</ver>
+  </compatibility>
+  <comments>Please report any comments or issues with the module on the Github page for the extension.</comments>
+  <civix>
+    <namespace>CRM/MembersOnlyEvent</namespace>
+  </civix>
+</extension>
