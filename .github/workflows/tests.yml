@@ -41,12 +41,12 @@ jobs:
 
       - uses: actions/checkout@v2
         with:
-          path: ${{ env.CIVICRM_EXTENSIONS_DIR }}/uk.co.compucorp.civicrm.members-only-events
+          path: ${{ env.CIVICRM_EXTENSIONS_DIR }}/uk.co.compucorp.membersonlyevent
 
       - name: Installing Members Only Event extension
         working-directory: ${{ env.CIVICRM_EXTENSIONS_DIR }}
-        run: cv en com.compucorp.membersonlyevent
+        run: cv en uk.co.compucorp.membersonlyevent
 
       - name: Run phpunit tests
-        working-directory: ${{ env.CIVICRM_EXTENSIONS_DIR }}/uk.co.compucorp.civicrm.members-only-events
+        working-directory: ${{ env.CIVICRM_EXTENSIONS_DIR }}/uk.co.compucorp.membersonlyevent
         run: phpunit5
