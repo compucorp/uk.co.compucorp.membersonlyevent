@@ -100,5 +100,5 @@
   });
 </script>
 {/literal}
-{crmScript ext="com.compucorp.membersonlyevent" file="js/CRM/Form/MembersOnlyEventTab.js"}
-{crmStyle ext="com.compucorp.membersonlyevent" file="css/MembersOnlyEventTab.css"}
+{crmScript ext="uk.co.compucorp.membersonlyevent" file="js/CRM/Form/MembersOnlyEventTab.js"}
+{crmStyle ext="uk.co.compucorp.membersonlyevent" file="css/MembersOnlyEventTab.css"}
