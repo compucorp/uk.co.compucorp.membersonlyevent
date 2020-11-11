@@ -243,16 +243,7 @@ function _membersonlyevent_is_tab_valid($eventID) {
 function _membersonlyevent_civicrm_pageRun_CRM_Event_Page_EventInfo(&$page) {
   $eventID = $page->_id;
 
-  if (_membersonly_is_event_for_members_only($eventID)) {
-    $session = CRM_Core_Session::singleton();
-    $statusMessages = $session->get('status');
-    foreach ($statusMessages as $k => $msg) {
-      if (strpos($msg['text'], 'register another participant')) {
-        $statusMessages[$k]['text'] = ts("It looks like you are already registered for this event. If you want to change your registration, or you feel that you've gotten this message in error, please contact the site administrator.");
-      }
-    }
-    $session->set('status', $statusMessages);
-  }
+  _membersonlyevent_event_info_page_session_handler($eventId);
 
   $userHasEventAccess = _membersonlyevent_user_has_event_access($eventID);
   if ($userHasEventAccess) {
@@ -269,6 +260,32 @@ function _membersonlyevent_civicrm_pageRun_CRM_Event_Page_EventInfo(&$page) {
   else {
     _membersonlyevent_handle_access_denied_for_logged_users($eventID);
   }
+}
+
+/**
+ * Handle session message if the user is trying
+ * to register another participant.
+ *
+ * @param int $eventID
+ *
+ */
+function _membersonlyevent_event_info_page_session_handler($eventID) {
+  if (!_membersonly_is_event_for_members_only($eventID)) {
+    return;
+  }
+
+  $session = CRM_Core_Session::singleton();
+  $statusMessages = $session->get('status');
+  if (empty($statusMessages)) {
+    return;
+  }
+
+  foreach ($statusMessages as $k => $msg) {
+    if (strpos($msg['text'], 'register another participant')) {
+      $statusMessages[$k]['text'] = ts("It looks like you are already registered for this event. If you want to change your registration, or you feel that you've gotten this message in error, please contact the site administrator.");
+    }
+  }
+  $session->set('status', $statusMessages);
 }
 
 /**
