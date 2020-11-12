@@ -243,16 +243,7 @@ function _membersonlyevent_is_tab_valid($eventID) {
 function _membersonlyevent_civicrm_pageRun_CRM_Event_Page_EventInfo(&$page) {
   $eventID = $page->_id;
 
-  if (_membersonly_is_event_for_members_only($eventID)) {
-    $session = CRM_Core_Session::singleton();
-    $statusMessages = $session->get('status');
-    foreach ($statusMessages as $k => $msg) {
-      if (strpos($msg['text'], 'register another participant')) {
-        $statusMessages[$k]['text'] = ts("It looks like you are already registered for this event. If you want to change your registration, or you feel that you've gotten this message in error, please contact the site administrator.");
-      }
-    }
-    $session->set('status', $statusMessages);
-  }
+  _membersonlyevent_event_info_page_session_handler($eventID);
 
   $userHasEventAccess = _membersonlyevent_user_has_event_access($eventID);
   if ($userHasEventAccess) {
@@ -262,13 +253,34 @@ function _membersonlyevent_civicrm_pageRun_CRM_Event_Page_EventInfo(&$page) {
 
   _membersonlyevent_hide_event_info_page_register_button();
 
-  $userLoggedIn = CRM_Core_Session::getLoggedInContactID();
-  if (!$userLoggedIn) {
-    _membersonlyevent_handle_access_denied_for_guest_users();
+  _membersonlyevent_handle_access_option_for_user($eventID);
+
+}
+
+/**
+ * Handle session message if the user is trying
+ * to register another participant.
+ *
+ * @param int $eventID
+ *
+ */
+function _membersonlyevent_event_info_page_session_handler($eventID) {
+  if (!_membersonly_is_event_for_members_only($eventID)) {
+    return;
   }
-  else {
-    _membersonlyevent_handle_access_denied_for_logged_users($eventID);
+
+  $session = CRM_Core_Session::singleton();
+  $statusMessages = $session->get('status');
+  if (empty($statusMessages)) {
+    return;
   }
+
+  foreach ($statusMessages as $k => $msg) {
+    if (strpos($msg['text'], 'register another participant')) {
+      $statusMessages[$k]['text'] = ts("It looks like you are already registered for this event. If you want to change your registration, or you feel that you've gotten this message in error, please contact the site administrator.");
+    }
+  }
+  $session->set('status', $statusMessages);
 }
 
 /**
@@ -434,27 +446,25 @@ function _membersonlyevent_hide_event_info_page_register_button() {
 }
 
 /**
- * Handles the case when the guest
- * user does not have permission to access
- * the event info page.
+ * Handles access options for logged / anonymous user.
+ *
+ * @param $eventID
  *
  */
-function _membersonlyevent_handle_access_denied_for_guest_users() {
-  $loginURL = CRM_Core_Config::singleton()->userSystem->getLoginURL();
-  _membersonlyevent_add_action_button_to_event_info_page($loginURL, 'Login to register');
-}
-
-/**
- * Handles the case when the logged-in
- * user does not have permission to access
- * the event info page.
- *
- * @param int $eventID
- */
-function _membersonlyevent_handle_access_denied_for_logged_users($eventID) {
+function _membersonlyevent_handle_access_option_for_user($eventID) {
   $membersOnlyEvent = MembersOnlyEvent::getMembersOnlyEvent($eventID);
   if ($membersOnlyEvent->purchase_membership_button) {
     _membersonlyevent_add_membership_purchase_button_to_event_info_page($membersOnlyEvent);
+    $userLoggedIn = CRM_Core_Session::getLoggedInContactID();
+    if ($userLoggedIn) {
+      return;
+    }
+    $loginURL = CRM_Core_Config::singleton()->userSystem->getLoginURL();
+    $infoText = 'This event is for members only, if you have a current, pending or former membership
+                 please log in before purchase membership. If you are not a current member you will be charged
+                 an additional membership fee. <a href="' . $loginURL . '">Click here to login </a>';
+    CRM_Core_Session::setStatus(ts($infoText));
+
   }
   else {
     // Purchase membership button is disabled, so we will just show the configured notice message
