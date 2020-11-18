@@ -198,9 +198,17 @@ function membersonlyevent_civicrm_preProcess($formName, &$form) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_navigationMenu
  */
-function membersonlyevent_civicrm_navigationMenu(&$params) {
-  _membersonlyevent_add_configurations_menu($params);
-}
+function membersonlyevent_civicrm_navigationMenu(&$menu) {
+  $membersonlyeventMenu = [
+    'label' => ts('Members Only Event Extension Configurations'),
+    'name' => 'membersonlyevent_configurations',
+    'url' => 'civicrm/admin/membersonlyevent',
+    'permission' => 'administer CiviCRM,access CiviEvent',
+    'operator' => NULL,
+    'separator' => NULL,
+  ];
+
+  _membersonlyevent_civix_insert_navigation_menu($menu, 'Administer/CiviEvent', $membersonlyeventMenu);}
 
 //----------------------------------------------------------------------------//
 //                               Helper Functions                             //
@@ -551,35 +559,6 @@ function _membersonlyevent_civicrm_preProcess_CRM_Event_Form_Registration_Regist
       CRM_Utils_System::redirect($url);
       $form->_skipDupeRegistrationCheck = TRUE;
     }
-  }
-}
-
-/**
- * Adds `Members-Only Event Extension Configurations` menu
- * item under `Administer` top-level menu item.
- *
- * @param $params
- */
-function _membersonlyevent_add_configurations_menu(&$params) {
-  $administerMenuId = CRM_Core_DAO::getFieldValue('CRM_Core_BAO_Navigation', 'Administer', 'id', 'name');
-  if ($administerMenuId) {
-    // get the maximum key under administer menu
-    $maxAdminMenuKey = max(array_keys($params[$administerMenuId]['child']));
-    $nextAdminMenuKey = $maxAdminMenuKey + 1;
-    $params[$administerMenuId]['child'][$nextAdminMenuKey] = array(
-      'attributes' => array(
-        'label' => ts('Members-Only Event Extension Configurations'),
-        'name' => 'membersonlyevent_configurations',
-        'url' => 'civicrm/admin/membersonlyevent',
-        'permission' => 'administer CiviCRM,access CiviEvent',
-        'operator' => NULL,
-        'separator' => 1,
-        'parentID' => $administerMenuId,
-        'navID' => $nextAdminMenuKey,
-        'active' => 1,
-      ),
-      'child' => NULL,
-    );
   }
 }
 
