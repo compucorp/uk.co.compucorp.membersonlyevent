@@ -208,7 +208,8 @@ function membersonlyevent_civicrm_navigationMenu(&$menu) {
     'separator' => NULL,
   ];
 
-  _membersonlyevent_civix_insert_navigation_menu($menu, 'Administer/CiviEvent', $membersonlyeventMenu);}
+  _membersonlyevent_civix_insert_navigation_menu($menu, 'Administer/CiviEvent', $membersonlyeventMenu);
+}
 
 //----------------------------------------------------------------------------//
 //                               Helper Functions                             //
