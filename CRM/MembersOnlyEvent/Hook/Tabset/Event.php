@@ -17,7 +17,7 @@ class CRM_MembersOnlyEvent_Hook_Tabset_Event {
       'reset=1&id=' . $eventID . '&action=update&component=event');
 
     $tab['membersonlyevent'] = [
-      'title' => ts('Members only event settings'),
+      'title' => ts('Members Only Event Settings'),
       'link' => $url,
       'valid' => $this->isTabValid($eventID),
       'active' => TRUE,
