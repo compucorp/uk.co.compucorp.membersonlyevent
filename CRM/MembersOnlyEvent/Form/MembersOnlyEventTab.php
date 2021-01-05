@@ -31,17 +31,8 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
    * @const String
    */
   const OPERATION_DO_NOTHING = 'do_nothing';
-  /**
-   *
-   */
   const OPERATION_CREATE = 'create';
-  /**
-   *
-   */
   const OPERATION_UPDATE = 'update';
-  /**
-   *
-   */
   const OPERATION_DOWNGRADE_TO_NORMAL_EVENT = 'downgrade_to_normal_event';
 
   /**

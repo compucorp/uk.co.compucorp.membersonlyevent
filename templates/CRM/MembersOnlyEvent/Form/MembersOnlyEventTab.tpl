@@ -13,7 +13,6 @@
     <div class="clear"></div>
   </div>
 
-
   <div id="members-only-event-fields">
 
     {if isset($form.pricefields_to_hide)}
