@@ -13,7 +13,17 @@
     <div class="clear"></div>
   </div>
 
+
   <div id="members-only-event-fields">
+
+    {if isset($form.pricefields_to_hide)}
+      <div class="crm-section">
+        <div class="label">{$form.pricefields_to_hide.label}</div>
+        <div class="content">{$form.pricefields_to_hide.html}</div>
+        <div class="clear"></div>
+      </div>
+    {/if}
+
     <div class="crm-section">
       <div class="label">{$form.allowed_membership_types.label} {help id="allowed-membership-types" file="CRM/MembersOnlyEvent/Form/MembersOnlyEventTab"}</div>
       <div class="content">{$form.allowed_membership_types.html}</div>

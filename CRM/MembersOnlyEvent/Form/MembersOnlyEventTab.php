@@ -31,8 +31,17 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
    * @const String
    */
   const OPERATION_DO_NOTHING = 'do_nothing';
+  /**
+   *
+   */
   const OPERATION_CREATE = 'create';
+  /**
+   *
+   */
   const OPERATION_UPDATE = 'update';
+  /**
+   *
+   */
   const OPERATION_DOWNGRADE_TO_NORMAL_EVENT = 'downgrade_to_normal_event';
 
   /**
@@ -56,15 +65,29 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       ts('Only allow members to register for this event?')
     );
 
+    $priceFields = $this->getEventPriceFields();
+
+    if (!empty($priceFields)) {
+      $includePriceFields = &$this->addElement('advmultiselect', 'pricefields_to_hide',
+        ts('Select price field to hide from members') . ' ', $priceFields, [
+          'size' => 5,
+          'style' => 'width:150px',
+          'class' => 'advmultiselect',
+        ]
+      );
+      $includePriceFields->setButtonAttributes('add', ['value' => ts('Add >>')]);
+      $includePriceFields->setButtonAttributes('remove', ['value' => ts('<< Remove')]);
+    }
+
     $this->addEntityRef(
       'allowed_membership_types',
       ts('Allowed Membership Types'),
-      array(
+      [
         'entity' => 'MembershipType',
         'multiple' => TRUE,
         'placeholder' => ts('- any -'),
-        'select' => array('minimumInputLength' => 0),
-      )
+        'select' => ['minimumInputLength' => 0],
+      ]
     );
 
     $this->addYesNo(
@@ -87,25 +110,25 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
     $this->addRadio(
       'purchase_membership_link_type',
       ts('Purchase Membership Button Link'),
-      array(0 => 'Link to a Contribution Page', 1 => 'Other URLs')
+      [0 => 'Link to a Contribution Page', 1 => 'Other URLs']
     );
 
     $this->addEntityRef(
       'contribution_page_id',
       ts('Contribution Page'),
-      array(
+      [
         'entity' => 'ContributionPage',
         'multiple' => FALSE,
         'placeholder' => ts('- Select -'),
-        'select' => array('minimumInputLength' => 0),
-      )
+        'select' => ['minimumInputLength' => 0],
+      ]
     );
 
     $this->add(
       'text',
       'purchase_membership_url',
       ts('Purchase Membership URL'),
-      array('placeholder' => CRM_Utils_System::baseCMSURL())
+      ['placeholder' => CRM_Utils_System::baseCMSURL()]
     );
   }
 
@@ -329,6 +352,70 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
     $membersOnlyEvent = new MembersOnlyEvent();
     $membersOnlyEvent->id = $membersOnlyEventID;
     $membersOnlyEvent->delete();
+  }
+
+  /**
+   * Gets price fields from an event ID
+   * Empty Price Fields will be returned if an event is not paid event
+   * or price set is not been used or one of the price fields
+   * is not Radio or Checkbox
+   *
+   * @return array
+   * @throws CiviCRM_API3_Exception
+   */
+  private function getEventPriceFields() {
+    $priceFieldOptions = [];
+    $priceSetId = CRM_Price_BAO_PriceSet::getFor('civicrm_event', $this->_id, NULL);
+
+    if (!$this->isPaidEvent() || !$priceSetId) {
+      return $priceFieldOptions;
+    }
+
+    $options = civicrm_api3('PriceField', 'get', [
+      'sequential' => 1,
+      'price_set_id' => $priceSetId,
+    ])['values'];
+
+    if (!$this->isPriceFieldValidForMembersOnlyEvent($options)) {
+      return $priceFieldOptions;
+    }
+
+    foreach ($options as $option) {
+      $priceFieldOptions[$option['id']] = $option['label'];
+    }
+
+    return $priceFieldOptions;
+  }
+
+  /**
+   * Check if the event is paid event
+   *
+   * @return mixed
+   * @throws CiviCRM_API3_Exception
+   */
+  private function isPaidEvent() {
+    return civicrm_api3('Event', 'get', [
+      'return' => ["is_monetary"],
+      'id' => $this->_id,
+    ])['values'][$this->_id]['is_monetary'];
+  }
+
+  /**
+   * Currently Members only event only support Radio and Checkbox
+   * elements in price field.
+   * This function is checking if select price set is valid
+   *
+   * @param array $options
+   */
+  private function isPriceFieldValidForMembersOnlyEvent(array $options) {
+    $supportElement = ['CheckBox', 'Radio'];
+    foreach ($options as $option) {
+      if (!in_array($option['html_type'], $supportElement)) {
+        return FALSE;
+      }
+    }
+
+    return TRUE;
   }
 
 }
