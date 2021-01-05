@@ -56,15 +56,29 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       ts('Only allow members to register for this event?')
     );
 
+    $priceFieldValues = $this->getEventPriceFieldValues();
+
+    if (!empty($priceFieldValues)) {
+      $includePriceFieldValues = &$this->addElement('advmultiselect', 'non_member_price_field_values',
+        ts('Select price field to hide from members') . ' ', $priceFieldValues, [
+          'size' => 5,
+          'style' => 'width:150px',
+          'class' => 'advmultiselect members-only-event-price-field-values',
+        ]
+      );
+      $includePriceFieldValues->setButtonAttributes('add', ['value' => ts('Add >>')]);
+      $includePriceFieldValues->setButtonAttributes('remove', ['value' => ts('<< Remove')]);
+    }
+
     $this->addEntityRef(
       'allowed_membership_types',
       ts('Allowed Membership Types'),
-      array(
+      [
         'entity' => 'MembershipType',
         'multiple' => TRUE,
         'placeholder' => ts('- any -'),
-        'select' => array('minimumInputLength' => 0),
-      )
+        'select' => ['minimumInputLength' => 0],
+      ]
     );
 
     $this->addYesNo(
@@ -87,25 +101,25 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
     $this->addRadio(
       'purchase_membership_link_type',
       ts('Purchase Membership Button Link'),
-      array(0 => 'Link to a Contribution Page', 1 => 'Other URLs')
+      [0 => 'Link to a Contribution Page', 1 => 'Other URLs']
     );
 
     $this->addEntityRef(
       'contribution_page_id',
       ts('Contribution Page'),
-      array(
+      [
         'entity' => 'ContributionPage',
         'multiple' => FALSE,
         'placeholder' => ts('- Select -'),
-        'select' => array('minimumInputLength' => 0),
-      )
+        'select' => ['minimumInputLength' => 0],
+      ]
     );
 
     $this->add(
       'text',
       'purchase_membership_url',
       ts('Purchase Membership URL'),
-      array('placeholder' => CRM_Utils_System::baseCMSURL())
+      ['placeholder' => CRM_Utils_System::baseCMSURL()]
     );
   }
 
@@ -329,6 +343,51 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
     $membersOnlyEvent = new MembersOnlyEvent();
     $membersOnlyEvent->id = $membersOnlyEventID;
     $membersOnlyEvent->delete();
+  }
+
+  /**
+   * Gets price fields from an event ID
+   * Empty Price Fields will be returned if an event is not paid event
+   * or price set is not been used or one of the price fields
+   * is not Radio or Checkbox
+   *
+   * @return array
+   * @throws CiviCRM_API3_Exception
+   */
+  private function getEventPriceFieldValues() {
+    $priceFieldValueLabelsByIDs = [];
+    $priceSetId = CRM_Price_BAO_PriceSet::getFor('civicrm_event', $this->_id, NULL);
+
+    if (!$this->isPaidEvent() || empty($priceSetId)) {
+      return $priceFieldValueLabelsByIDs;
+    }
+
+    // Get only the values of the valid price fields
+    $priceFieldValues = civicrm_api3('PriceFieldValue', 'get', [
+      'sequential' => 1,
+      'price_field_id.price_set_id' => $priceSetId,
+      'price_field_id.html_type' => ['IN' => ['CheckBox', 'Radio']],
+      'return' => ['id', 'label'],
+    ])['values'];
+
+    foreach ($priceFieldValues as $priceFieldValue) {
+      $priceFieldValueLabelsByIDs[$priceFieldValue['id']] = $priceFieldValue['label'];
+    }
+
+    return $priceFieldValueLabelsByIDs;
+  }
+
+  /**
+   * Check if the event is paid event
+   *
+   * @return mixed
+   * @throws CiviCRM_API3_Exception
+   */
+  private function isPaidEvent() {
+    return civicrm_api3('Event', 'get', [
+      'return' => ["is_monetary"],
+      'id' => $this->_id,
+    ])['values'][$this->_id]['is_monetary'];
   }
 
 }
