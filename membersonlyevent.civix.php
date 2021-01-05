@@ -484,5 +484,10 @@ function _membersonlyevent_civix_civicrm_entityTypes(&$entityTypes) {
       'class' => 'CRM_MembersOnlyEvent_DAO_MembersOnlyEvent',
       'table' => 'membersonlyevent',
     ],
+    'CRM_MembersOnlyEvent_DAO_MembersOnlyEventSelectPriceField' => [
+      'name' => 'MembersOnlyEventSelectPriceField',
+      'class' => 'CRM_MembersOnlyEvent_DAO_MembersOnlyEventSelectPriceField',
+      'table' => 'membersonlyevent_select_price_field',
+    ],
   ]);
 }
