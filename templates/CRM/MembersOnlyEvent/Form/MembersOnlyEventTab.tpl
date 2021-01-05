@@ -13,7 +13,6 @@
     <div class="clear"></div>
   </div>
 
-
   <div id="members-only-event-fields">
 
     {if isset($form.non_member_price_field_values)}
