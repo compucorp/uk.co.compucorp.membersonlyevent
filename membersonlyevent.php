@@ -136,33 +136,15 @@ function membersonlyevent_civicrm_permission(&$permissions) {
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_tabset/
  */
 function membersonlyevent_civicrm_tabset($tabsetName, &$tabs, $context) {
-  // check if the tabset is 'Manage Event' page
-  if ($tabsetName == 'civicrm/event/manage') {
-    if (empty($context['event_id'])) {
-      return;
-    }
-
-    $eventID = $context['event_id'];
-    $url = CRM_Utils_System::url(
-      'civicrm/event/manage/membersonlyevent',
-      'reset=1&id=' . $eventID . '&action=update&component=event');
-
-    $tab['membersonlyevent'] = array(
-      'title' => ts('Members only event settings'),
-      'link' => $url,
-      'valid' => _membersonlyevent_is_tab_valid($eventID),
-      'active' => TRUE,
-      'current' => FALSE,
-      'class' => 'ajaxForm',
-    );
-
-    //Insert this tab into position 4 (after `Online Registration` tab)
-    $tabs = array_merge(
-      array_slice($tabs, 0, 4),
-      $tab,
-      array_slice($tabs, 4)
-    );
+  // check if the tabset is 'Manage Event' page or event id is exist
+  if ($tabsetName != 'civicrm/event/manage' || empty($context['event_id'])) {
+    return;
   }
+
+  $eventID = $context['event_id'];
+  $eventTab = new CRM_MembersOnlyEvent_Hook_Tabset_Event();
+  $eventTab->handle($eventID, $tabs);
+
 }
 
 /**
@@ -214,37 +196,6 @@ function membersonlyevent_civicrm_navigationMenu(&$menu) {
 //----------------------------------------------------------------------------//
 //                               Helper Functions                             //
 //----------------------------------------------------------------------------//
-
-/**
- * Checks if the members-only settings tab
- * should be valid or not. Currently it is valid
- * only if the event is members-only event and
- * online registration is enabled.
- *
- * @param int $eventID
- *
- * @return bool
- *
- */
-function _membersonlyevent_is_tab_valid($eventID) {
-  $isOnlineRegistrationEnabled = FALSE;
-  $event = civicrm_api3('Event', 'get', array(
-    'sequential' => 1,
-    'return' => array('is_online_registration'),
-    'id' => $eventID,
-  ));
-  if (!empty($event['values'][0]['is_online_registration'])) {
-    $isOnlineRegistrationEnabled = TRUE;
-  }
-
-  $membersOnlyEvent = MembersOnlyEvent::getMembersOnlyEvent($eventID);
-
-  if ($isOnlineRegistrationEnabled && $membersOnlyEvent) {
-    return TRUE;
-  }
-
-  return FALSE;
-}
 
 /**
  * Callback for event info page
