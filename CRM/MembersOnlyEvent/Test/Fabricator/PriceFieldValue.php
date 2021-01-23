@@ -18,6 +18,9 @@ class CRM_MembersOnlyEvent_Test_Fabricator_PriceFieldValue extends BaseFabricato
    *
    * @var array
    */
-  protected static $defaultParams = [];
+  protected static $defaultParams = [
+    'amount' => 100,
+    'financial_type_id' => "Event Fee",
+  ];
 
 }
