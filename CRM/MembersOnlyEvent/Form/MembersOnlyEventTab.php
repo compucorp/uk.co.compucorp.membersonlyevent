@@ -2,7 +2,7 @@
 
 use CRM_MembersOnlyEvent_BAO_MembersOnlyEvent as MembersOnlyEvent;
 use CRM_MembersOnlyEvent_BAO_EventMembershipType as EventMembershipType;
-
+use CRM_MembersOnlyEvent_BAO_MembersOnlyEventPriceFieldValue as MembersOnlyEventPriceFieldValue;
 /**
  * Form controller class
  *
@@ -220,6 +220,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
     if ($membersOnlyEvent) {
       $defaultValues['is_members_only_event'] = self::YES_SELECTED;
       $defaultValues['allowed_membership_types'] = EventMembershipType::getAllowedMembershipTypesIDs($membersOnlyEvent->id);
+      $defaultValues['non_member_price_field_values'] = MembersOnlyEventPriceFieldValue::getNonMemberPriceFieldValueIDs($membersOnlyEvent->id);
       $defaultValues['purchase_membership_button'] = $membersOnlyEvent->purchase_membership_button;
       $defaultValues['notice_for_access_denied'] = $membersOnlyEvent->notice_for_access_denied;
       $defaultValues['purchase_membership_button_label'] = $membersOnlyEvent->purchase_membership_button_label;
@@ -328,6 +329,12 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       }
 
       EventMembershipType::updateAllowedMembershipTypes($membersOnlyEvent->id, $allowedMembershipTypesIDs);
+
+      $nonMemberPriceFieldValueIDs = array();
+      if (!empty($params['non_member_price_field_values'])) {
+        $nonMemberPriceFieldValueIDs = $params['non_member_price_field_values'];
+      }
+      MembersOnlyEventPriceFieldValue::updateNonMemberPriceFieldValues($membersOnlyEvent->id, $nonMemberPriceFieldValueIDs);
     }
   }
 
