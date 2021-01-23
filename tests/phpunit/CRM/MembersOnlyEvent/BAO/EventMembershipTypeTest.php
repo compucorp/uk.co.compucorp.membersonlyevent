@@ -18,12 +18,12 @@ class CRM_MembersOnlyEvent_BAO_EventMembershipTypeTest extends BaseHeadlessTest 
    */
   public function testUpdateAllowedMembershipTypes() {
     $membersOnlyEvent = MembersOnlyEventFabricator::fabricate();
-    $membershipType1 = MembershipTypeFabricator::fabricate([], TRUE);
-    $membershipType2 = MembershipTypeFabricator::fabricate([], TRUE);
+    $membershipType1 = MembershipTypeFabricator::fabricate(['name' => 'Student'], TRUE);
+    $membershipType2 = MembershipTypeFabricator::fabricate(['name' => 'Teacher'], TRUE);
 
     $membershipTypeIds = [$membershipType1->id, $membershipType2->id];
 
-    EventMembershipType::updateAllowedMembershipTypes($membersOnlyEvent->event_id, $membershipTypeIds);
+    EventMembershipType::updateAllowedMembershipTypes($membersOnlyEvent->id, $membershipTypeIds);
 
     $eventMembershipTypeDAO = new CRM_MembersOnlyEvent_DAO_EventMembershipType();
     $eventMembershipTypeDAO->members_only_event_id = $membersOnlyEvent->id;
@@ -43,8 +43,8 @@ class CRM_MembersOnlyEvent_BAO_EventMembershipTypeTest extends BaseHeadlessTest 
    */
   public function testGetAllowedMembershipTypeIDs() {
     $membersOnlyEvent = MembersOnlyEventFabricator::fabricate();
-    $membershipType = MembershipTypeFabricator::fabricate([], TRUE);
-    EventMembershipType::updateAllowedMembershipTypes($membersOnlyEvent->event_id, [$membershipType->id]);
+    $membershipType = MembershipTypeFabricator::fabricate(['name' => 'Student'], TRUE);
+    EventMembershipType::updateAllowedMembershipTypes($membersOnlyEvent->id, [$membershipType->id]);
     $eventMembershipTypeIds = EventMembershipType::getAllowedMembershipTypeIDs($membersOnlyEvent->id);
 
     $this->assertEquals([$membershipType->id], $eventMembershipTypeIds);
