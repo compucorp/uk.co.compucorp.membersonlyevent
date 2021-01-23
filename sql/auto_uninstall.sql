@@ -17,8 +17,9 @@
 
 SET FOREIGN_KEY_CHECKS=0;
 
-DROP TABLE IF EXISTS `membersonlyevent_select_price_field`;
+DROP TABLE IF EXISTS `membersonlyevent_non_member_price_field_value`;
 DROP TABLE IF EXISTS `membersonlyevent`;
 DROP TABLE IF EXISTS `membersonlyevent_event_membership_type`;
+DROP TABLE IF EXISTS `membersonlyevent_entity_price_field_value`;
 
 SET FOREIGN_KEY_CHECKS=1;

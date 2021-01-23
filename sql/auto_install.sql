@@ -31,7 +31,6 @@
 SET
 FOREIGN_KEY_CHECKS=0;
 
-DROP TABLE IF EXISTS `membersonlyevent_select_price_field`;
 DROP TABLE IF EXISTS `membersonlyevent`;
 DROP TABLE IF EXISTS `membersonlyevent_event_membership_type`;
 
@@ -60,8 +59,8 @@ CREATE TABLE `membersonlyevent`(
     `contribution_page_id`             int unsigned DEFAULT NULL COMMENT 'Foreign key for the Contribution page',
     `purchase_membership_url`          varchar(3000) DEFAULT NULL COMMENT 'Purchase membership page URL',
     PRIMARY KEY (`id`),
-    CONSTRAINT FK_membersonlyevent_event_id FOREIGN KEY (`event_id`) REFERENCES `civicrm_event` (`id`) ON DELETE CASCADE,
-    CONSTRAINT FK_membersonlyevent_contribution_page_id FOREIGN KEY (`contribution_page_id`) REFERENCES `civicrm_contribution_page` (`id`) ON DELETE SET NULL
+    CONSTRAINT FK_membersonlyevent1_event_id FOREIGN KEY (`event_id`) REFERENCES `civicrm_event` (`id`) ON DELETE CASCADE,
+    CONSTRAINT FK_membersonlyevent1_contribution_page_id FOREIGN KEY (`contribution_page_id`) REFERENCES `civicrm_contribution_page` (`id`) ON DELETE SET NULL
 );
 
 -- /*******************************************************
@@ -77,22 +76,6 @@ CREATE TABLE `membersonlyevent_event_membership_type`(
     INDEX                   `index_event_id_membership_type_id`( members_only_event_id
         , membership_type_id
         ),
-    CONSTRAINT FK_membersonlyevent_event_membership_type_members_only_event_id FOREIGN KEY (`members_only_event_id`) REFERENCES `membersonlyevent` (`id`) ON DELETE CASCADE,
-    CONSTRAINT FK_membersonlyevent_event_membership_type_membership_type_id FOREIGN KEY (`membership_type_id`) REFERENCES `civicrm_membership_type` (`id`) ON DELETE CASCADE
+    CONSTRAINT FK_membersonlyevent2_members_only_event_id FOREIGN KEY (`members_only_event_id`) REFERENCES `membersonlyevent` (`id`) ON DELETE CASCADE,
+    CONSTRAINT FK_membersonlyevent2_membership_type_id FOREIGN KEY (`membership_type_id`) REFERENCES `civicrm_membership_type` (`id`) ON DELETE CASCADE
 );
-
-
--- /*******************************************************
--- *
--- * membersonlyevent_select_price_field
--- *
--- * Join table for storing selected price field for members only event
--- *
--- *******************************************************/
-CREATE TABLE `membersonlyevent_select_price_field`(
-    `members_only_event_id` int unsigned NOT NULL COMMENT 'Members-only event ID.',
-    `price_field_id`        int unsigned NOT NULL COMMENT 'Selected Price Field ID.',
-    CONSTRAINT FK_membersonlyevent_select_price_field_members_only_event_id FOREIGN KEY (`members_only_event_id`) REFERENCES `membersonlyevent` (`id`) ON DELETE CASCADE,
-    CONSTRAINT FK_membersonlyevent_select_price_field_price_field_id FOREIGN KEY (`price_field_id`) REFERENCES `civicrm_price_field` (`id`) ON DELETE CASCADE
-);
-
