@@ -28,8 +28,8 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTabTest extends BaseHeadlessTest
     $this->mockEventFeeWithValidPriceSet($eventID);
     $this->membersOnlyEventTab->_id = $eventID;
     $this->membersOnlyEventTab->buildQuickForm();
-    $priceFieldsToHideElement = $this->membersOnlyEventTab->getElement('pricefields_to_hide');
-    $this->assertTrue(is_object($priceFieldsToHideElement));
+    $priceFieldValuesToHideElement = $this->membersOnlyEventTab->getElement('non_member_price_field_values');
+    $this->assertTrue(is_object($priceFieldValuesToHideElement));
   }
 
   /**
@@ -41,11 +41,11 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTabTest extends BaseHeadlessTest
     $this->mockEventFeeWithInvalidPriceSet($eventID);
     $this->membersOnlyEventTab->buildQuickForm();
 
-    //Expect PEAR_Exception: QuickForm Error: nonexistent html element as pricefields_to_hide
+    //Expect PEAR_Exception: QuickForm Error: nonexistent html element as non_member_price_field_values
     //should not be set when InvalidPriceSet for members only event is used.
     $this->expectException(PEAR_Exception::class);
-    $priceFieldsToHideElement = $this->membersOnlyEventTab->getElement('pricefields_to_hide');
-    $this->assertFalse(is_object($priceFieldsToHideElement));
+    $priceFieldValuesToHideElement = $this->membersOnlyEventTab->getElement('non_member_price_field_values');
+    $this->assertFalse(is_object($priceFieldValuesToHideElement));
   }
 
   /**

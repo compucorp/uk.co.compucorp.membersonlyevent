@@ -56,18 +56,18 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       ts('Only allow members to register for this event?')
     );
 
-    $priceFields = $this->getEventPriceFields();
+    $priceFieldValues = $this->getEventPriceFieldValues();
 
-    if (!empty($priceFields)) {
-      $includePriceFields = &$this->addElement('advmultiselect', 'pricefields_to_hide',
-        ts('Select price field to hide from members') . ' ', $priceFields, [
+    if (!empty($priceFieldValues)) {
+      $includePriceFieldValues = &$this->addElement('advmultiselect', 'non_member_price_field_values',
+        ts('Select price field to hide from members') . ' ', $priceFieldValues, [
           'size' => 5,
           'style' => 'width:150px',
-          'class' => 'advmultiselect',
+          'class' => 'advmultiselect members-only-event-price-fields',
         ]
       );
-      $includePriceFields->setButtonAttributes('add', ['value' => ts('Add >>')]);
-      $includePriceFields->setButtonAttributes('remove', ['value' => ts('<< Remove')]);
+      $includePriceFieldValues->setButtonAttributes('add', ['value' => ts('Add >>')]);
+      $includePriceFieldValues->setButtonAttributes('remove', ['value' => ts('<< Remove')]);
     }
 
     $this->addEntityRef(
@@ -354,12 +354,12 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
    * @return array
    * @throws CiviCRM_API3_Exception
    */
-  private function getEventPriceFields() {
-    $priceFieldOptions = [];
+  private function getEventPriceFieldValues() {
+    $priceFieldValueLabelsByIDs = [];
     $priceSetId = CRM_Price_BAO_PriceSet::getFor('civicrm_event', $this->_id, NULL);
 
     if (!$this->isPaidEvent() || !$priceSetId) {
-      return $priceFieldOptions;
+      return $priceFieldValueLabelsByIDs;
     }
 
     $priceFields = civicrm_api3('PriceField', 'get', [
@@ -392,7 +392,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       $priceFieldValueLabelsByIDs[$priceFieldValue['id']] = $priceFieldValue['label'];
     }
 
-    return $priceFieldOptions;
+    return $priceFieldValueLabelsByIDs;
   }
 
   /**

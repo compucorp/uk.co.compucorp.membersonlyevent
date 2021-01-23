@@ -15,10 +15,10 @@
 
   <div id="members-only-event-fields">
 
-    {if isset($form.pricefields_to_hide)}
+    {if isset($form.non_member_price_field_values)}
       <div class="crm-section">
-        <div class="label">{$form.pricefields_to_hide.label}</div>
-        <div class="content">{$form.pricefields_to_hide.html}</div>
+        <div class="label">{$form.non_member_price_field_values.label}</div>
+        <div class="content">{$form.non_member_price_field_values.html}</div>
         <div class="clear"></div>
       </div>
     {/if}
