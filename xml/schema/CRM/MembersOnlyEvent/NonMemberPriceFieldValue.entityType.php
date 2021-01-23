@@ -3,8 +3,8 @@
 // https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_entityTypes
 return [
   [
-    'name' => 'MembersOnlyEventSelectPriceField',
-    'class' => 'CRM_MembersOnlyEvent_DAO_MembersOnlyEventSelectPriceField',
-    'table' => 'membersonlyevent_select_price_field',
+    'name' => 'NonMemberPriceFieldValue',
+    'class' => 'CRM_MembersOnlyEvent_DAO_NonMemberPriceFieldValue',
+    'table' => 'membersonlyevent_non_member_price_field_value',
   ],
 ];

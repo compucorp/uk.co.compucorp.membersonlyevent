@@ -2,9 +2,9 @@
 
 <table>
   <base>CRM/MembersOnlyEvent</base>
-  <class>MembersOnlyEventSelectPriceField</class>
-  <name>membersonlyevent_select_price_field</name>
-  <comment>Join table for storing selected price field for members only event</comment>
+  <class>NonMemberPriceFieldValue</class>
+  <name>membersonlyevent_non_member_price_field_value</name>
+  <comment>Join table for storing selected price field value for members only event</comment>
   <log>true</log>
 
   <field>
@@ -22,15 +22,15 @@
   </foreignKey>
 
   <field>
-    <name>price_field_id</name>
-    <title>Price Field ID</title>
+    <name>price_field_value_id</name>
+    <title>Price Field Value ID</title>
     <type>int unsigned</type>
     <required>true</required>
-    <comment>Selected Price Field ID.</comment>
+    <comment>Selected Price Field Value ID.</comment>
   </field>
   <foreignKey>
-    <name>price_field_id</name>
-    <table>civicrm_price_field</table>
+    <name>price_field_value_id</name>
+    <table>civicrm_price_field_value</table>
     <key>id</key>
     <onDelete>CASCADE</onDelete>
   </foreignKey>

@@ -362,17 +362,34 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       return $priceFieldOptions;
     }
 
-    $options = civicrm_api3('PriceField', 'get', [
+    $priceFields = civicrm_api3('PriceField', 'get', [
       'sequential' => 1,
       'price_set_id' => $priceSetId,
+      'options' => [
+          'limit' => 0,
+          'sort' => 'id ASC'
+      ]
     ])['values'];
 
-    if (!$this->isPriceFieldValidForMembersOnlyEvent($options)) {
-      return $priceFieldOptions;
+    $priceFieldIDs = [];
+    foreach($priceFields as $priceField) {
+      if ($this->isPriceFieldValidForMembersOnlyEvent($priceField)) {
+        $priceFieldIDs[] = $priceField['id'];
+      }
     }
 
-    foreach ($options as $option) {
-      $priceFieldOptions[$option['id']] = $option['label'];
+    if (empty($priceFieldIDs)) {
+      return $priceFieldValueLabelsByIDs;
+    }
+
+    $priceFieldValues = civicrm_api3('PriceFieldValue', 'get', [
+      'sequential' => 1,
+      'price_field_id' => ['IN' => $priceFieldIDs],
+      'return' => ['id', 'label'],
+    ])['values'];
+
+    foreach ($priceFieldValues as $priceFieldValue) {
+      $priceFieldValueLabelsByIDs[$priceFieldValue['id']] = $priceFieldValue['label'];
     }
 
     return $priceFieldOptions;
@@ -391,19 +408,20 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
     ])['values'][$this->_id]['is_monetary'];
   }
 
+
   /**
    * Currently Members only event only support Radio and Checkbox
    * elements in price field.
    * This function is checking if select price set is valid
    *
-   * @param array $options
+   * @param $priceField
+   *
+   * @return bool
    */
-  private function isPriceFieldValidForMembersOnlyEvent(array $options) {
+  private function isPriceFieldValidForMembersOnlyEvent($priceField) {
     $supportElement = ['CheckBox', 'Radio'];
-    foreach ($options as $option) {
-      if (!in_array($option['html_type'], $supportElement)) {
-        return FALSE;
-      }
+    if (!in_array($priceField['html_type'], $supportElement)) {
+      return FALSE;
     }
 
     return TRUE;
