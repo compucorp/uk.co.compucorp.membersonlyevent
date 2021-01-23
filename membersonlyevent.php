@@ -51,6 +51,15 @@ function membersonlyevent_civicrm_install() {
 }
 
 /**
+ * Implements hook_civicrm_postInstall().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_postInstall
+ */
+function membersonlyevent_civicrm_postInstall() {
+  _membersonlyevent_civix_civicrm_postInstall();
+}
+
+/**
  * Implements hook_civicrm_uninstall().
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_uninstall
@@ -109,6 +118,20 @@ function membersonlyevent_civicrm_managed(&$entities) {
  */
 function membersonlyevent_civicrm_caseTypes(&$caseTypes) {
   _membersonlyevent_civix_civicrm_caseTypes($caseTypes);
+}
+
+/**
+ * Implements hook_civicrm_angularModules().
+ *
+ * Generate a list of Angular modules.
+ *
+ * Note: This hook only runs in CiviCRM 4.5+. It may
+ * use features only available in v4.6+.
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_angularModules
+ */
+function membersonlyevent_civicrm_angularModules(&$angularModules) {
+  _membersonlyevent_civix_civicrm_angularModules($angularModules);
 }
 
 /**
