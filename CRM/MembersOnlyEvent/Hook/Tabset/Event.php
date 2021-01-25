@@ -47,7 +47,7 @@ class CRM_MembersOnlyEvent_Hook_Tabset_Event {
   private function isTabValid($eventID) {
     $event = civicrm_api3('Event', 'get', [
       'sequential' => 1,
-      'return' => array('is_online_registration'),
+      'return' => ['is_online_registration'],
       'id' => $eventID,
     ]);
 

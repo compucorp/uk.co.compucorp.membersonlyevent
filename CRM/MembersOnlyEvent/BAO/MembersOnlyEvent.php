@@ -59,4 +59,5 @@ class CRM_MembersOnlyEvent_BAO_MembersOnlyEvent extends CRM_MembersOnlyEvent_DAO
 
     return FALSE;
   }
+
 }

@@ -56,13 +56,15 @@ class CRM_MembersOnlyEvent_Upgrader_Base {
   }
 
   /**
-   * Adapter that lets you add normal (non-static) member functions to the queue.
+   * Adapter that lets you add normal (non-static) member functions to the
+   * queue.
    *
    * Note: Each upgrader instance should only be associated with one
    * task-context; otherwise, this will be non-reentrant.
    *
    * ```
-   * CRM_MembersOnlyEvent_Upgrader_Base::_queueAdapter($ctx, 'methodName', 'arg1', 'arg2');
+   * CRM_MembersOnlyEvent_Upgrader_Base::_queueAdapter($ctx, 'methodName',
+   * 'arg1', 'arg2');
    * ```
    */
   public static function _queueAdapter() {
@@ -92,6 +94,7 @@ class CRM_MembersOnlyEvent_Upgrader_Base {
    *
    * @param string $relativePath
    *   the CustomData XML file path (relative to this extension's dir)
+   *
    * @return bool
    */
   public function executeCustomDataFile($relativePath) {

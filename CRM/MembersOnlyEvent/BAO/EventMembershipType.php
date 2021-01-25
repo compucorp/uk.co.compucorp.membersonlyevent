@@ -17,7 +17,8 @@ class CRM_MembersOnlyEvent_BAO_EventMembershipType extends CRM_MembersOnlyEvent_
 
     if ($removeResponse === FALSE || $createResponse === FALSE) {
       $transaction->rollback();
-    } else {
+    }
+    else {
       $transaction->commit();
     }
   }
@@ -72,11 +73,12 @@ class CRM_MembersOnlyEvent_BAO_EventMembershipType extends CRM_MembersOnlyEvent_
     $eventMembershipType->members_only_event_id = $membersOnlyEventID;
     $eventMembershipType->find();
 
-    $allowedMembershipTypeIDs = array();
+    $allowedMembershipTypeIDs = [];
     while ($eventMembershipType->fetch()) {
       $allowedMembershipTypeIDs[] = $eventMembershipType->membership_type_id;
     }
 
     return $allowedMembershipTypeIDs;
   }
+
 }
