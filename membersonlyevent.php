@@ -613,3 +613,29 @@ function membersonlyevent_civicrm_copy($objectName, &$object) {
     $currentListener->handle($object);
   }
 }
+
+/**
+ * Implements hook_civicrm_buildForm().
+ */
+function membersonlyevent_civicrm_buildForm($formName, &$form) {
+  $listeners = [
+    new CRM_MembersOnlyEvent_Hook_BuildForm_Field(),
+    new CRM_MembersOnlyEvent_Hook_BuildForm_Option(),
+  ];
+  foreach ($listeners as $currentListener) {
+    $currentListener->handle($formName, $form);
+  }
+}
+
+/**
+ * Implements hook_civicrm_postProcess().
+ */
+function membersonlyevent_civicrm_postProcess($formName, &$form) {
+  $listeners = [
+    new CRM_MembersOnlyEvent_Hook_PostProcess_Field(),
+    new CRM_MembersOnlyEvent_Hook_PostProcess_Option(),
+  ];
+  foreach ($listeners as $currentListener) {
+    $currentListener->handle($formName, $form);
+  }
+}
