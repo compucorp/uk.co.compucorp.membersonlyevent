@@ -14,6 +14,8 @@ jQuery(document).ready(function(){
   var contributionPageField = jQuery("#field-contribution-page-id");
   var purchaseURLField = jQuery("#field-purchase-membership-url");
 
+  jQuery('.advmultiselect.members-only-event-price-fields input[name="add"]').after('<br><br>')
+
   setInitialFieldValues();
   setFieldListeners();
 
