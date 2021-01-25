@@ -27,4 +27,3 @@ class CRM_MembersOnlyEvent_Test_Fabricator_NonMemberPriceFieldValue {
   }
 
 }
-

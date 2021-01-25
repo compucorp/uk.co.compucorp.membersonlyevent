@@ -79,4 +79,5 @@ class CRM_MembersOnlyEvent_Hook_BuildForm_Option extends BaseField {
 
     $form->setDefaults($defaults);
   }
+
 }

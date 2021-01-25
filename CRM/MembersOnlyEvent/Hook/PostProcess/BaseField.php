@@ -1,6 +1,5 @@
 <?php
 
-use CRM_MembersOnlyEvent_BAO_EntityPriceFieldValue as EntityPriceFieldValue;
 
 /**
  * Abstract class for PostProcess Hook
@@ -70,7 +69,8 @@ abstract class CRM_MembersOnlyEvent_Hook_PostProcess_BaseField {
 
     try {
       return civicrm_api3('PriceFieldValue', 'getvalue', $searchParams);
-    } catch (CiviCRM_API3_Exception $e) {
+    }
+    catch (CiviCRM_API3_Exception $e) {
       CRM_Core_Error::debug_var('Failed to find price option/field just created', $e);
     }
   }
@@ -107,7 +107,8 @@ abstract class CRM_MembersOnlyEvent_Hook_PostProcess_BaseField {
 
     try {
       return civicrm_api3('PriceField', 'getvalue', $searchParams);
-    } catch (CiviCRM_API3_Exception $e) {
+    }
+    catch (CiviCRM_API3_Exception $e) {
       CRM_Core_Error::debug_var('Failed to find price option/field just created', $e);
     }
   }

@@ -6,8 +6,6 @@ use CRM_MembersOnlyEvent_Test_Fabricator_PriceFieldValue as PriceFieldValueFabri
 use CRM_MembersOnlyEvent_Test_Fabricator_PriceField as PriceFieldFabricator;
 use CRM_MembersOnlyEvent_Test_Fabricator_PriceSet as PriceSetFabricator;
 
-
-
 require_once __DIR__ . '/../../../BaseHeadlessTest.php';
 
 /**
@@ -104,4 +102,5 @@ class CRM_MembersOnlyEvent_BAO_EntityPriceFieldValueTest extends BaseHeadlessTes
     $this->assertEquals(2, count($entityIDs));
     $this->assertEquals([$event1->id, $event2->id], array_values($entityIDs));
   }
+
 }

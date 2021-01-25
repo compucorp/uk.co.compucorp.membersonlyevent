@@ -50,4 +50,5 @@ class CRM_MembersOnlyEvent_Hook_PostProcess_Option extends BaseField {
         break;
     }
   }
+
 }

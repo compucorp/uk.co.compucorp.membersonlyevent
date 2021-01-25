@@ -23,7 +23,7 @@ abstract class CRM_MembersOnlyEvent_Hook_BuildForm_BaseField {
    * Checks if the hook should be handled.
    *
    * @param $formName
-   * @param $formClass
+   * @param $form
    */
   abstract protected function shouldHandle($formName, &$form);
 
@@ -57,10 +57,12 @@ abstract class CRM_MembersOnlyEvent_Hook_BuildForm_BaseField {
       if (in_array('CiviEvent', $components)) {
         $entityOptions['Participant'] = ts('Participant');
       }
-    } catch (CiviCRM_API3_Exception $e) {
+    }
+    catch (CiviCRM_API3_Exception $e) {
       CRM_Core_Error::debug_var('Cannot find enabled components', $e);
     }
 
     return $entityOptions;
   }
+
 }

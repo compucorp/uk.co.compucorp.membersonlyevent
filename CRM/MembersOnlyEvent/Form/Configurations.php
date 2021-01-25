@@ -58,4 +58,5 @@ class CRM_MembersOnlyEvent_Form_Configurations extends CRM_Core_Form {
 
     CRM_Core_Session::setStatus(ts('The configurations have been saved.'), ts('Saved'), 'success');
   }
+
 }

@@ -73,7 +73,7 @@ class CRM_MembersOnlyEvent_BAO_EntityPriceFieldValue extends CRM_MembersOnlyEven
 
     return $createdRecordsCount == count($entityIDs);
   }
-  
+
   /**
    * @param $priceFieldValueID
    *

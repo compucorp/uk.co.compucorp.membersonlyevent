@@ -3,6 +3,7 @@
 use CRM_MembersOnlyEvent_BAO_MembersOnlyEvent as MembersOnlyEvent;
 use CRM_MembersOnlyEvent_BAO_EventMembershipType as EventMembershipType;
 use CRM_MembersOnlyEvent_BAO_NonMemberPriceFieldValue as NonMemberPriceFieldValue;
+
 /**
  * Form controller class
  *
@@ -373,13 +374,13 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       'sequential' => 1,
       'price_set_id' => $priceSetId,
       'options' => [
-          'limit' => 0,
-          'sort' => 'id ASC'
-      ]
+        'limit' => 0,
+        'sort' => 'id ASC',
+      ],
     ])['values'];
 
     $priceFieldIDs = [];
-    foreach($priceFields as $priceField) {
+    foreach ($priceFields as $priceField) {
       if ($this->isPriceFieldValidForMembersOnlyEvent($priceField)) {
         $priceFieldIDs[] = $priceField['id'];
       }
@@ -414,7 +415,6 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       'id' => $this->_id,
     ])['values'][$this->_id]['is_monetary'];
   }
-
 
   /**
    * Currently Members only event only support Radio and Checkbox
