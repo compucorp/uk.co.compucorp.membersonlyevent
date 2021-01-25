@@ -3,6 +3,7 @@
 use CRM_MembersOnlyEvent_BAO_MembersOnlyEvent as MembersOnlyEvent;
 use CRM_MembersOnlyEvent_BAO_EventMembershipType as EventMembershipType;
 use CRM_MembersOnlyEvent_BAO_MembersOnlyEventPriceFieldValue as MembersOnlyEventPriceFieldValue;
+
 /**
  * Form controller class
  *
@@ -31,8 +32,11 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
    * @const String
    */
   const OPERATION_DO_NOTHING = 'do_nothing';
+
   const OPERATION_CREATE = 'create';
+
   const OPERATION_UPDATE = 'update';
+
   const OPERATION_DOWNGRADE_TO_NORMAL_EVENT = 'downgrade_to_normal_event';
 
   /**
@@ -41,7 +45,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
   public function buildQuickForm() {
     $this->addFields();
 
-    $this->addFormRule(array($this, 'formRules'));
+    $this->addFormRule([$this, 'formRules']);
 
     parent::buildQuickForm();
   }
@@ -133,7 +137,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
    *   The errors message to report to the user if any or TRUE otherwise.
    */
   public function formRules($values) {
-    $errors = array();
+    $errors = [];
 
     // Skip validation if the event is not members-only
     if (empty($values['is_members_only_event'])) {
@@ -212,7 +216,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
    * @inheritdoc
    */
   public function setDefaultValues() {
-    $defaultValues = array();
+    $defaultValues = [];
 
     $this->setInitialValues($defaultValues);
 
@@ -323,14 +327,14 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
   private function saveFormData($params) {
     $membersOnlyEvent = MembersOnlyEvent::create($params);
     if (!empty($membersOnlyEvent->id)) {
-      $allowedMembershipTypesIDs = array();
+      $allowedMembershipTypesIDs = [];
       if (!empty($params['allowed_membership_types'])) {
         $allowedMembershipTypesIDs = explode(',', $params['allowed_membership_types']);
       }
 
       EventMembershipType::updateAllowedMembershipTypes($membersOnlyEvent->id, $allowedMembershipTypesIDs);
 
-      $nonMemberPriceFieldValueIDs = array();
+      $nonMemberPriceFieldValueIDs = [];
       if (!empty($params['non_member_price_field_values'])) {
         $nonMemberPriceFieldValueIDs = $params['non_member_price_field_values'];
       }

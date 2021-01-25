@@ -1,4 +1,5 @@
 <?php
+
 use CRM_MembersOnlyEvent_ExtensionUtil as E;
 
 class CRM_MembersOnlyEvent_BAO_MembersOnlyEventPriceFieldValue extends CRM_MembersOnlyEvent_DAO_MembersOnlyEventPriceFieldValue {
@@ -7,6 +8,7 @@ class CRM_MembersOnlyEvent_BAO_MembersOnlyEventPriceFieldValue extends CRM_Membe
    * Create a new MembersOnlyEventPriceFieldValue based on array-data
    *
    * @param array $params key-value pairs
+   *
    * @return CRM_MembersOnlyEvent_DAO_MembersOnlyEventPriceFieldValue|NULL
    */
   public static function create($params) {
@@ -92,7 +94,7 @@ class CRM_MembersOnlyEvent_BAO_MembersOnlyEventPriceFieldValue extends CRM_Membe
     $membersOnlyEventPriceFieldValue->members_only_event_id = $membersOnlyEventID;
     $membersOnlyEventPriceFieldValue->find();
 
-    $priceFieldValueIDs = array();
+    $priceFieldValueIDs = [];
     while ($membersOnlyEventPriceFieldValue->fetch()) {
       $priceFieldValueIDs[] = $membersOnlyEventPriceFieldValue->price_field_value_id;
     }

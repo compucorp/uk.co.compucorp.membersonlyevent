@@ -1,4 +1,5 @@
 <?php
+
 use CRM_MembersOnlyEvent_ExtensionUtil as E;
 
 /**

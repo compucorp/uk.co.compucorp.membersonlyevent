@@ -1,6 +1,6 @@
 <?php
 
-use CRM_MembersOnlyEvent_BAO_EventMembershipType as  EventMembershipType;
+use CRM_MembersOnlyEvent_BAO_EventMembershipType as EventMembershipType;
 use CRM_MembersOnlyEvent_BAO_MembersOnlyEvent as MemberOnlyEvent;
 
 /**
@@ -12,6 +12,7 @@ class CRM_MembersOnlyEvent_Hook_Copy_EventFromTemplateCreator {
    * @var templateId
    */
   private $templateId;
+
   /**
    * @var eventId
    */
@@ -19,6 +20,7 @@ class CRM_MembersOnlyEvent_Hook_Copy_EventFromTemplateCreator {
 
   /**
    * CRM_MembersOnlyEvent_Hook_Copy_EventFRomTemplateCreator constructor.
+   *
    * @param $eventId
    * @param $templateId
    */
@@ -54,6 +56,7 @@ class CRM_MembersOnlyEvent_Hook_Copy_EventFromTemplateCreator {
 
   /**
    * Sets allowed membership type IDs if applicable
+   *
    * @param $memberOnlyEventId
    * @param $memberOnlyEventTemplateId
    */

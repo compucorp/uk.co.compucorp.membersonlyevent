@@ -15,23 +15,23 @@ class CRM_MembersOnlyEvent_Configurations {
    */
   public static function get() {
     $settingFields = civicrm_api3('Setting', 'getfields',
-      array(
-        'filters' => array('group' => self::SETTINGS_GROUP_NAME),
-      )
+      [
+        'filters' => ['group' => self::SETTINGS_GROUP_NAME],
+      ]
     )['values'];
     $settingFields = array_keys($settingFields);
 
     // we do separate API call for each field since
     // civicrm Setting API does not allow retrieving more than
     // on field value in a single API call
-    $settingValues = array();
-    foreach($settingFields as $field) {
+    $settingValues = [];
+    foreach ($settingFields as $field) {
       $configurations = civicrm_api3('Setting', 'get',
-        array('return' => $field, 'sequential' => 1))['values'][0];
+        ['return' => $field, 'sequential' => 1])['values'][0];
       $settingValues[$field] = $configurations[$field];
     }
 
-
     return $settingValues;
   }
+
 }

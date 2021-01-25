@@ -89,6 +89,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTabTest extends BaseHeadlessTest
 
   /**
    * @param $eventID
+   *
    * @return array
    * @throws CiviCRM_API3_Exception
    */
@@ -108,6 +109,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTabTest extends BaseHeadlessTest
   /**
    * @param $priceSetID
    * @param string $htmlType
+   *
    * @return array
    * @throws CiviCRM_API3_Exception
    */
@@ -122,6 +124,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTabTest extends BaseHeadlessTest
 
   /**
    * @param $priceFieldID
+   *
    * @return array
    * @throws CiviCRM_API3_Exception
    */
