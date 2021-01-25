@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/MembersOnlyEvent</base>
+  <class>EntityPriceFieldValue</class>
+  <name>membersonlyevent_entity_price_field_value</name>
+  <comment>Join table for storing selected entities for price field value</comment>
+  <log>true</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique EntityPriceFieldValue ID</comment>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>entity_table</name>
+    <type>varchar</type>
+    <comment>Physical tablename for entity being joined to file, e.g. civicrm_membership_type</comment>
+  </field>
+
+  <field>
+    <name>entity_id</name>
+    <type>int unsigned</type>
+    <comment>Foreign key for the civicrm_price_field_value</comment>
+  </field>
+  <index>
+    <name>index_entity_id</name>
+    <fieldName>entity_id</fieldName>
+    <unique>false</unique>
+  </index>
+
+  <field>
+    <name>price_field_value_id</name>
+    <type>int unsigned</type>
+    <comment>FK to price field value</comment>
+  </field>
+  <foreignKey>
+    <name>price_field_value_id</name>
+    <table>civicrm_price_field_value</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+</table>

@@ -474,6 +474,11 @@ function _membersonlyevent_civix_civicrm_alterSettingsFolders(&$metaDataFolders 
  */
 function _membersonlyevent_civix_civicrm_entityTypes(&$entityTypes) {
   $entityTypes = array_merge($entityTypes, [
+    'CRM_MembersOnlyEvent_DAO_EntityPriceFieldValue' => [
+      'name' => 'EntityPriceFieldValue',
+      'class' => 'CRM_MembersOnlyEvent_DAO_EntityPriceFieldValue',
+      'table' => 'membersonlyevent_entity_price_field_value',
+    ],
     'CRM_MembersOnlyEvent_DAO_EventMembershipType' => [
       'name' => 'EventMembershipType',
       'class' => 'CRM_MembersOnlyEvent_DAO_EventMembershipType',
