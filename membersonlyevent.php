@@ -205,7 +205,7 @@ function membersonlyevent_civicrm_navigationMenu(&$menu) {
     'label' => ts('Members Only Event Extension Configurations'),
     'name' => 'membersonlyevent_configurations',
     'url' => 'civicrm/admin/membersonlyevent',
-    'permission' => 'administer CiviCRM,access CiviEvent',
+    'permission' => 'administer CiviCRM,edit all events',
     'operator' => NULL,
     'separator' => NULL,
   ];
