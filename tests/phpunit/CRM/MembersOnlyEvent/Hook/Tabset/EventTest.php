@@ -7,6 +7,8 @@ require_once __DIR__ . '/../../../../BaseHeadlessTest.php';
 
 /**
  * Class CRM_MembersOnlyEvent_Hook_Tabset_EventTest
+ *
+ * @group headless
  */
 class CRM_MembersOnlyEvent_Hook_Tabset_EventTest extends BaseHeadlessTest {
 
@@ -17,9 +19,11 @@ class CRM_MembersOnlyEvent_Hook_Tabset_EventTest extends BaseHeadlessTest {
   public function testValidMembersOnlyEventTabSet() {
     $event = EventFabricator::fabricate(['is_online_registration' => TRUE]);
     MembersOnlyEventFabricator::fabricate(['event_id' => $event->id]);
-    $evenTabset = new CRM_MembersOnlyEvent_Hook_Tabset_Event();
+    $tabsetName = 'civicrm/event/manage';
     $tabsets = [];
-    $evenTabset->handle($event->id, $tabsets);
+    $context = ['event_id' => $event->id];
+    $evenTabset = new CRM_MembersOnlyEvent_Hook_Tabset_Event();
+    $evenTabset->handle($tabsetName, $tabsets, $context);
     $this->assertArrayHasKey('membersonlyevent', $tabsets);
     $this->assertTrue($tabsets['membersonlyevent']['valid']);
   }
@@ -32,8 +36,10 @@ class CRM_MembersOnlyEvent_Hook_Tabset_EventTest extends BaseHeadlessTest {
     $event = EventFabricator::fabricate(['is_online_registration' => FALSE]);
     $membersOnlyEventTemplate = MembersOnlyEventFabricator::fabricate(['event_id' => $event->id]);
     $tabsets = [];
+    $tabsetName = 'civicrm/event/manage';
+    $context = ['event_id' => $event->id];
     $evenTabset = new CRM_MembersOnlyEvent_Hook_Tabset_Event();
-    $evenTabset->handle($event->id, $tabsets);
+    $evenTabset->handle($tabsetName, $tabsets, $context);
     $this->assertArrayHasKey('membersonlyevent', $tabsets);
     $this->assertFalse($tabsets['membersonlyevent']['valid']);
   }
