@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/MembersOnlyEvent</base>
+  <class>MembersOnlyEventPriceFieldValue</class>
+  <name>membersonlyevent_event_price_field_value</name>
+  <comment>Join table for storing selected price field value for members only event</comment>
+  <log>true</log>
+
+  <field>
+    <name>members_only_event_id</name>
+    <title>Members-only event ID</title>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Members-only event ID.</comment>
+  </field>
+  <foreignKey>
+    <name>members_only_event_id</name>
+    <table>membersonlyevent</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>price_field_value_id</name>
+    <title>Price Field Value ID</title>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Selected Price Field Value ID.</comment>
+  </field>
+  <foreignKey>
+    <name>price_field_value_id</name>
+    <table>civicrm_price_field_value</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+</table>
