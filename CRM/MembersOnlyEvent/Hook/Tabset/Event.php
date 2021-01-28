@@ -8,10 +8,43 @@ use CRM_MembersOnlyEvent_BAO_MembersOnlyEvent as MembersOnlyEvent;
 class CRM_MembersOnlyEvent_Hook_Tabset_Event {
 
   /**
+   * Handle the hook
+   *
+   * @param string $tabsetName
+   * @param object $tabs
+   * @param object $context
+   */
+  public function handle($tabsetName, &$tabs, $context) {
+    if (!$this->shouldHandle($tabsetName, $tabs, $context)) {
+      return;
+    }
+
+    $eventID = $context['event_id'];
+    $this->addMembersOnlyEventTab($eventID, $tabs);
+  }
+
+  /**
+   * Checks if the hook should be handled.
+   *
+   * @param string $tabsetName
+   * @param object $tabs
+   * @param object $context
+   *
+   * @return bool
+   */
+  private function shouldHandle($tabsetName, &$tabs, $context) {
+    $isManageEventTabset = ($tabsetName === 'civicrm/event/manage');
+    if (!empty($context['event_id']) && $isManageEventTabset) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
    * @param $eventID
    * @param $tabs
    */
-  public function handle($eventID, &$tabs) {
+  public function addMembersOnlyEventTab($eventID, &$tabs) {
     $url = CRM_Utils_System::url(
       'civicrm/event/manage/membersonlyevent',
       'reset=1&id=' . $eventID . '&action=update&component=event');

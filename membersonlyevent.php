@@ -159,15 +159,12 @@ function membersonlyevent_civicrm_permission(&$permissions) {
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_tabset/
  */
 function membersonlyevent_civicrm_tabset($tabsetName, &$tabs, $context) {
-  // check if the tabset is 'Manage Event' page or event id is exist
-  if ($tabsetName != 'civicrm/event/manage' || empty($context['event_id'])) {
-    return;
+  $listeners = [
+    new CRM_MembersOnlyEvent_Hook_Tabset_Event(),
+  ];
+  foreach ($listeners as $currentListener) {
+    $currentListener->handle($tabsetName, $tabs, $context);
   }
-
-  $eventID = $context['event_id'];
-  $eventTab = new CRM_MembersOnlyEvent_Hook_Tabset_Event();
-  $eventTab->handle($eventID, $tabs);
-
 }
 
 /**
