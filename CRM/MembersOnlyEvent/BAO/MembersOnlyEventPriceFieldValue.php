@@ -31,6 +31,11 @@ class CRM_MembersOnlyEvent_BAO_MembersOnlyEventPriceFieldValue extends CRM_Membe
    * @param array $priceFieldValueIDs
    */
   public static function updateNonMemberPriceFieldValues($membersOnlyEventID, $priceFieldValueIDs) {
+    $oldPriceFieldValueIDs = self::getNonMemberPriceFieldValueIDs($membersOnlyEventID);
+    if ($oldPriceFieldValueIDs == $priceFieldValueIDs) {
+      return;
+    }
+
     $transaction = new CRM_Core_Transaction();
 
     $removeResponse = self::removeNonMemberPriceFieldValues($membersOnlyEventID);
@@ -53,7 +58,8 @@ class CRM_MembersOnlyEvent_BAO_MembersOnlyEventPriceFieldValue extends CRM_Membe
   private static function removeNonMemberPriceFieldValues($membersOnlyEventID) {
     $membersOnlyEventPriceFieldValue = new self();
     $membersOnlyEventPriceFieldValue->members_only_event_id = $membersOnlyEventID;
-    $membersOnlyEventPriceFieldValue->delete();
+
+    return $membersOnlyEventPriceFieldValue->delete();
   }
 
   /**
