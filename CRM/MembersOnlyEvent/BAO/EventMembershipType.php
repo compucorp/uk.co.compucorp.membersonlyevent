@@ -10,7 +10,7 @@ class CRM_MembersOnlyEvent_BAO_EventMembershipType extends CRM_MembersOnlyEvent_
    * @param array $allowedMembershipTypeIDs
    */
   public static function updateAllowedMembershipTypes($membersOnlyEventID, $allowedMembershipTypeIDs) {
-    $oldAllowedMembershipTypeIDs = self::getAllowedMembershipTypesIDs($membersOnlyEventID);
+    $oldAllowedMembershipTypeIDs = self::getAllowedMembershipTypeIDs($membersOnlyEventID);
     if ($oldAllowedMembershipTypeIDs == $allowedMembershipTypeIDs) {
       return;
     }
@@ -85,6 +85,39 @@ class CRM_MembersOnlyEvent_BAO_EventMembershipType extends CRM_MembersOnlyEvent_
     }
 
     return $allowedMembershipTypeIDs;
+  }
+
+  /**
+   * Gets the memberships for the specified
+   * contact in case he has any active membership
+   * with a membership type allowed to access the
+   * provided members-only event.
+   *
+   * @param int $membersOnlyEventID
+   * @param int $contactID
+   *
+   * @return array
+   *   List of contact Memberships or empty array if nothing found
+   */
+  public static function getContactActiveAllowedMemberships($membersOnlyEventID, $contactID) {
+    $params = [
+      'sequential' => 1,
+      'contact_id' => $contactID,
+      'active_only' => 1,
+    ];
+
+    $allowedMembershipTypes = self::getAllowedMembershipTypeIDs($membersOnlyEventID);
+    if (!empty($allowedMembershipTypes)) {
+      $params['membership_type_id'] = ['IN' => $allowedMembershipTypes];
+    }
+
+    $contactActiveMemberships = civicrm_api3('Membership', 'get', $params);
+
+    if ($contactActiveMemberships['count']) {
+      return $contactActiveMemberships['values'];
+    }
+
+    return [];
   }
 
 }
