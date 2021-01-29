@@ -4,12 +4,12 @@
     <path>civicrm/event/manage/membersonlyevent</path>
     <page_callback>CRM_MembersOnlyEvent_Form_MembersOnlyEventTab</page_callback>
     <title>Event - Members-Only Event</title>
-    <access_arguments>access CiviEvent</access_arguments>
+    <access_arguments>edit all events</access_arguments>
   </item>
   <item>
     <path>civicrm/admin/membersonlyevent</path>
     <page_callback>CRM_MembersOnlyEvent_Form_Configurations</page_callback>
     <title>Members-only event extension system-wide configurations</title>
-    <access_arguments>administer CiviCRM,access CiviEvent</access_arguments>
+    <access_arguments>administer CiviCRM,edit all events</access_arguments>
   </item>
 </menu>

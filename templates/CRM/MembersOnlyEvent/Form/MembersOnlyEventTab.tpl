@@ -14,6 +14,15 @@
   </div>
 
   <div id="members-only-event-fields">
+
+    {if isset($form.non_member_price_field_values)}
+      <div class="crm-section">
+        <div class="label">{$form.non_member_price_field_values.label}</div>
+        <div class="content">{$form.non_member_price_field_values.html}</div>
+        <div class="clear"></div>
+      </div>
+    {/if}
+
     <div class="crm-section">
       <div class="label">{$form.allowed_membership_types.label} {help id="allowed-membership-types" file="CRM/MembersOnlyEvent/Form/MembersOnlyEventTab"}</div>
       <div class="content">{$form.allowed_membership_types.html}</div>
@@ -100,5 +109,5 @@
   });
 </script>
 {/literal}
-{crmScript ext="uk.co.compucorp.membersonlyevent" file="js/CRM/Form/MembersOnlyEventTab.js"}
-{crmStyle ext="uk.co.compucorp.membersonlyevent" file="css/MembersOnlyEventTab.css"}
+{crmScript ext="uk.co.compucorp.membersonlyevent" file="js/CRM/MembersOnlyEvent/Form/MembersOnlyEventTab.js"}
+{crmStyle ext="uk.co.compucorp.membersonlyevent" file="css/CRM/MembersOnlyEvent/Form/MembersOnlyEventTab.css"}

@@ -51,6 +51,15 @@ function membersonlyevent_civicrm_install() {
 }
 
 /**
+ * Implements hook_civicrm_postInstall().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_postInstall
+ */
+function membersonlyevent_civicrm_postInstall() {
+  _membersonlyevent_civix_civicrm_postInstall();
+}
+
+/**
  * Implements hook_civicrm_uninstall().
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_uninstall
@@ -112,6 +121,20 @@ function membersonlyevent_civicrm_caseTypes(&$caseTypes) {
 }
 
 /**
+ * Implements hook_civicrm_angularModules().
+ *
+ * Generate a list of Angular modules.
+ *
+ * Note: This hook only runs in CiviCRM 4.5+. It may
+ * use features only available in v4.6+.
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_angularModules
+ */
+function membersonlyevent_civicrm_angularModules(&$angularModules) {
+  _membersonlyevent_civix_civicrm_angularModules($angularModules);
+}
+
+/**
  * Implements hook_civicrm_alterSettingsFolders().
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_alterSettingsFolders
@@ -136,15 +159,12 @@ function membersonlyevent_civicrm_permission(&$permissions) {
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_tabset/
  */
 function membersonlyevent_civicrm_tabset($tabsetName, &$tabs, $context) {
-  // check if the tabset is 'Manage Event' page or event id is exist
-  if ($tabsetName != 'civicrm/event/manage' || empty($context['event_id'])) {
-    return;
+  $listeners = [
+    new CRM_MembersOnlyEvent_Hook_Tabset_Event(),
+  ];
+  foreach ($listeners as $currentListener) {
+    $currentListener->handle($tabsetName, $tabs, $context);
   }
-
-  $eventID = $context['event_id'];
-  $eventTab = new CRM_MembersOnlyEvent_Hook_Tabset_Event();
-  $eventTab->handle($eventID, $tabs);
-
 }
 
 /**
@@ -185,7 +205,7 @@ function membersonlyevent_civicrm_navigationMenu(&$menu) {
     'label' => ts('Members Only Event Extension Configurations'),
     'name' => 'membersonlyevent_configurations',
     'url' => 'civicrm/admin/membersonlyevent',
-    'permission' => 'administer CiviCRM,access CiviEvent',
+    'permission' => 'administer CiviCRM,edit all events',
     'operator' => NULL,
     'separator' => NULL,
   ];
@@ -287,6 +307,7 @@ function _membersonlyevent_user_has_event_access($eventID) {
  * an access to the specified event or not.
  *
  * @param $eventID
+ *
  * @return CRM_MembersOnlyEvent_DAO_MembersOnlyEvent|FALSE
  */
 function _membersonly_is_event_for_members_only($eventID) {
@@ -306,15 +327,15 @@ function _membersonly_is_event_for_members_only($eventID) {
  *   List of contact Memberships or empty array if nothing found
  */
 function _membersonlyevent_get_contact_active_allowed_memberships($membersOnlyEventID, $contactID) {
-  $params = array(
+  $params = [
     'sequential' => 1,
     'contact_id' => $contactID,
     'active_only' => 1,
-  );
+  ];
 
   $allowedMembershipTypes = EventMembershipType::getAllowedMembershipTypesIDs($membersOnlyEventID);
   if (!empty($allowedMembershipTypes)) {
-    $params['membership_type_id'] = array('IN' => $allowedMembershipTypes);
+    $params['membership_type_id'] = ['IN' => $allowedMembershipTypes];
   }
 
   $contactActiveMemberships = civicrm_api3('Membership', 'get', $params);
@@ -323,7 +344,7 @@ function _membersonlyevent_get_contact_active_allowed_memberships($membersOnlyEv
     return $contactActiveMemberships['values'];
   }
 
-  return array();
+  return [];
 }
 
 /**
@@ -382,7 +403,11 @@ function _membersonlyevent_get_event_start_date($eventID) {
   $eventStartDate = '';
 
   $eventInfo = civicrm_api3('event', 'get',
-    array('id' => $eventID, 'return' => array('start_date'), 'sequential' => 1))['values'][0];
+    [
+      'id' => $eventID,
+      'return' => ['start_date'],
+      'sequential' => 1,
+    ])['values'][0];
 
   if (!empty($eventInfo['start_date'])) {
     $date = new DateTime($eventInfo['start_date']);
@@ -397,12 +422,14 @@ function _membersonlyevent_get_event_start_date($eventID) {
  * the event register link.
  */
 function _membersonlyevent_hide_event_info_page_register_button() {
-  CRM_Core_Region::instance('event-page-eventinfo-actionlinks-top')->update('default', array(
-    'disabled' => TRUE,
-  ));
-  CRM_Core_Region::instance('event-page-eventinfo-actionlinks-bottom')->update('default', array(
-    'disabled' => TRUE,
-  ));
+  CRM_Core_Region::instance('event-page-eventinfo-actionlinks-top')
+    ->update('default', [
+      'disabled' => TRUE,
+    ]);
+  CRM_Core_Region::instance('event-page-eventinfo-actionlinks-bottom')
+    ->update('default', [
+      'disabled' => TRUE,
+    ]);
 }
 
 /**
@@ -465,18 +492,20 @@ function _membersonlyevent_add_membership_purchase_button_to_event_info_page($me
  * of the event info page.
  */
 function _membersonlyevent_add_action_button_to_event_info_page($url, $buttonText) {
-  $buttonToAdd = array(
+  $buttonToAdd = [
     'template' => 'CRM/Event/Page/members-event-button.tpl',
     'button_text' => ts($buttonText),
     'position' => 'top',
     'url' => $url,
     'weight' => -10,
-  );
+  ];
 
-  CRM_Core_Region::instance('event-page-eventinfo-actionlinks-top')->add($buttonToAdd);
+  CRM_Core_Region::instance('event-page-eventinfo-actionlinks-top')
+    ->add($buttonToAdd);
 
   $buttonToAdd['position'] = 'bottom';
-  CRM_Core_Region::instance('event-page-eventinfo-actionlinks-bottom')->add($buttonToAdd);
+  CRM_Core_Region::instance('event-page-eventinfo-actionlinks-bottom')
+    ->add($buttonToAdd);
 }
 
 /**
@@ -499,7 +528,8 @@ function _membersonlyevent_civicrm_preProcess_CRM_Event_Form_Registration_Regist
   }
   if (_membersonly_is_event_for_members_only($eventID)) {
     $cid = CRM_Utils_Request::retrieve('cid', 'Positive');
-    CRM_Core_Resources::singleton()->addStyle('.crm-not-you-message { display: none; }');
+    CRM_Core_Resources::singleton()
+      ->addStyle('.crm-not-you-message { display: none; }');
     if (isset($cid)) {
       CRM_Core_Session::setStatus('You have already registered for this event! You cannot register other users.');
       $id = CRM_Utils_Request::retrieve('id', 'Positive');
@@ -519,7 +549,7 @@ function _membersonlyevent_civicrm_preProcess_CRM_Event_Form_Registration_Regist
  */
 function membersonlyevent_civicrm_entityTypes(&$entityTypes) {
   $entityTypes[] = [
-    'name'  => 'MembersOnlyEvent',
+    'name' => 'MembersOnlyEvent',
     'class' => 'CRM_MembersOnlyEvent_DAO_MembersOnlyEvent',
     'table' => 'membersonlyevent',
   ];

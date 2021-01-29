@@ -7,6 +7,7 @@ jQuery(document).ready(function(){
 
   var membersOnlyEventCheckbox= jQuery("#is_members_only_event");
   var membersOnlyEventFields = jQuery("#members-only-event-fields");
+  var membersOnlyEventAddButton = jQuery('.advmultiselect.members-only-event-price-field-values input[name="add"]');
 
   var purchaseButtonDisabledSection = jQuery("#purchase-button-disabled-section");
   var purchaseButtonEnabledSection = jQuery("#purchase-button-enabled-section");
@@ -22,6 +23,8 @@ jQuery(document).ready(function(){
    * the needed fields.
    */
   function setInitialFieldValues() {
+    membersOnlyEventAddButton.after('<br><br>')
+
     toggleMembersOnlyEventFields(membersOnlyEventCheckbox.is(':checked'));
 
     var purchaseMembershipButtonEnabled = jQuery("input[name='purchase_membership_button']:checked").val();

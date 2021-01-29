@@ -38,7 +38,7 @@ class CRM_MembersOnlyEvent_BAO_MembersOnlyEventTest extends BaseHeadlessTest {
    */
   public function testGetMembersOnlyEvent() {
     $fabricatedMembersOnlyEvent = MembersOnlyEventFabricator::fabricate();
-    $memberOnlyEvent = MembersOnlyEvent::getMembersOnlyEvent($fabricatedMembersOnlyEvent->id);
+    $memberOnlyEvent = MembersOnlyEvent::getMembersOnlyEvent($fabricatedMembersOnlyEvent->event_id);
     $this->assertEquals($fabricatedMembersOnlyEvent->id, $memberOnlyEvent->id);
   }
 

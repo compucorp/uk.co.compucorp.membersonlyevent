@@ -10,6 +10,11 @@ class CRM_MembersOnlyEvent_BAO_EventMembershipType extends CRM_MembersOnlyEvent_
    * @param array $allowedMembershipTypeIDs
    */
   public static function updateAllowedMembershipTypes($membersOnlyEventID, $allowedMembershipTypeIDs) {
+    $oldAllowedMembershipTypeIDs = self::getAllowedMembershipTypesIDs($membersOnlyEventID);
+    if ($oldAllowedMembershipTypeIDs == $allowedMembershipTypeIDs) {
+      return;
+    }
+
     $transaction = new CRM_Core_Transaction();
 
     $removeResponse = self::removeAllowedMembershipTypes($membersOnlyEventID);
@@ -17,7 +22,8 @@ class CRM_MembersOnlyEvent_BAO_EventMembershipType extends CRM_MembersOnlyEvent_
 
     if ($removeResponse === FALSE || $createResponse === FALSE) {
       $transaction->rollback();
-    } else {
+    }
+    else {
       $transaction->commit();
     }
   }
@@ -31,7 +37,8 @@ class CRM_MembersOnlyEvent_BAO_EventMembershipType extends CRM_MembersOnlyEvent_
   private static function removeAllowedMembershipTypes($membersOnlyEventID) {
     $membership_type = new self();
     $membership_type->members_only_event_id = $membersOnlyEventID;
-    $membership_type->delete();
+
+    return $membership_type->delete();
   }
 
   /**
@@ -72,11 +79,12 @@ class CRM_MembersOnlyEvent_BAO_EventMembershipType extends CRM_MembersOnlyEvent_
     $eventMembershipType->members_only_event_id = $membersOnlyEventID;
     $eventMembershipType->find();
 
-    $allowedMembershipTypeIDs = array();
+    $allowedMembershipTypeIDs = [];
     while ($eventMembershipType->fetch()) {
       $allowedMembershipTypeIDs[] = $eventMembershipType->membership_type_id;
     }
 
     return $allowedMembershipTypeIDs;
   }
+
 }
