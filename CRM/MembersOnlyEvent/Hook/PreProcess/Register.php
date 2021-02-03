@@ -1,19 +1,24 @@
 <?php
 
 use CRM_MembersOnlyEvent_Hook_PreProcess_Base as PreProcessBase;
-use CRM_MembersOnlyEvent_BAO_MembersOnlyEvent as MembersOnlyEvent;
+use CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess as MembersOnlyEventAccessService;
 
 /**
  * Class for Event Registration Form PreProcess Hook
  */
 class CRM_MembersOnlyEvent_Hook_PreProcess_Register extends PreProcessBase {
 
-  use CRM_MembersOnlyEvent_Trait_userHasEventAccess;
+  /**
+   * @var \CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess
+   */
+  private $membersOnlyEventAccessService;
 
   /**
-   * @var \CRM_MembersOnlyEvent_DAO_MembersOnlyEvent|NULL
+   * CRM_MembersOnlyEvent_Hook_BuildForm_Register constructor.
    */
-  private $membersOnlyEvent = NULL;
+  public function __construct() {
+    $this->membersOnlyEventAccessService = new MembersOnlyEventAccessService();
+  }
 
   /**
    * Checks if the hook should be handled.
@@ -25,10 +30,9 @@ class CRM_MembersOnlyEvent_Hook_PreProcess_Register extends PreProcessBase {
    */
   protected function shouldHandle($formName, &$form) {
     if ($formName === CRM_Event_Form_Registration_Register::class
-      && $form->getAction() === CRM_Core_Action::ADD) {
-      $eventID = $form->_eventId;
-      $this->membersOnlyEvent = MembersOnlyEvent::getMembersOnlyEvent($eventID);
-      return $this->membersOnlyEvent;
+      && $form->getAction() === CRM_Core_Action::ADD
+      && $this->membersOnlyEventAccessService->getMembersOnlyEvent()) {
+      return TRUE;
     }
     return FALSE;
   }
@@ -48,12 +52,7 @@ class CRM_MembersOnlyEvent_Hook_PreProcess_Register extends PreProcessBase {
    * @throws \CRM_Core_Exception
    */
   protected function preProcess($formName, &$form) {
-    $userHasEventAccess = $this->userHasEventAccess($this->membersOnlyEvent);
-    if (!$userHasEventAccess) {
-      // if the user has no access, redirect to the main page
-      CRM_Utils_System::redirect('/');
-    }
-
+    $this->membersOnlyEventAccessService->redirectUsersWithoutEventAccess();
     $cid = CRM_Utils_Request::retrieve('cid', 'Positive');
     CRM_Core_Resources::singleton()
       ->addStyle('.crm-not-you-message { display: none; }');
@@ -68,6 +67,7 @@ class CRM_MembersOnlyEvent_Hook_PreProcess_Register extends PreProcessBase {
       CRM_Utils_System::redirect($url);
       $form->_skipDupeRegistrationCheck = TRUE;
     }
+
   }
 
 }
