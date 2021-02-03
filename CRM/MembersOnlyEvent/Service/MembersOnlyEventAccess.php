@@ -42,22 +42,6 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
   }
 
   /**
-   * Checks if the logged-in user has
-   * an access to the specified event or not.
-   *
-   * @return bool
-   *   True if has access or False otherwise
-   */
-  public function userHasEventAccess() {
-    if (!$this->contactID) {
-      // the user is not logged-in so he cannot access the event
-      return FALSE;
-    }
-
-    return !empty($this->contactActiveAllowedMemberships);
-  }
-
-  /**
    * Return a list of allowed and active memberships
    * Also in case 'membership duration check' is enabled.
    * It check for the membership is valid (active) during the period of
@@ -145,16 +129,6 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
    */
   public function getMembersOnlyEvent() {
     return $this->membersOnlyEvent;
-  }
-
-  /**
-   * if the user has no access, redirect to the main page
-   */
-  public function redirectUsersWithoutEventAccess() {
-    if (!$this->userHasEventAccess()) {
-      // if the user has no access, redirect to the main page
-      CRM_Utils_System::redirect('/');
-    }
   }
 
   /**

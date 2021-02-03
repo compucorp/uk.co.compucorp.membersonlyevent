@@ -32,7 +32,7 @@ class CRM_MembersOnlyEvent_Hook_BuildForm_Register extends BuildFormBase {
   protected function shouldHandle($formName, &$form) {
     if ($formName === CRM_Event_Form_Registration_Register::class
       && $form->getAction() === CRM_Core_Action::ADD
-      && $this->membersOnlyEventAccessService->userHasEventAccess()) {
+      && $this->membersOnlyEventAccess->getMembersOnlyEvent()) {
       return TRUE;
     }
     return FALSE;

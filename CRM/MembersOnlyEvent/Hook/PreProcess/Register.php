@@ -52,7 +52,6 @@ class CRM_MembersOnlyEvent_Hook_PreProcess_Register extends PreProcessBase {
    * @throws \CRM_Core_Exception
    */
   protected function preProcess($formName, &$form) {
-    $this->membersOnlyEventAccessService->redirectUsersWithoutEventAccess();
     $cid = CRM_Utils_Request::retrieve('cid', 'Positive');
     CRM_Core_Resources::singleton()
       ->addStyle('.crm-not-you-message { display: none; }');

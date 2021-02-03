@@ -43,15 +43,6 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
    */
   protected function pageRun(&$page) {
     $this->showSessionMessageWhenRegisteringAnotherParticipant();
-
-    if ($this->membersOnlyEventAccessService->userHasEventAccess()) {
-      // skip early and show the page if the user has access to the members-only event.
-      return;
-    }
-
-    $this->hideEventInfoPageRegisterButton();
-
-    $this->handleAccessOptionForUser();
   }
 
   /**
@@ -77,46 +68,6 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
       }
     }
     $session->set('status', $statusMessages);
-  }
-
-  /**
-   * Hides the event info page action links which contain
-   * the event register link.
-   */
-  private function hideEventInfoPageRegisterButton() {
-    CRM_Core_Region::instance('event-page-eventinfo-actionlinks-top')
-      ->update('default', [
-        'disabled' => TRUE,
-      ]);
-    CRM_Core_Region::instance('event-page-eventinfo-actionlinks-bottom')
-      ->update('default', [
-        'disabled' => TRUE,
-      ]);
-  }
-
-  /**
-   * Handles access options for logged / anonymous user.
-   */
-  private function handleAccessOptionForUser() {
-    $membersOnlyEvent = $this->membersOnlyEventAccessService->getMembersOnlyEvent();
-
-    if ($membersOnlyEvent->purchase_membership_button) {
-      $this->addMembershipPurchaseButtonToEventInfoPage($membersOnlyEvent);
-      $userLoggedIn = CRM_Core_Session::getLoggedInContactID();
-      if ($userLoggedIn) {
-        return;
-      }
-      $loginURL = CRM_Core_Config::singleton()->userSystem->getLoginURL();
-      $infoText = 'This event is for members only, if you have a current, pending or former membership
-                 please log in before purchase membership. If you are not a current member you will be charged
-                 an additional membership fee. <a href="' . $loginURL . '">Click here to login </a>';
-      CRM_Core_Session::setStatus(ts($infoText));
-
-    }
-    else {
-      // Purchase membership button is disabled, so we will just show the configured notice message
-      CRM_Core_Session::setStatus($membersOnlyEvent->notice_for_access_denied);
-    }
   }
 
   /**
