@@ -100,16 +100,17 @@ class CRM_MembersOnlyEvent_BAO_EventMembershipType extends CRM_MembersOnlyEvent_
    *   List of contact Memberships or empty array if nothing found
    */
   public static function getContactActiveAllowedMemberships($membersOnlyEventID, $contactID) {
+    $allowedMembershipTypes = self::getAllowedMembershipTypesIDs($membersOnlyEventID);
+    if (empty($allowedMembershipTypes)) {
+      return [];
+    }
+
     $params = [
       'sequential' => 1,
       'contact_id' => $contactID,
       'active_only' => 1,
+      'membership_type_id' => ['IN' => $allowedMembershipTypes],
     ];
-
-    $allowedMembershipTypes = self::getAllowedMembershipTypesIDs($membersOnlyEventID);
-    if (!empty($allowedMembershipTypes)) {
-      $params['membership_type_id'] = ['IN' => $allowedMembershipTypes];
-    }
 
     $contactActiveMemberships = civicrm_api3('Membership', 'get', $params);
 
