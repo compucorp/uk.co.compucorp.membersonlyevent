@@ -2,13 +2,24 @@
 
 use CRM_MembersOnlyEvent_Hook_PageRun_Base as PageRunBase;
 use CRM_MembersOnlyEvent_BAO_MembersOnlyEvent as MembersOnlyEvent;
+use CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess as MembersOnlyEventAccessService;
 
 /**
  * Class for Event Info PageRun Hook
  */
 class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
 
-  use CRM_MembersOnlyEvent_Trait_userHasEventAccess;
+  /**
+   * @var \CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess
+   */
+  private $membersOnlyEventAccessService;
+
+  /**
+   * CRM_MembersOnlyEvent_Hook_BuildForm_Register constructor.
+   */
+  public function __construct() {
+    $this->membersOnlyEventAccessService = new MembersOnlyEventAccessService();
+  }
 
   /**
    * Checks if the hook should be handled.
@@ -31,31 +42,24 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
    * @param $page
    */
   protected function pageRun(&$page) {
-    $eventID = $page->_id;
+    $this->showSessionMessageWhenRegisteringAnotherParticipant();
 
-    $this->showSessionMessageWhenRegisteringAnotherParticipant($eventID);
-
-    $membersOnlyEvent = MembersOnlyEvent::getMembersOnlyEvent($eventID);
-    $userHasEventAccess = $this->userHasEventAccess($membersOnlyEvent);
-    if ($userHasEventAccess) {
+    if ($this->membersOnlyEventAccessService->userHasEventAccess()) {
       // skip early and show the page if the user has access to the members-only event.
       return;
     }
 
     $this->hideEventInfoPageRegisterButton();
 
-    $this->handleAccessOptionForUser($eventID);
+    $this->handleAccessOptionForUser();
   }
 
   /**
    * Handle session message if the user is trying
    * to register another participant.
-   *
-   * @param int $eventID
-   *
    */
-  private function showSessionMessageWhenRegisteringAnotherParticipant($eventID) {
-    $isEventForMembersOnly = MembersOnlyEvent::getMembersOnlyEvent($eventID);
+  private function showSessionMessageWhenRegisteringAnotherParticipant() {
+    $isEventForMembersOnly = $this->membersOnlyEventAccessService->getMembersOnlyEvent();
 
     if (!$isEventForMembersOnly) {
       return;
@@ -92,12 +96,10 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
 
   /**
    * Handles access options for logged / anonymous user.
-   *
-   * @param $eventID
-   *
    */
-  private function handleAccessOptionForUser($eventID) {
-    $membersOnlyEvent = MembersOnlyEvent::getMembersOnlyEvent($eventID);
+  private function handleAccessOptionForUser() {
+    $membersOnlyEvent = $this->membersOnlyEventAccessService->getMembersOnlyEvent();
+
     if ($membersOnlyEvent->purchase_membership_button) {
       $this->addMembershipPurchaseButtonToEventInfoPage($membersOnlyEvent);
       $userLoggedIn = CRM_Core_Session::getLoggedInContactID();
@@ -122,7 +124,7 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
    * on the members-only event configurations to
    * the header and the footer of the event info page.
    *
-   * @param \CRM_MembersOnlyEvent_BAO_MembersOnlyEvent $membersOnlyEvent
+   * @param \CRM_MembersOnlyEvent_DAO_MembersOnlyEvent $membersOnlyEvent
    */
   private function addMembershipPurchaseButtonToEventInfoPage($membersOnlyEvent) {
     switch ($membersOnlyEvent->purchase_membership_link_type) {
