@@ -223,3 +223,16 @@ function membersonlyevent_civicrm_copy($objectName, &$object) {
     $currentListener->handle($object);
   }
 }
+
+/**
+ * Implements hook_civicrm_buildForm().
+ */
+function membersonlyevent_civicrm_buildForm($formName, &$form) {
+
+  $listeners = [
+    new CRM_MembersOnlyEvent_Hook_BuildForm_Register(),
+  ];
+  foreach ($listeners as $currentListener) {
+    $currentListener->handle($formName, $form);
+  }
+}
