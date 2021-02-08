@@ -48,9 +48,8 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
    * the specified event.
    *
    * The membership is valid during an event if :
-   * 1- The membership end date is empty.
-   * 2- The event start date is empty.
-   * 3- The membership end data is > the event start date.
+   * 1- The membership end date is empty (lifetime membership).
+   * 2- Or the membership end data is >= the event start date.
    *
    * @param \CRM_MembersOnlyEvent_DAO_MembersOnlyEvent $membersOnlyEvent
    * @param int $contactID
@@ -80,7 +79,7 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
     $eventStartDate = $this->getEventStartDate($membersOnlyEvent->event_id);
     foreach ($contactActiveAllowedMemberships as $membership) {
       $membershipEndDate = !(empty($membership['end_date'])) ? $membership['end_date'] : '';
-      if (empty($membershipEndDate) || empty($eventStartDate) || ($membershipEndDate >= $eventStartDate)) {
+      if (empty($membershipEndDate) || ($membershipEndDate >= $eventStartDate)) {
         // the user has an active allowed membership for this event
         // so the user should be able to access the event.
         $validMemberships[] = $membership;
@@ -100,8 +99,6 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
    *   or empty string if no start date exist.
    */
   private function getEventStartDate($eventID) {
-    $eventStartDate = '';
-
     $eventInfo = civicrm_api3('event', 'get',
       [
         'id' => $eventID,
@@ -109,10 +106,8 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
         'sequential' => 1,
       ])['values'][0];
 
-    if (!empty($eventInfo['start_date'])) {
-      $date = new DateTime($eventInfo['start_date']);
-      $eventStartDate = $date->format('Y-m-d');
-    }
+    $date = new DateTime($eventInfo['start_date']);
+    $eventStartDate = $date->format('Y-m-d');
 
     return $eventStartDate;
   }
