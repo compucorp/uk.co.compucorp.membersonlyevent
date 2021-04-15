@@ -64,7 +64,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
 
     if (!empty($priceFieldValues)) {
       $includePriceFieldValues = &$this->addElement('advmultiselect', 'non_member_price_field_values',
-        ts('Select price field to hide from members') . ' ', $priceFieldValues, [
+        ts('Select price fields to be hidden from members') . ' ', $priceFieldValues, [
           'size' => 5,
           'style' => 'width:150px',
           'class' => 'advmultiselect members-only-event-price-field-values',
