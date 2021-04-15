@@ -62,7 +62,13 @@ class CRM_MembersOnlyEvent_Hook_BuildForm_Register extends BuildFormBase {
               continue 2;
             }
 
-            $priceFieldValueID = $element->getAttribute('value');
+            if ($isCheckboxElement) {
+              $priceFieldValueID = $element->getAttribute('id');
+            }
+            else {
+              $priceFieldValueID = $element->getAttribute('value');
+            }
+
             $isNonMemberPriceFieldValue = in_array($priceFieldValueID, $nonMemberPriceFieldValueIDs);
 
             if (!$hasMembership && $isNonMemberPriceFieldValue) {
