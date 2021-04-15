@@ -35,7 +35,7 @@ class CRM_MembersOnlyEvent_Hook_Tabset_Event {
   private function shouldHandle($tabsetName, &$tabs, $context) {
     $canEditAllEvents = CRM_Core_Permission::check(['edit all events']);
     $isManageEventTabset = ($tabsetName === 'civicrm/event/manage');
-    if (!empty($context['event_id'] && $isManageEventTabset && $canEditAllEvents)) {
+    if (!empty($context['event_id']) && $isManageEventTabset && $canEditAllEvents) {
       return TRUE;
     }
     return FALSE;
