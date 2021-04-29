@@ -19,5 +19,6 @@ SET FOREIGN_KEY_CHECKS=0;
 
 DROP TABLE IF EXISTS `membersonlyevent`;
 DROP TABLE IF EXISTS `membersonlyevent_event_membership_type`;
+DROP TABLE IF EXISTS `membersonlyevent_event_group`;
 
 SET FOREIGN_KEY_CHECKS=1;
