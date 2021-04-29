@@ -75,7 +75,7 @@
     <comment>0: contribution page, 1: custom URL</comment>
     <add>4.4</add>
   </field>
-  
+
   <field>
     <name>contribution_page_id</name>
     <type>int unsigned</type>
@@ -100,5 +100,15 @@
     <comment>Purchase membership page URL</comment>
     <add>4.4</add>
   </field>
+
+  <field>
+    <name>is_groups_only</name>
+    <title>Purchase membership link type</title>
+    <type>boolean</type>
+    <default>0</default>
+    <comment>Should we check groups instead of membership types ?</comment>
+    <add>5.35</add>
+  </field>
+
 
 </table>

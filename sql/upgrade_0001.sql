@@ -25,3 +25,11 @@ CREATE TABLE `membersonlyevent_event_group`
     CONSTRAINT FK_membersonlyevent_event_group_group_id FOREIGN KEY (`group_id`) REFERENCES `civicrm_group` (`id`) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
+-- /*******************************************************
+-- *
+-- * membersonlyevent
+-- *
+-- * Add is_groups_only column
+-- *
+-- *******************************************************/
+ALTER TABLE `membersonlyevent` ADD `is_groups_only` TINYINT NOT NULL DEFAULT '0' COMMENT 'Should we check groups instead of membership types ?' AFTER `purchase_membership_url`;

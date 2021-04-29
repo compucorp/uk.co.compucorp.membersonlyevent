@@ -57,7 +57,8 @@ CREATE TABLE `membersonlyevent` (
      `purchase_membership_button_label` varchar(255)   DEFAULT NULL COMMENT 'Purchase membership button label if it is enabled',
      `purchase_membership_link_type` int   DEFAULT 0 COMMENT '0: contribution page, 1: custom URL',
      `contribution_page_id` int unsigned   DEFAULT NULL COMMENT 'Foreign key for the Contribution page',
-     `purchase_membership_url` varchar(3000)   DEFAULT NULL COMMENT 'Purchase membership page URL'
+     `purchase_membership_url` varchar(3000)   DEFAULT NULL COMMENT 'Purchase membership page URL',
+     `is_groups_only` tinyint   DEFAULT 0 COMMENT 'Should we check groups instead of membership types ?'
 ,
         PRIMARY KEY (`id`)
 
@@ -109,4 +110,5 @@ CREATE TABLE `membersonlyevent_event_membership_type` (
 
 ,          CONSTRAINT FK_membersonlyevent_event_membership_type_members_only_event_id FOREIGN KEY (`members_only_event_id`) REFERENCES `membersonlyevent`(`id`) ON DELETE CASCADE,          CONSTRAINT FK_membersonlyevent_event_membership_type_membership_type_id FOREIGN KEY (`membership_type_id`) REFERENCES `civicrm_membership_type`(`id`) ON DELETE CASCADE
 )  ENGINE=InnoDB  ;
+
 
