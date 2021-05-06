@@ -4,6 +4,7 @@ use CRM_MembersOnlyEvent_BAO_EventMembershipType as EventMembershipType;
 use CRM_MembersOnlyEvent_BAO_EventGroup as EventGroup;
 use CRM_MembersOnlyEvent_Configurations as Configurations;
 use CRM_MembersOnlyEvent_BAO_MembersOnlyEvent as MembersOnlyEvent;
+use CRM_MembersOnlyEvent_Utils_Array as ArrayUtils;
 
 class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
 
@@ -187,6 +188,43 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
       'civicrm/event/info',
     ];
     return in_array($currentPath, $validPaths);
+  }
+
+  /**
+   * Gets event access details for a given event ids
+   *
+   * @param array $eventIDs
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public static function getEventAccessDetails($eventIDs) {
+    $membersOnlyEvents = MembersOnlyEvent::getMembersOnlyEvents($eventIDs);
+    $membersOnlyEvents = ArrayUtils::keyBy($membersOnlyEvents, 'id');
+    $eventGroups = EventGroup::getEventGroups(array_keys($membersOnlyEvents));
+    $groupsKeyedByEventID = [];
+    foreach ($eventGroups as $eventGroup) {
+      $membersOnlyEvent = $membersOnlyEvents[$eventGroup['members_only_event_id']];
+      $eventID = $membersOnlyEvent['event_id'];
+      $groupsKeyedByEventID[$eventID][] = $eventGroup['group_id'];
+    }
+
+    $contactId = CRM_Core_Session::getLoggedInContactID();
+    $contactGroupIDs = EventGroup::getContactGroupIDs($contactId);
+
+    $events = [];
+    foreach ($eventIDs as $eventID) {
+      $groups = $groupsKeyedByEventID[$eventID] ?? [];
+      $allowedGroupsWhichUserBelongsTo = array_intersect($contactGroupIDs, $groups);
+      $events[] = [
+        'event_id' => $eventID,
+        'is_groups_only_event' => !empty($groupsKeyedByEventID[$eventID]),
+        'allowed_groups' => $groups,
+        'does_user_belongs_to_any_allowed_group' => !empty($allowedGroupsWhichUserBelongsTo),
+        'allowed_groups_which_user_belongs_to' => $allowedGroupsWhichUserBelongsTo,
+      ];
+    }
+
+    return $events;
   }
 
 }
