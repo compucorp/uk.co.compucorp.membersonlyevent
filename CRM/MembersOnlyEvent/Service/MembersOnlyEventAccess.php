@@ -26,11 +26,14 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
    */
   private $eventID = NULL;
 
-  public function __construct() {
+  /**
+   * @param int $eventID
+   */
+  public function __construct($eventID) {
     if (!$this->isValidPath()) {
       return;
     }
-    $this->eventID = CRM_Utils_Request::retrieve('id', 'Positive');
+    $this->eventID = $eventID;
 
     $this->membersOnlyEvent = MembersOnlyEvent::getMembersOnlyEvent($this->eventID);
     $this->contactID = CRM_Core_Session::getLoggedInContactID();

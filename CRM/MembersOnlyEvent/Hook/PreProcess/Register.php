@@ -14,13 +14,6 @@ class CRM_MembersOnlyEvent_Hook_PreProcess_Register extends PreProcessBase {
   private $membersOnlyEventAccessService;
 
   /**
-   * CRM_MembersOnlyEvent_Hook_BuildForm_Register constructor.
-   */
-  public function __construct() {
-    $this->membersOnlyEventAccessService = new MembersOnlyEventAccessService();
-  }
-
-  /**
    * Checks if the hook should be handled.
    *
    * @param $formName
@@ -29,12 +22,19 @@ class CRM_MembersOnlyEvent_Hook_PreProcess_Register extends PreProcessBase {
    * @return bool
    */
   protected function shouldHandle($formName, &$form) {
-    if ($formName === CRM_Event_Form_Registration_Register::class
-      && $form->getAction() === CRM_Core_Action::ADD
-      && $this->membersOnlyEventAccessService->getMembersOnlyEvent()) {
-      return TRUE;
+    if ($formName !== CRM_Event_Form_Registration_Register::class
+      || $form->getAction() !== CRM_Core_Action::ADD) {
+
+      return FALSE;
     }
-    return FALSE;
+
+    $this->membersOnlyEventAccessService = new MembersOnlyEventAccessService($form->_eventId);
+    $membersOnlyEvent = $this->membersOnlyEventAccessService->getMembersOnlyEvent();
+    if (!$membersOnlyEvent) {
+      return FALSE;
+    }
+
+    return TRUE;
   }
 
   /**

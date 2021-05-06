@@ -1,6 +1,7 @@
 <?php
 
 use CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess as MembersOnlyEventAccessService;
+use CRM_MembersOnlyEvent_Test_Fabricator_Event as EventFabricator;
 use CRM_MembersOnlyEvent_Test_Fabricator_MembersOnlyEvent as MembersOnlyEventFabricator;
 use CRM_MembersOnlyEvent_Test_Fabricator_Contact as ContactFabricator;
 use CRM_MembersOnlyEvent_Test_Fabricator_MembershipType as MembershipTypeFabricator;
@@ -43,12 +44,13 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccessTest extends BaseHeadle
    * Tests IsValidPath is true for event info page
    */
   public function testIfEventInfoPageIsValidPath() {
+    $event = EventFabricator::fabricate();
     $config = CRM_Core_Config::singleton();
     $tmpGlobals = [];
     $tmpGlobals['_GET'][$config->userFrameworkURLVar] = 'civicrm/event/info';
     CRM_Utils_GlobalStack::singleton()->push($tmpGlobals);
 
-    $membersOnlyEventAccessService = new MembersOnlyEventAccessService();
+    $membersOnlyEventAccessService = new MembersOnlyEventAccessService($event->id);
     $this->assertTrue($membersOnlyEventAccessService->isValidPath());
 
     CRM_Utils_GlobalStack::singleton()->pop();
@@ -58,13 +60,14 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccessTest extends BaseHeadle
    * Tests IsValidPath is true for event registeration page
    */
   public function testIfEventRegisterationPageIsValidPath() {
+    $event = EventFabricator::fabricate();
     $config = CRM_Core_Config::singleton();
     $tmpGlobals = [];
     $tmpGlobals['_GET'][$config->userFrameworkURLVar] = 'civicrm/event/register';
 
     CRM_Utils_GlobalStack::singleton()->push($tmpGlobals);
 
-    $membersOnlyEventAccessService = new MembersOnlyEventAccessService();
+    $membersOnlyEventAccessService = new MembersOnlyEventAccessService($event->id);
     $this->assertTrue($membersOnlyEventAccessService->isValidPath());
 
     CRM_Utils_GlobalStack::singleton()->pop();
@@ -74,12 +77,13 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccessTest extends BaseHeadle
    * Tests IsValidPath is false for any url not event info page or registeration page
    */
   public function testIfNonEventInfoPageOrRegisterationPageIsInvalidPath() {
+    $event = EventFabricator::fabricate();
     $config = CRM_Core_Config::singleton();
     $tmpGlobals = [];
     $tmpGlobals['_GET'][$config->userFrameworkURLVar] = 'civicrm/home';
     CRM_Utils_GlobalStack::singleton()->push($tmpGlobals);
 
-    $membersOnlyEventAccessService = new MembersOnlyEventAccessService();
+    $membersOnlyEventAccessService = new MembersOnlyEventAccessService($event->id);
     $this->assertFalse($membersOnlyEventAccessService->isValidPath());
 
     CRM_Utils_GlobalStack::singleton()->pop();
@@ -89,7 +93,8 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccessTest extends BaseHeadle
    * Tests redirectUsersWithoutEventAccess().
    */
   public function testRedirectUsersWithoutEventAccess() {
-    $membersOnlyEventAccessService = new MembersOnlyEventAccessService();
+    $event = EventFabricator::fabricate();
+    $membersOnlyEventAccessService = new MembersOnlyEventAccessService($event->id);
 
     $this->expectException(CRM_Core_Exception_PrematureExitException::class);
     $membersOnlyEventAccessService->redirectUsersWithoutEventAccess();
@@ -105,10 +110,9 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccessTest extends BaseHeadle
     $config = CRM_Core_Config::singleton();
     $tmpGlobals = [];
     $tmpGlobals['_GET'][$config->userFrameworkURLVar] = 'civicrm/event/register';
-    $tmpGlobals['_REQUEST']['id'] = $membersOnlyEvent->event_id;
     CRM_Utils_GlobalStack::singleton()->push($tmpGlobals);
 
-    $membersOnlyEventAccessService = new MembersOnlyEventAccessService();
+    $membersOnlyEventAccessService = new MembersOnlyEventAccessService($membersOnlyEvent->event_id);
 
     $this->expectException(CRM_Core_Exception_PrematureExitException::class);
     $membersOnlyEventAccessService->redirectUsersWithoutEventAccess();
@@ -138,10 +142,9 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccessTest extends BaseHeadle
     $config = CRM_Core_Config::singleton();
     $tmpGlobals = [];
     $tmpGlobals['_GET'][$config->userFrameworkURLVar] = 'civicrm/event/register';
-    $tmpGlobals['_REQUEST']['id'] = $membersOnlyEvent->event_id;
     CRM_Utils_GlobalStack::singleton()->push($tmpGlobals);
 
-    $membersOnlyEventAccessService = new MembersOnlyEventAccessService();
+    $membersOnlyEventAccessService = new MembersOnlyEventAccessService($membersOnlyEvent->event_id);
 
     $this->assertTrue($membersOnlyEventAccessService->hasMembership());
 
@@ -157,10 +160,9 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccessTest extends BaseHeadle
     $config = CRM_Core_Config::singleton();
     $tmpGlobals = [];
     $tmpGlobals['_GET'][$config->userFrameworkURLVar] = 'civicrm/event/register';
-    $tmpGlobals['_REQUEST']['id'] = $membersOnlyEvent->event_id;
     CRM_Utils_GlobalStack::singleton()->push($tmpGlobals);
 
-    $membersOnlyEventAccessService = new MembersOnlyEventAccessService();
+    $membersOnlyEventAccessService = new MembersOnlyEventAccessService($membersOnlyEvent->event_id);
     $this->assertEquals($membersOnlyEvent->id, $membersOnlyEventAccessService->getMembersOnlyEvent()->id);
 
     CRM_Utils_GlobalStack::singleton()->pop();
