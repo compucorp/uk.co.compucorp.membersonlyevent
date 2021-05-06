@@ -1,6 +1,7 @@
 <?php
 
 use CRM_MembersOnlyEvent_BAO_EventMembershipType as EventMembershipType;
+use CRM_MembersOnlyEvent_BAO_EventGroup as EventGroup;
 use CRM_MembersOnlyEvent_Configurations as Configurations;
 use CRM_MembersOnlyEvent_BAO_MembersOnlyEvent as MembersOnlyEvent;
 
@@ -10,6 +11,11 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
    * @var array
    */
   private $contactActiveAllowedMemberships = [];
+
+  /**
+   * @var array
+   */
+  private $contactAllowedGroups = [];
 
   /**
    * @var \CRM_MembersOnlyEvent_DAO_MembersOnlyEvent|null
@@ -41,6 +47,7 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
     if ($this->contactID) {
       // Only calculate for logged in users
       $this->contactActiveAllowedMemberships = $this->getAllowedMemberships($this->membersOnlyEvent, $this->contactID);
+      $this->contactAllowedGroups = $this->getAllowedGroups($this->membersOnlyEvent, $this->contactID);
     }
   }
 
@@ -57,7 +64,7 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
       return FALSE;
     }
 
-    return !empty($this->contactActiveAllowedMemberships);
+    return $this->membersOnlyEvent->is_groups_only ? !empty($this->contactAllowedGroups) : !empty($this->contactActiveAllowedMemberships);
   }
 
   /**
@@ -129,6 +136,21 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
     $eventStartDate = $date->format('Y-m-d');
 
     return $eventStartDate;
+  }
+
+  /**
+   * Returns a list of allowed groups that the user belongs to.
+   *
+   * @param \CRM_MembersOnlyEvent_DAO_MembersOnlyEvent $membersOnlyEvent
+   * @param int $contactID
+   *
+   * @return array
+   *   Array of groups.
+   */
+  private function getAllowedGroups($membersOnlyEvent, $contactID) {
+    $contactAllowedGroups = EventGroup::getContactAllowedGroups($membersOnlyEvent->id, $contactID);
+
+    return $contactAllowedGroups;
   }
 
   /**
