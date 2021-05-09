@@ -39,13 +39,13 @@ class CRM_MembersOnlyEvent_BAO_EventMembershipTypeTest extends BaseHeadlessTest 
   }
 
   /**
-   * Tests getAllowedMembershipTypesIDs().
+   * Tests getAllowedMembershipTypeIDs().
    */
-  public function testGetAllowedMembershipTypesIDs() {
+  public function testGetAllowedMembershipTypeIDs() {
     $membersOnlyEvent = MembersOnlyEventFabricator::fabricate();
     $membershipType = MembershipTypeFabricator::fabricate([], TRUE);
     EventMembershipType::updateAllowedMembershipTypes($membersOnlyEvent->event_id, [$membershipType->id]);
-    $eventMembershipTypeIds = EventMembershipType::getAllowedMembershipTypesIDs($membersOnlyEvent->id);
+    $eventMembershipTypeIds = EventMembershipType::getAllowedMembershipTypeIDs($membersOnlyEvent->id);
 
     $this->assertEquals([$membershipType->id], $eventMembershipTypeIds);
 

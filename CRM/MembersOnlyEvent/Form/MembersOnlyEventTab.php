@@ -205,7 +205,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
     $membersOnlyEvent = MembersOnlyEvent::getMembersOnlyEvent($this->_id);
     if ($membersOnlyEvent) {
       $defaultValues['is_members_only_event'] = self::YES_SELECTED;
-      $defaultValues['allowed_membership_types'] = EventMembershipType::getAllowedMembershipTypesIDs($membersOnlyEvent->id);
+      $defaultValues['allowed_membership_types'] = EventMembershipType::getAllowedMembershipTypeIDs($membersOnlyEvent->id);
       $defaultValues['purchase_membership_button'] = $membersOnlyEvent->purchase_membership_button;
       $defaultValues['notice_for_access_denied'] = $membersOnlyEvent->notice_for_access_denied;
       $defaultValues['purchase_membership_button_label'] = $membersOnlyEvent->purchase_membership_button_label;
@@ -308,12 +308,12 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
   private function saveFormData($params) {
     $membersOnlyEvent = MembersOnlyEvent::create($params);
     if (!empty($membersOnlyEvent->id)) {
-      $allowedMembershipTypesIDs = array();
+      $allowedMembershipTypeIDs = array();
       if (!empty($params['allowed_membership_types'])) {
-        $allowedMembershipTypesIDs = explode(',', $params['allowed_membership_types']);
+        $allowedMembershipTypeIDs = explode(',', $params['allowed_membership_types']);
       }
 
-      EventMembershipType::updateAllowedMembershipTypes($membersOnlyEvent->id, $allowedMembershipTypesIDs);
+      EventMembershipType::updateAllowedMembershipTypes($membersOnlyEvent->id, $allowedMembershipTypeIDs);
     }
   }
 

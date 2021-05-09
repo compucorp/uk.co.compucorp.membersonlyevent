@@ -312,7 +312,7 @@ function _membersonlyevent_get_contact_active_allowed_memberships($membersOnlyEv
     'active_only' => 1,
   );
 
-  $allowedMembershipTypes = EventMembershipType::getAllowedMembershipTypesIDs($membersOnlyEventID);
+  $allowedMembershipTypes = EventMembershipType::getAllowedMembershipTypeIDs($membersOnlyEventID);
   if (!empty($allowedMembershipTypes)) {
     $params['membership_type_id'] = array('IN' => $allowedMembershipTypes);
   }

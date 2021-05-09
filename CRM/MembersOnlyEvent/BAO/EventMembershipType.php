@@ -67,7 +67,7 @@ class CRM_MembersOnlyEvent_BAO_EventMembershipType extends CRM_MembersOnlyEvent_
    * @return array
    *   The IDs of allowed membership types
    */
-  public static function getAllowedMembershipTypesIDs($membersOnlyEventID) {
+  public static function getAllowedMembershipTypeIDs($membersOnlyEventID) {
     $eventMembershipType = new self();
     $eventMembershipType->members_only_event_id = $membersOnlyEventID;
     $eventMembershipType->find();
