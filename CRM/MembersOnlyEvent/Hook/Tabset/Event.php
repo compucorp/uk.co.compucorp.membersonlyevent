@@ -8,10 +8,44 @@ use CRM_MembersOnlyEvent_BAO_MembersOnlyEvent as MembersOnlyEvent;
 class CRM_MembersOnlyEvent_Hook_Tabset_Event {
 
   /**
+   * Handle the hook
+   *
+   * @param string $tabsetName
+   * @param object $tabs
+   * @param object $context
+   */
+  public function handle($tabsetName, &$tabs, $context) {
+    if (!$this->shouldHandle($tabsetName, $tabs, $context)) {
+      return;
+    }
+
+    $eventID = $context['event_id'];
+    $this->addMembersOnlyEventTab($eventID, $tabs);
+  }
+
+  /**
+   * Checks if the hook should be handled.
+   *
+   * @param string $tabsetName
+   * @param object $tabs
+   * @param object $context
+   *
+   * @return bool
+   */
+  private function shouldHandle($tabsetName, &$tabs, $context) {
+    $canEditAllEvents = CRM_Core_Permission::check(['edit all events']);
+    $isManageEventTabset = ($tabsetName === 'civicrm/event/manage');
+    if (!empty($context['event_id']) && $isManageEventTabset && $canEditAllEvents) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
    * @param $eventID
    * @param $tabs
    */
-  public function handle($eventID, &$tabs) {
+  public function addMembersOnlyEventTab($eventID, &$tabs) {
     $url = CRM_Utils_System::url(
       'civicrm/event/manage/membersonlyevent',
       'reset=1&id=' . $eventID . '&action=update&component=event');
@@ -47,7 +81,7 @@ class CRM_MembersOnlyEvent_Hook_Tabset_Event {
   private function isTabValid($eventID) {
     $event = civicrm_api3('Event', 'get', [
       'sequential' => 1,
-      'return' => array('is_online_registration'),
+      'return' => ['is_online_registration'],
       'id' => $eventID,
     ]);
 
