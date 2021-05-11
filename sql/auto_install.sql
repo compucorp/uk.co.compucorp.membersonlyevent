@@ -41,27 +41,6 @@ SET FOREIGN_KEY_CHECKS=1;
 
 -- /*******************************************************
 -- *
--- * membersonlyevent_event_membership_type
--- *
--- * Joining table for members-only event and allowed membership types
--- *
--- *******************************************************/
-CREATE TABLE `membersonlyevent_event_membership_type` (
-
-
-     `members_only_event_id` int unsigned NOT NULL   COMMENT 'Members-only event ID.',
-     `membership_type_id` int unsigned NOT NULL   COMMENT 'Allowed Membership Type ID.'
-
-    ,     INDEX `index_event_id_membership_type_id`(
-        members_only_event_id
-      , membership_type_id
-  )
-
-,          CONSTRAINT FK_membersonlyevent_event_membership_type_members_only_event_id FOREIGN KEY (`members_only_event_id`) REFERENCES `membersonlyevent`(`id`) ON DELETE CASCADE,          CONSTRAINT FK_membersonlyevent_event_membership_type_membership_type_id FOREIGN KEY (`membership_type_id`) REFERENCES `civicrm_membership_type`(`id`) ON DELETE CASCADE
-)  ENGINE=InnoDB  ;
-
--- /*******************************************************
--- *
 -- * membersonlyevent
 -- *
 -- * Stores members-only event configurations
@@ -83,6 +62,27 @@ CREATE TABLE `membersonlyevent` (
 
 
 ,          CONSTRAINT FK_membersonlyevent_event_id FOREIGN KEY (`event_id`) REFERENCES `civicrm_event`(`id`) ON DELETE CASCADE,          CONSTRAINT FK_membersonlyevent_contribution_page_id FOREIGN KEY (`contribution_page_id`) REFERENCES `civicrm_contribution_page`(`id`) ON DELETE SET NULL
+)  ENGINE=InnoDB  ;
+
+-- /*******************************************************
+-- *
+-- * membersonlyevent_event_membership_type
+-- *
+-- * Joining table for members-only event and allowed membership types
+-- *
+-- *******************************************************/
+CREATE TABLE `membersonlyevent_event_membership_type` (
+
+
+     `members_only_event_id` int unsigned NOT NULL   COMMENT 'Members-only event ID.',
+     `membership_type_id` int unsigned NOT NULL   COMMENT 'Allowed Membership Type ID.'
+
+    ,     INDEX `index_event_id_membership_type_id`(
+        members_only_event_id
+      , membership_type_id
+  )
+
+,          CONSTRAINT FK_membersonlyevent_event_membership_type_members_only_event_id FOREIGN KEY (`members_only_event_id`) REFERENCES `membersonlyevent`(`id`) ON DELETE CASCADE,          CONSTRAINT FK_membersonlyevent_event_membership_type_membership_type_id FOREIGN KEY (`membership_type_id`) REFERENCES `civicrm_membership_type`(`id`) ON DELETE CASCADE
 )  ENGINE=InnoDB  ;
 
 
