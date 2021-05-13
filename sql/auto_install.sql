@@ -31,6 +31,7 @@ SET FOREIGN_KEY_CHECKS=0;
 
 DROP TABLE IF EXISTS `membersonlyevent`;
 DROP TABLE IF EXISTS `membersonlyevent_event_membership_type`;
+DROP TABLE IF EXISTS `membersonlyevent_event_group`;
 
 SET FOREIGN_KEY_CHECKS=1;
 -- /*******************************************************
@@ -56,12 +57,37 @@ CREATE TABLE `membersonlyevent` (
      `purchase_membership_button_label` varchar(255)   DEFAULT NULL COMMENT 'Purchase membership button label if it is enabled',
      `purchase_membership_link_type` int   DEFAULT 0 COMMENT '0: contribution page, 1: custom URL',
      `contribution_page_id` int unsigned   DEFAULT NULL COMMENT 'Foreign key for the Contribution page',
-     `purchase_membership_url` varchar(3000)   DEFAULT NULL COMMENT 'Purchase membership page URL'
+     `purchase_membership_url` varchar(3000)   DEFAULT NULL COMMENT 'Purchase membership page URL',
+     `is_groups_only` tinyint   DEFAULT 0 COMMENT 'Should we check groups instead of membership types ?'
 ,
         PRIMARY KEY (`id`)
 
 
 ,          CONSTRAINT FK_membersonlyevent_event_id FOREIGN KEY (`event_id`) REFERENCES `civicrm_event`(`id`) ON DELETE CASCADE,          CONSTRAINT FK_membersonlyevent_contribution_page_id FOREIGN KEY (`contribution_page_id`) REFERENCES `civicrm_contribution_page`(`id`) ON DELETE SET NULL
+)  ENGINE=InnoDB  ;
+
+-- /*******************************************************
+-- *
+-- * membersonlyevent_event_group
+-- *
+-- * Joining table for members-only event and allowed groups
+-- *
+-- *******************************************************/
+CREATE TABLE `membersonlyevent_event_group` (
+
+
+     `id` int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'Unique EventGroup ID',
+     `members_only_event_id` int unsigned NOT NULL   COMMENT 'Members-only event ID.',
+     `group_id` int unsigned NOT NULL   COMMENT 'Allowed Group ID.'
+,
+        PRIMARY KEY (`id`)
+
+    ,     INDEX `index_event_id_group_id`(
+        members_only_event_id
+      , group_id
+  )
+
+,          CONSTRAINT FK_membersonlyevent_event_group_members_only_event_id FOREIGN KEY (`members_only_event_id`) REFERENCES `membersonlyevent`(`id`) ON DELETE CASCADE,          CONSTRAINT FK_membersonlyevent_event_group_group_id FOREIGN KEY (`group_id`) REFERENCES `civicrm_group`(`id`) ON DELETE CASCADE
 )  ENGINE=InnoDB  ;
 
 -- /*******************************************************

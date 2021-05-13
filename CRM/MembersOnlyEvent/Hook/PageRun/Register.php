@@ -15,13 +15,6 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
   private $membersOnlyEventAccessService;
 
   /**
-   * CRM_MembersOnlyEvent_Hook_BuildForm_Register constructor.
-   */
-  public function __construct() {
-    $this->membersOnlyEventAccessService = new MembersOnlyEventAccessService();
-  }
-
-  /**
    * Checks if the hook should be handled.
    *
    * @param $pageName
@@ -42,6 +35,9 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
    * @param $page
    */
   protected function pageRun(&$page) {
+    $eventID = $page->_id;
+    $this->membersOnlyEventAccessService = new MembersOnlyEventAccessService($eventID);
+
     $this->showSessionMessageWhenRegisteringAnotherParticipant();
 
     if ($this->membersOnlyEventAccessService->userHasEventAccess()) {

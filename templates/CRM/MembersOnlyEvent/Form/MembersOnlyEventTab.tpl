@@ -13,10 +13,25 @@
     <div class="clear"></div>
   </div>
 
+  <div class="crm-section">
+    <div class="label"></div>
+    <div class="content">
+      {$form.is_groups_only_event.html}
+      {$form.is_groups_only_event.label}
+    </div>
+    <div class="clear"></div>
+  </div>
+
   <div id="members-only-event-fields">
-    <div class="crm-section">
+    <div class="crm-section" id="allowed-membership-types-field">
       <div class="label">{$form.allowed_membership_types.label} {help id="allowed-membership-types" file="CRM/MembersOnlyEvent/Form/MembersOnlyEventTab"}</div>
       <div class="content">{$form.allowed_membership_types.html}</div>
+      <div class="clear"></div>
+    </div>
+
+    <div class="crm-section" id="allowed-groups-field">
+      <div class="label">{$form.allowed_groups.label} {help id="allowed-groups" file="CRM/MembersOnlyEvent/Form/MembersOnlyEventTab"}</div>
+      <div class="content">{$form.allowed_groups.html}</div>
       <div class="clear"></div>
     </div>
 

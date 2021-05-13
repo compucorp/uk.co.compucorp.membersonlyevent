@@ -205,6 +205,11 @@ function membersonlyevent_civicrm_entityTypes(&$entityTypes) {
     'class' => 'CRM_MembersOnlyEvent_DAO_MembersOnlyEvent',
     'table' => 'membersonlyevent',
   ];
+  $entityTypes[] = [
+    'name' => 'EventGroup',
+    'class' => 'CRM_MembersOnlyEvent_DAO_EventGroup',
+    'table' => 'membersonlyevent_event_group',
+  ];
 }
 
 /**
