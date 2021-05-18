@@ -219,7 +219,7 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
         'event_id' => $eventID,
         'is_groups_only_event' => !empty($groupsKeyedByEventID[$eventID]),
         'allowed_groups' => $groups,
-        'does_user_belongs_to_any_allowed_group' => !empty($allowedGroupsWhichUserBelongsTo),
+        'is_user_in_any_allowed_group' => !empty($allowedGroupsWhichUserBelongsTo),
         'allowed_groups_which_user_belongs_to' => $allowedGroupsWhichUserBelongsTo,
       ];
     }
