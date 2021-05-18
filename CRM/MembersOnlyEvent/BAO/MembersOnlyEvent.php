@@ -60,4 +60,24 @@ class CRM_MembersOnlyEvent_BAO_MembersOnlyEvent extends CRM_MembersOnlyEvent_DAO
     return FALSE;
   }
 
+  /**
+   * Gets the members-only events given the event IDs
+   *
+   * @param $eventIDs
+   *
+   * @return array
+   * @throws \CiviCRM_API3_Exception
+   */
+  public static function getMembersOnlyEvents($eventIDs) {
+    $result = civicrm_api3('MembersOnlyEvent', 'get', [
+      'sequential' => 1,
+      'is_groups_only' => 1,
+      'event_id' => ['IN' => $eventIDs],
+      'return' => ['id', 'event_id'],
+      'options' => ['limit' => 0],
+    ]);
+
+    return $result['values'] ?? [];
+  }
+
 }
