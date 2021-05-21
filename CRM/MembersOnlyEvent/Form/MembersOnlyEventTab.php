@@ -84,7 +84,6 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       [
         'entity' => 'Group',
         'multiple' => TRUE,
-        'placeholder' => ts('- any -'),
         'select' => ['minimumInputLength' => 0],
       ]
     );
@@ -143,11 +142,14 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
   public function formRules($values) {
     $errors = [];
 
-    // Skip validation if the event is not members-only or groups-only
-    $isMembersOnlyEvent = $values['event_access_type'] === 'members_only';
-    $isGroupsOnlyEvent = $values['event_access_type'] === 'groups_only';
-    if ($isMembersOnlyEvent || $isGroupsOnlyEvent) {
+    // Skip validation if the event is not members-only or not groups-only
+    if (empty($values['event_access_type'])) {
       return $errors;
+    }
+
+    $isGroupsOnlyEvent = $values['event_access_type'] === 'groups_only';
+    if ($isGroupsOnlyEvent) {
+      $this->validateForEmptyAllowedGroups($values, $errors);
     }
 
     switch ($values['purchase_membership_button']) {
@@ -161,6 +163,18 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
     }
 
     return $errors ?: TRUE;
+  }
+
+  /**
+   * Validates form fields when allowed groups field is empty.
+   *
+   * @param array $values
+   * @param array $errors
+   */
+  private function validateForEmptyAllowedGroups(&$values, &$errors) {
+    if (empty($values['allowed_groups'])) {
+      $errors['allowed_groups'] = ts('Please select at least one group');
+    }
   }
 
   /**
