@@ -5,8 +5,7 @@ jQuery(document).ready(function(){
   var LINK_TYPE_CONTRIBUTION_PAGE = '0';
   var LINK_TYPE_URL = '1';
 
-  var membersOnlyEventCheckbox= jQuery("#is_members_only_event");
-  var groupsOnlyEventCheckbox= jQuery("#is_groups_only_event");
+  var eventAccessTypeField = jQuery("#event-access-type");
   var membersOnlyEventSection = jQuery("#members-only-event-section");
   var allowedMembershipTypesField = jQuery("#allowed-membership-types-field");
   var allowedGroupsField = jQuery("#allowed-groups-field");
@@ -35,31 +34,16 @@ jQuery(document).ready(function(){
   }
 
   /**
-   * Gets is_members_only_event value
-   */
-  function getIsMembersOnlyEventValue() {
-    return membersOnlyEventCheckbox.is(':checked') && !groupsOnlyEventCheckbox.is(':checked');
-  }
-
-  /**
-   * Gets is_groups_only_event value
-   */
-  function getIsGroupsOnlyEventValue() {
-    return !membersOnlyEventCheckbox.is(':checked') && groupsOnlyEventCheckbox.is(':checked');
-  }
-
-  /**
    * Sets the fields event listeners
    */
   function setFieldListeners() {
-    membersOnlyEventCheckbox.click(function(){
-      groupsOnlyEventCheckbox.prop('checked', false);
-      toggleTabFields();
-    });
+    eventAccessTypeField.change(toggleTabFields);
 
-    groupsOnlyEventCheckbox.click(function(){
-      membersOnlyEventCheckbox.prop('checked', false);
-      toggleTabFields();
+    eventAccessTypeField.click(function(e){
+      // Checks if target is the crm-clear-link.
+      if (jQuery(e.target).hasClass('crm-clear-link') || jQuery(e.target).hasClass('fa-times')) {
+        membersOnlyEventSection.hide();
+      }
     });
 
     purchaseMembershipButtonField.click(togglePurchaseButtonFields);
@@ -75,21 +59,14 @@ jQuery(document).ready(function(){
    * value.
    */
   function toggleTabFields() {
-    let isMembersOnlyEventValue = getIsMembersOnlyEventValue();
-    let isGroupsOnlyEventValue = getIsGroupsOnlyEventValue();
-
-    if (isMembersOnlyEventValue || isGroupsOnlyEventValue){
-      if (isMembersOnlyEventValue) {
-        allowedMembershipTypesField.show();
-        allowedGroupsField.hide();
-      }
-
-      if (isGroupsOnlyEventValue) {
-        allowedMembershipTypesField.hide();
-        allowedGroupsField.show();
-      }
-
-      membersOnlyEventFields.show();
+    if (eventAccessTypeField.find(':checked').val() === 'members_only') {
+      membersOnlyEventSection.show();
+      allowedMembershipTypesField.show();
+      allowedGroupsField.hide();
+    } else if (eventAccessTypeField.find(':checked').val() === 'groups_only') {
+      membersOnlyEventSection.show();
+      allowedMembershipTypesField.hide();
+      allowedGroupsField.show();
     } else {
       membersOnlyEventSection.hide();
     }

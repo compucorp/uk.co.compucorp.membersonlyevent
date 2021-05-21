@@ -54,16 +54,17 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
    * Adds the form fields.
    */
   private function addFields() {
-    $this->add(
-      'checkbox',
-      'is_members_only_event',
-      ts('Only allow members to register for this event?')
-    );
-
-    $this->add(
-      'checkbox',
-      'is_groups_only_event',
-      ts('Only allow contacts in groups to register for this event?')
+    $this->addRadio(
+      'event_access_type',
+      '',
+      [
+        'members_only' => ts('Only allow members to register for this event?'),
+        'groups_only' => ts('Only allow contacts in groups to register for this event?'),
+      ],
+      [
+        'allowClear' => TRUE,
+      ],
+      '<br>'
     );
 
     $this->addEntityRef(
@@ -143,8 +144,8 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
     $errors = [];
 
     // Skip validation if the event is not members-only or groups-only
-    $isMembersOnlyEvent = !empty($values['is_members_only_event']) && empty($values['is_groups_only_event']);
-    $isGroupsOnlyEvent = empty($values['is_members_only_event']) && !empty($values['is_groups_only_event']);
+    $isMembersOnlyEvent = $values['event_access_type'] === 'members_only';
+    $isGroupsOnlyEvent = $values['event_access_type'] === 'groups_only';
     if ($isMembersOnlyEvent || $isGroupsOnlyEvent) {
       return $errors;
     }
@@ -227,8 +228,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
 
     $membersOnlyEvent = MembersOnlyEvent::getMembersOnlyEvent($this->_id);
     if ($membersOnlyEvent) {
-      $defaultValues['is_members_only_event'] = !$membersOnlyEvent->is_groups_only;
-      $defaultValues['is_groups_only_event'] = $membersOnlyEvent->is_groups_only;
+      $defaultValues['event_access_type'] = $membersOnlyEvent->is_groups_only ? 'groups_only' : 'members_only';
       $defaultValues['allowed_membership_types'] = EventMembershipType::getAllowedMembershipTypeIDs($membersOnlyEvent->id);
       $defaultValues['allowed_groups'] = EventGroup::getAllowedGroupIDs($membersOnlyEvent->id);
       $defaultValues['purchase_membership_button'] = $membersOnlyEvent->purchase_membership_button;
@@ -248,8 +248,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
    * @param $defaultValues
    */
   private function setInitialValues(&$defaultValues) {
-    $defaultValues['is_members_only_event'] = self::NO_SELECTED;
-    $defaultValues['is_groups_only_event'] = self::NO_SELECTED;
+    $defaultValues['event_access_type'] = self::NO_SELECTED;
     $defaultValues['purchase_membership_button'] = self::NO_SELECTED;
     $defaultValues['notice_for_access_denied'] = ts('Access Denied');
     $defaultValues['purchase_membership_button_label'] = ts('Purchase membership to book the event');
@@ -263,8 +262,8 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
     $params = $this->exportValues();
     $params['event_id'] = $this->_id;
 
-    $eventSetToMembersOnly = !empty($params['is_members_only_event']) ? self::YES_SELECTED : self::NO_SELECTED;
-    $eventSetToGroupsOnly = !empty($params['is_groups_only_event']) ? self::YES_SELECTED : self::NO_SELECTED;
+    $eventSetToMembersOnly = $params['event_access_type'] === 'members_only';
+    $eventSetToGroupsOnly = $params['event_access_type'] === 'groups_only';
     $isTabEnabled = $eventSetToMembersOnly || $eventSetToGroupsOnly;
 
     // Skip if both are true. We don't want to handle this edge case.

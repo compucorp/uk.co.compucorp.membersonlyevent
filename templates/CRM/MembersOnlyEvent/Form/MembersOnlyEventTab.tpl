@@ -4,20 +4,10 @@
     {include file="CRM/common/formButtons.tpl" location="top"}
   </div>
 
-  <div class="crm-section">
+  <div class="crm-section" id="event-access-type">
     <div class="label"></div>
     <div class="content">
-      {$form.is_members_only_event.html}
-      {$form.is_members_only_event.label}
-    </div>
-    <div class="clear"></div>
-  </div>
-
-  <div class="crm-section">
-    <div class="label"></div>
-    <div class="content">
-      {$form.is_groups_only_event.html}
-      {$form.is_groups_only_event.label}
+      {$form.event_access_type.html}
     </div>
     <div class="clear"></div>
   </div>
