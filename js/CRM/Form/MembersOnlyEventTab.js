@@ -63,10 +63,17 @@ jQuery(document).ready(function(){
       membersOnlyEventSection.show();
       allowedMembershipTypesField.show();
       allowedGroupsField.hide();
+      purchaseMembershipButtonField.show();
     } else if (eventAccessTypeField.find(':checked').val() === 'groups_only') {
       membersOnlyEventSection.show();
       allowedMembershipTypesField.hide();
       allowedGroupsField.show();
+
+      // Only shows allowed_groups and notice_for_access_denied fields if the
+      // groups_only option was chosen.
+      purchaseMembershipButtonField.find('[value=' + NO_SELECTED + ']').prop('checked', true)
+      purchaseMembershipButtonField.click();
+      purchaseMembershipButtonField.hide();
     } else {
       membersOnlyEventSection.hide();
     }
