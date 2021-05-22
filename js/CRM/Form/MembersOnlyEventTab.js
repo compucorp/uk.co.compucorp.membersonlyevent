@@ -7,10 +7,11 @@ jQuery(document).ready(function(){
 
   var membersOnlyEventCheckbox= jQuery("#is_members_only_event");
   var groupsOnlyEventCheckbox= jQuery("#is_groups_only_event");
-  var membersOnlyEventFields = jQuery("#members-only-event-fields");
+  var membersOnlyEventSection = jQuery("#members-only-event-section");
   var allowedMembershipTypesField = jQuery("#allowed-membership-types-field");
   var allowedGroupsField = jQuery("#allowed-groups-field");
 
+  var purchaseMembershipButtonField = jQuery("#purchase-membership-button");
   var purchaseButtonDisabledSection = jQuery("#purchase-button-disabled-section");
   var purchaseButtonEnabledSection = jQuery("#purchase-button-enabled-section");
 
@@ -27,8 +28,7 @@ jQuery(document).ready(function(){
   function setInitialFieldValues() {
     toggleTabFields();
 
-    var purchaseMembershipButtonEnabled = jQuery("input[name='purchase_membership_button']:checked").val();
-    togglePurchaseButtonFields(purchaseMembershipButtonEnabled);
+    togglePurchaseButtonFields();
 
     var purchaseLinkType = jQuery("input[name='purchase_membership_link_type']:checked").val();
     toggleLinkTypeFields(purchaseLinkType);
@@ -62,9 +62,7 @@ jQuery(document).ready(function(){
       toggleTabFields();
     });
 
-    jQuery("input[name='purchase_membership_button']").click(function(){
-      togglePurchaseButtonFields(jQuery(this).val());
-    });
+    purchaseMembershipButtonField.click(togglePurchaseButtonFields);
 
     jQuery("input[name='purchase_membership_link_type']").click(function(){
       toggleLinkTypeFields(jQuery(this).val());
@@ -93,21 +91,20 @@ jQuery(document).ready(function(){
 
       membersOnlyEventFields.show();
     } else {
-      membersOnlyEventFields.hide();
+      membersOnlyEventSection.hide();
     }
   }
 
   /**
    * Shows/Hides the related purchase membership
    * button fields.
-   * If Yes is selected then allow the user to set
+   * If the selectedOption was Yes then allow the user to set
    * button label and the link.
-   * If No is selected then show only the
+   * If the selectedOption was selected then show only the
    * notice message textarea.
-   *
-   * @param selectedOption
    */
-  function togglePurchaseButtonFields(selectedOption) {
+  function togglePurchaseButtonFields() {
+    var selectedOption = purchaseMembershipButtonField.find(':checked').val()
     switch (selectedOption) {
       case NO_SELECTED:
         purchaseButtonDisabledSection.show();
