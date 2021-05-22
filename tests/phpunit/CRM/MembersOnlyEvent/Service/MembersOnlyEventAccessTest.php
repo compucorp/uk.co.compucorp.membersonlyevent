@@ -90,36 +90,6 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccessTest extends BaseHeadle
   }
 
   /**
-   * Tests redirectUsersWithoutEventAccess().
-   */
-  public function testRedirectUsersWithoutEventAccess() {
-    $event = EventFabricator::fabricate();
-    $membersOnlyEventAccessService = new MembersOnlyEventAccessService($event->id);
-
-    $this->expectException(CRM_Core_Exception_PrematureExitException::class);
-    $membersOnlyEventAccessService->redirectUsersWithoutEventAccess();
-  }
-
-  /**
-   * Tests redirectUsersWithoutEventAccess().
-   */
-  public function testRedirectUsersWithoutEventAccessForLoggedUserWithoutValidMembership() {
-    $this->createLoggedInUser();
-
-    $membersOnlyEvent = MembersOnlyEventFabricator::fabricate();
-    $config = CRM_Core_Config::singleton();
-    $tmpGlobals = [];
-    $tmpGlobals['_GET'][$config->userFrameworkURLVar] = 'civicrm/event/register';
-    CRM_Utils_GlobalStack::singleton()->push($tmpGlobals);
-
-    $membersOnlyEventAccessService = new MembersOnlyEventAccessService($membersOnlyEvent->event_id);
-
-    $this->expectException(CRM_Core_Exception_PrematureExitException::class);
-    $membersOnlyEventAccessService->redirectUsersWithoutEventAccess();
-    CRM_Utils_GlobalStack::singleton()->pop();
-  }
-
-  /**
    * Tests hasMembership for logged user with valid membership
    */
   public function testLoggedUserWithValidMembership() {

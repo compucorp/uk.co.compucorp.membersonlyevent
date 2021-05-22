@@ -65,7 +65,17 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
       return FALSE;
     }
 
-    return $this->membersOnlyEvent->is_groups_only ? !empty($this->contactAllowedGroups) : !empty($this->contactActiveAllowedMemberships);
+    if (empty($this->membersOnlyEvent->is_groups_only) && CRM_Core_Permission::check('members only event registration')) {
+      // Any user with 'members only event registration' permission
+      // can access any members-only event.
+      return TRUE;
+    }
+
+    if (empty($this->membersOnlyEvent->is_groups_only)) {
+      return !empty($this->contactActiveAllowedMemberships);
+    }
+
+    return !empty($this->contactAllowedGroups);
   }
 
   /**
