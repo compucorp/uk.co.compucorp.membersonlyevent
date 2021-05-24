@@ -27,7 +27,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTabTest extends BaseHeadlessTest
     $eventID = $this->mockEvent();
     $this->membersOnlyEventTab->_id = $eventID;
     $this->membersOnlyEventTab->buildQuickForm();
-    $isGroupsOnlyEventElement = $this->membersOnlyEventTab->getElement('is_members_only_event');
+    $isGroupsOnlyEventElement = $this->membersOnlyEventTab->getElement('event_access_type');
     $this->assertTrue(is_object($isGroupsOnlyEventElement));
   }
 
