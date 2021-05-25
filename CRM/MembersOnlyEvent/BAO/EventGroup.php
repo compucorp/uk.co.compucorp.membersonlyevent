@@ -5,13 +5,6 @@ use CRM_MembersOnlyEvent_ExtensionUtil as E;
 class CRM_MembersOnlyEvent_BAO_EventGroup extends CRM_MembersOnlyEvent_DAO_EventGroup {
 
   /**
-   * Static instance to hold the contact's group IDs.
-   *
-   * @var array
-   */
-  private static $contactGroupIDs = NULL;
-
-  /**
    * Stores the allowed groups for specific
    * members-only event
    *
@@ -125,27 +118,23 @@ class CRM_MembersOnlyEvent_BAO_EventGroup extends CRM_MembersOnlyEvent_DAO_Event
    *   List of contact groups or empty array if nothing found
    */
   public static function getContactGroupIDs($contactID) {
-    if (self::$contactGroupIDs !== NULL) {
-      return self::$contactGroupIDs;
-    }
-
-    self::$contactGroupIDs = array_merge(
+    $contactGroupIDs = array_merge(
       self::getContactNormalGroupIds($contactID),
       self::getContactSmartGroupIds($contactID)
     );
 
-    return self::$contactGroupIDs;
+    return $contactGroupIDs;
   }
 
   /**
-   * Gets the normal groups for the specified contact.
+   * Gets The normal (not smart) groups that the contact is part of.
    *
    * @param int $contactID
    *
    * @return array
    *   List of group ids or empty array if nothing found
    */
-  public static function getContactNormalGroupIds($contactID) {
+  private static function getContactNormalGroupIds($contactID) {
     $params = [
       'sequential' => 1,
       'contact_id' => (int) $contactID,
@@ -167,15 +156,14 @@ class CRM_MembersOnlyEvent_BAO_EventGroup extends CRM_MembersOnlyEvent_DAO_Event
   }
 
   /**
-   * Gets the smarty groups for the specified contact.
+   * Gets the smart groups that the contact is part of.
    *
    * @param int $contactID
    *
    * @return array
    *   List of group ids or empty array if nothing found
    */
-  public static function getContactSmartGroupIds($contactID) {
-    // Gets the smart group ids that the contact belongs to.
+  private static function getContactSmartGroupIds($contactID) {
     $query = "SELECT group_id FROM `civicrm_group_contact_cache` WHERE contact_id=%1";
     $queryParams = [
       1 => [(int) $contactID, 'Positive'],
@@ -191,7 +179,7 @@ class CRM_MembersOnlyEvent_BAO_EventGroup extends CRM_MembersOnlyEvent_DAO_Event
   }
 
   /**
-   * Gets the event-groups event data given the event IDs
+   * Gets the event-groups event data given the membersOnlyEvent IDs
    *
    * @param $membersOnlyEventIDs
    *
