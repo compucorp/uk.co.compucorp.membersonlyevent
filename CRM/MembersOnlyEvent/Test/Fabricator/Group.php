@@ -19,6 +19,7 @@ class CRM_MembersOnlyEvent_Test_Fabricator_Group {
 
     if (empty($params['name'])) {
       $params['name'] = md5(mt_rand());
+      $params['title'] = $params['name'];
     }
 
     foreach ($params as $property => $value) {

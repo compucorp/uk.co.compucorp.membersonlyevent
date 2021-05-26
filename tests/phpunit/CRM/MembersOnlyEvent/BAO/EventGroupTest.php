@@ -1,8 +1,10 @@
 <?php
 
 use CRM_MembersOnlyEvent_Test_Fabricator_Group as GroupFabricator;
+use CRM_MembersOnlyEvent_Test_Fabricator_SmartGroup as SmartGroupFabricator;
 use CRM_MembersOnlyEvent_Test_Fabricator_MembersOnlyEvent as MembersOnlyEventFabricator;
 use CRM_MembersOnlyEvent_BAO_EventGroup as EventGroup;
+use CRM_MembersOnlyEvent_Test_Fabricator_Contact as ContactFabricator;
 
 require_once __DIR__ . '/../../../BaseHeadlessTest.php';
 
@@ -49,6 +51,87 @@ class CRM_MembersOnlyEvent_BAO_EventGroupTest extends BaseHeadlessTest {
 
     $this->assertEquals([$group->id], $eventGroupIds);
 
+  }
+
+  /**
+   * Tests getContactAllowedGroups().
+   */
+  public function testIfGetContactAllowedGroupsReturnsNothingIfNoAllowedGroupsAreConfigured() {
+    $params = [
+      'first_name' => 'John',
+      'last_name' => 'Doe',
+    ];
+    $contactID = ContactFabricator::fabricate($params)['id'];
+    $membersOnlyEvent = MembersOnlyEventFabricator::fabricate();
+    $studentsGroup = GroupFabricator::fabricate(['title' => 'Students'], TRUE);
+
+    $params = [
+      'contact_id' => $contactID,
+      'group_id' => $studentsGroup->id,
+      'status' => 'Added',
+    ];
+    $contactGroups = civicrm_api3('GroupContact', 'create', $params);
+
+    $contactGroupIds = EventGroup::getContactAllowedGroups($membersOnlyEvent->id, $contactID);
+    $this->assertEquals([], $contactGroupIds);
+  }
+
+  /**
+   * Tests getContactAllowedGroups().
+   */
+  public function testIfGetContactAllowedGroupsReturnsNothingIfAllowedGroupsAreConfiguredButTheContactIsNotPartOfAnyOfThem() {
+    $params = [
+      'first_name' => 'John',
+      'last_name' => 'Doe',
+    ];
+    $contactID = ContactFabricator::fabricate($params)['id'];
+    $membersOnlyEvent = MembersOnlyEventFabricator::fabricate();
+    $studentsGroup = GroupFabricator::fabricate(['title' => 'Students'], TRUE);
+    EventGroup::updateAllowedGroups($membersOnlyEvent->id, [$studentsGroup->id]);
+
+    $contactGroupIds = EventGroup::getContactAllowedGroups($membersOnlyEvent->id, $contactID);
+    $this->assertEquals([], $contactGroupIds);
+  }
+
+  /**
+   * Tests getContactAllowedGroups().
+   */
+  public function testIfGetContactAllowedGroupsWorksWithNormalGroups() {
+    $params = [
+      'first_name' => 'John',
+      'last_name' => 'Doe',
+    ];
+    $contactID = ContactFabricator::fabricate($params)['id'];
+    $membersOnlyEvent = MembersOnlyEventFabricator::fabricate();
+    $studentsGroup = GroupFabricator::fabricate(['title' => 'Students'], TRUE);
+    EventGroup::updateAllowedGroups($membersOnlyEvent->id, [$studentsGroup->id]);
+
+    $params = [
+      'contact_id' => $contactID,
+      'group_id' => $studentsGroup->id,
+      'status' => 'Added',
+    ];
+    $contactGroups = civicrm_api3('GroupContact', 'create', $params);
+
+    $contactGroupIds = EventGroup::getContactAllowedGroups($membersOnlyEvent->id, $contactID);
+    $this->assertEquals([$studentsGroup->id], $contactGroupIds);
+  }
+
+  /**
+   * Tests getContactAllowedGroups().
+   */
+  public function testIfGetContactAllowedGroupsWorksWithSmartGroups() {
+    $params = [
+      'first_name' => 'John',
+      'last_name' => 'Doe',
+    ];
+    $contactID = ContactFabricator::fabricate($params)['id'];
+    $membersOnlyEvent = MembersOnlyEventFabricator::fabricate();
+    $smartGroup = SmartGroupFabricator::fabricate(['formValues' => ['sort_name' => 'Doe, John']]);
+    EventGroup::updateAllowedGroups($membersOnlyEvent->id, [$smartGroup->id]);
+
+    $contactGroupIds = EventGroup::getContactAllowedGroups($membersOnlyEvent->id, $contactID);
+    $this->assertEquals([$smartGroup->id], $contactGroupIds);
   }
 
 }
