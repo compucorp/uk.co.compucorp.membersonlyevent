@@ -187,6 +187,10 @@ class CRM_MembersOnlyEvent_BAO_EventGroup extends CRM_MembersOnlyEvent_DAO_Event
    * @throws \CiviCRM_API3_Exception
    */
   public static function getEventGroups($membersOnlyEventIDs) {
+    if (empty($membersOnlyEventIDs)) {
+      return [];
+    }
+
     $result = civicrm_api3('EventGroup', 'get', [
       'sequential' => 1,
       'members_only_event_id' => ['IN' => $membersOnlyEventIDs],
