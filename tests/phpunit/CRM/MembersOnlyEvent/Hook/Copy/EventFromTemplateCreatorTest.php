@@ -16,7 +16,9 @@ require_once __DIR__ . '/../../../../BaseHeadlessTest.php';
 class CRM_MembersOnlyEvent_Hook_Copy_EventFromTemplateCreatorTest extends BaseHeadlessTest {
 
   private $eventTemplate;
+
   private $membersOnlyEventTemplate;
+
   private $event;
 
   public function setUp() {
@@ -49,8 +51,8 @@ class CRM_MembersOnlyEvent_Hook_Copy_EventFromTemplateCreatorTest extends BaseHe
   }
 
   public function testCreateEventFromTemplateWithMembershipType() {
-    $membershipType1 = MembershipTypeFabricator::fabricate([], TRUE);
-    $membershipType2 = MembershipTypeFabricator::fabricate([], TRUE);
+    $membershipType1 = MembershipTypeFabricator::fabricate(['name' => 'Student'], TRUE);
+    $membershipType2 = MembershipTypeFabricator::fabricate(['name' => 'Teacher'], TRUE);
     $membershipTypeIds = [$membershipType1->id, $membershipType2->id];
     EventMembershipType::updateAllowedMembershipTypes($this->membersOnlyEventTemplate->id, $membershipTypeIds);
 

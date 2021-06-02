@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/MembersOnlyEvent</base>
+  <class>EventGroup</class>
+  <name>membersonlyevent_event_group</name>
+  <comment>Joining table for members-only event and allowed groups</comment>
+  <add>5.35</add>
+  <log>true</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique EventGroup ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+    <add>5.35</add>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
+    <name>members_only_event_id</name>
+    <title>Members-only event ID</title>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Members-only event ID.</comment>
+    <html>
+      <type>Number</type>
+    </html>
+    <add>5.35</add>
+  </field>
+  <foreignKey>
+    <name>members_only_event_id</name>
+    <table>membersonlyevent</table>
+    <key>id</key>
+    <add>5.35</add>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>group_id</name>
+    <title>Group ID</title>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Allowed Group ID.</comment>
+    <add>5.35</add>
+  </field>
+  <foreignKey>
+    <name>group_id</name>
+    <table>civicrm_group</table>
+    <key>id</key>
+    <add>5.35</add>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <index>
+    <name>index_event_id_group_id</name>
+    <fieldName>members_only_event_id</fieldName>
+    <fieldName>group_id</fieldName>
+    <add>5.35</add>
+  </index>
+
+</table>

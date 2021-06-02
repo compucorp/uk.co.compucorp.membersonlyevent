@@ -24,13 +24,13 @@ class CRM_MembersOnlyEvent_Form_Configurations extends CRM_Core_Form {
       ts('Membership duration check')
     );
 
-    $this->addButtons(array(
-      array(
+    $this->addButtons([
+      [
         'type' => 'submit',
         'name' => ts('Submit'),
         'isDefault' => TRUE,
-      ),
-    ));
+      ],
+    ]);
   }
 
   /**
@@ -38,7 +38,7 @@ class CRM_MembersOnlyEvent_Form_Configurations extends CRM_Core_Form {
    */
   public function setDefaultValues() {
     $existingValues = civicrm_api3('Setting', 'get',
-      array('sequential' => 1, 'return' => 'membership_duration_check')
+      ['sequential' => 1, 'return' => 'membership_duration_check']
     );
 
     $defaults['membership_duration_check'] = !empty($existingValues['values'][0]['membership_duration_check']) ? TRUE : FALSE;
@@ -58,4 +58,5 @@ class CRM_MembersOnlyEvent_Form_Configurations extends CRM_Core_Form {
 
     CRM_Core_Session::setStatus(ts('The configurations have been saved.'), ts('Saved'), 'success');
   }
+
 }
