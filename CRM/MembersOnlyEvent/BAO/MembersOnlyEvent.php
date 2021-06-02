@@ -69,6 +69,10 @@ class CRM_MembersOnlyEvent_BAO_MembersOnlyEvent extends CRM_MembersOnlyEvent_DAO
    * @throws \CiviCRM_API3_Exception
    */
   public static function getMembersOnlyEvents($eventIDs) {
+    if (empty($eventIDs)) {
+      return [];
+    }
+
     $result = civicrm_api3('MembersOnlyEvent', 'get', [
       'sequential' => 1,
       'is_groups_only' => 1,
