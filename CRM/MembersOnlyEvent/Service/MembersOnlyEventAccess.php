@@ -225,7 +225,7 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
     $events = [];
     foreach ($eventIDs as $eventID) {
       $groups = $groupsKeyedByEventID[$eventID] ?? [];
-      $allowedGroupsWhichUserBelongsTo = array_intersect($contactGroupIDs, $groups);
+      $allowedGroupsWhichUserBelongsTo = array_values(array_intersect($contactGroupIDs, $groups));
       $membersOnlyEventID = $eventIDAndMembersOnlyEventIDMap[$eventID] ?? NULL;
       $notice_for_access_denied = $membersOnlyEvents[$membersOnlyEventID]['notice_for_access_denied'] ?? '';
       $events[] = [
