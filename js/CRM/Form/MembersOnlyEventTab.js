@@ -5,9 +5,12 @@ jQuery(document).ready(function(){
   var LINK_TYPE_CONTRIBUTION_PAGE = '0';
   var LINK_TYPE_URL = '1';
 
-  var membersOnlyEventCheckbox= jQuery("#is_members_only_event");
-  var membersOnlyEventFields = jQuery("#members-only-event-fields");
+  var eventAccessTypeField = jQuery("#event-access-type");
+  var membersOnlyEventSection = jQuery("#members-only-event-section");
+  var allowedMembershipTypesField = jQuery("#allowed-membership-types-field");
+  var allowedGroupsField = jQuery("#allowed-groups-field");
 
+  var purchaseMembershipButtonField = jQuery("#purchase-membership-button");
   var purchaseButtonDisabledSection = jQuery("#purchase-button-disabled-section");
   var purchaseButtonEnabledSection = jQuery("#purchase-button-enabled-section");
 
@@ -22,10 +25,9 @@ jQuery(document).ready(function(){
    * the needed fields.
    */
   function setInitialFieldValues() {
-    toggleMembersOnlyEventFields(membersOnlyEventCheckbox.is(':checked'));
+    toggleTabFields();
 
-    var purchaseMembershipButtonEnabled = jQuery("input[name='purchase_membership_button']:checked").val();
-    togglePurchaseButtonFields(purchaseMembershipButtonEnabled);
+    togglePurchaseButtonFields();
 
     var purchaseLinkType = jQuery("input[name='purchase_membership_link_type']:checked").val();
     toggleLinkTypeFields(purchaseLinkType);
@@ -35,13 +37,16 @@ jQuery(document).ready(function(){
    * Sets the fields event listeners
    */
   function setFieldListeners() {
-    membersOnlyEventCheckbox.click(function(){
-      toggleMembersOnlyEventFields(jQuery(this).is(':checked'));
+    eventAccessTypeField.change(toggleTabFields);
+
+    eventAccessTypeField.click(function(e){
+      // Checks if target is the crm-clear-link.
+      if (jQuery(e.target).hasClass('crm-clear-link') || jQuery(e.target).hasClass('fa-times')) {
+        membersOnlyEventSection.hide();
+      }
     });
 
-    jQuery("input[name='purchase_membership_button']").click(function(){
-      togglePurchaseButtonFields(jQuery(this).val());
-    });
+    purchaseMembershipButtonField.click(togglePurchaseButtonFields);
 
     jQuery("input[name='purchase_membership_link_type']").click(function(){
       toggleLinkTypeFields(jQuery(this).val());
@@ -49,31 +54,41 @@ jQuery(document).ready(function(){
   }
 
   /**
-   * Shows/Hides the members-only events fields
+   * Shows/Hides the tab fields
    * based on 'Is members-only event ?' checkbox
    * value.
-   *
-   * @param isMembersOnlyEvent
    */
-  function toggleMembersOnlyEventFields(isMembersOnlyEvent) {
-    if (isMembersOnlyEvent){
-      membersOnlyEventFields.show();
+  function toggleTabFields() {
+    if (eventAccessTypeField.find(':checked').val() === 'members_only') {
+      membersOnlyEventSection.show();
+      allowedMembershipTypesField.show();
+      allowedGroupsField.hide();
+      purchaseMembershipButtonField.show();
+    } else if (eventAccessTypeField.find(':checked').val() === 'groups_only') {
+      membersOnlyEventSection.show();
+      allowedMembershipTypesField.hide();
+      allowedGroupsField.show();
+
+      // Only shows allowed_groups and notice_for_access_denied fields if the
+      // groups_only option was chosen.
+      purchaseMembershipButtonField.find('[value=' + NO_SELECTED + ']').prop('checked', true)
+      purchaseMembershipButtonField.click();
+      purchaseMembershipButtonField.hide();
     } else {
-      membersOnlyEventFields.hide();
+      membersOnlyEventSection.hide();
     }
   }
 
   /**
    * Shows/Hides the related purchase membership
    * button fields.
-   * If Yes is selected then allow the user to set
+   * If the selectedOption was Yes then allow the user to set
    * button label and the link.
-   * If No is selected then show only the
+   * If the selectedOption was selected then show only the
    * notice message textarea.
-   *
-   * @param selectedOption
    */
-  function togglePurchaseButtonFields(selectedOption) {
+  function togglePurchaseButtonFields() {
+    var selectedOption = purchaseMembershipButtonField.find(':checked').val()
     switch (selectedOption) {
       case NO_SELECTED:
         purchaseButtonDisabledSection.show();

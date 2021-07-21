@@ -8,8 +8,9 @@ class CRM_MembersOnlyEvent_Hook_Copy_Event {
   /**
    * Handle Hook Pre Event
    *
-   * @param  object $object
+   * @param object $object
    * @param  $object
+   *
    * @throws CRM_Core_Exception
    */
   public function handle(&$object) {
