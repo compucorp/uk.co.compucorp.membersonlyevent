@@ -210,6 +210,7 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
   public static function getEventAccessDetails($eventIDs) {
     $membersOnlyEvents = MembersOnlyEvent::getMembersOnlyEvents($eventIDs);
     $membersOnlyEvents = ArrayUtils::keyBy($membersOnlyEvents, 'id');
+    $eventIDAndMembersOnlyEventIDMap = array_column($membersOnlyEvents, 'id', 'event_id');
     $eventGroups = EventGroup::getEventGroups(array_keys($membersOnlyEvents));
     $groupsKeyedByEventID = [];
     foreach ($eventGroups as $eventGroup) {
@@ -224,13 +225,16 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
     $events = [];
     foreach ($eventIDs as $eventID) {
       $groups = $groupsKeyedByEventID[$eventID] ?? [];
-      $allowedGroupsWhichUserBelongsTo = array_intersect($contactGroupIDs, $groups);
+      $allowedGroupsWhichUserBelongsTo = array_values(array_intersect($contactGroupIDs, $groups));
+      $membersOnlyEventID = $eventIDAndMembersOnlyEventIDMap[$eventID] ?? NULL;
+      $notice_for_access_denied = $membersOnlyEvents[$membersOnlyEventID]['notice_for_access_denied'] ?? '';
       $events[] = [
         'event_id' => $eventID,
         'is_groups_only_event' => !empty($groupsKeyedByEventID[$eventID]),
         'allowed_groups' => $groups,
         'is_user_in_any_allowed_group' => !empty($allowedGroupsWhichUserBelongsTo),
         'allowed_groups_which_user_belongs_to' => $allowedGroupsWhichUserBelongsTo,
+        'notice_for_access_denied' => $notice_for_access_denied,
       ];
     }
 

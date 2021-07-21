@@ -77,7 +77,7 @@ class CRM_MembersOnlyEvent_BAO_MembersOnlyEvent extends CRM_MembersOnlyEvent_DAO
       'sequential' => 1,
       'is_groups_only' => 1,
       'event_id' => ['IN' => $eventIDs],
-      'return' => ['id', 'event_id'],
+      'return' => ['id', 'event_id', 'notice_for_access_denied'],
       'options' => ['limit' => 0],
     ]);
 
