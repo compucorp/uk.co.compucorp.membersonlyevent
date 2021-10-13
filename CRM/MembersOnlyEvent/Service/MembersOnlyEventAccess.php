@@ -60,13 +60,8 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
    *   True if has access or False otherwise
    */
   public function userHasEventAccess() {
-    if (!$this->contactID) {
-      // the user is not logged-in so he cannot access the event
-      return FALSE;
-    }
-
     if (empty($this->membersOnlyEvent->is_groups_only) && CRM_Core_Permission::check('members only event registration')) {
-      // Any user with 'members only event registration' permission
+      // Any user (including anonymous) with 'members only event registration' permission
       // can access any members-only event.
       return TRUE;
     }
