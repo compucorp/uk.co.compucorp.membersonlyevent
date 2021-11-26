@@ -60,7 +60,10 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
    *   True if has access or False otherwise
    */
   public function userHasEventAccess() {
-    if (empty($this->membersOnlyEvent->is_groups_only) && CRM_Core_Permission::check('members only event registration')) {
+    if (
+      empty($this->membersOnlyEvent) ||
+      CRM_Core_Permission::check('members only event registration')
+    ) {
       // Any user (including anonymous) with 'members only event registration' permission
       // can access any members-only event.
       return TRUE;
