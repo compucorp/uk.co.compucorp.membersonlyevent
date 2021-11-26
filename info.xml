@@ -4,8 +4,8 @@
   <name>Members Only Event</name>
   <description>Allow some events to be accessible only by users with CiviCRM Memberships, you can also allow users with certain membership types to access certain events.</description>
   <maintainer>
-    <author>Compucorp</author>
-    <email>info@compucorp.co.uk</email>
+    <author>Compuco</author>
+    <email>hello@compuco.io</email>
   </maintainer>
   <releaseDate>2021-11-26</releaseDate>
   <version>3.1.0</version>
@@ -15,7 +15,7 @@
   </compatibility>
   <comments>
     Supported CiviCRM versions  :
-    - 5.35.1
+    - 5.35.2
   </comments>
   <civix>
     <namespace>CRM/MembersOnlyEvent</namespace>
