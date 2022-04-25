@@ -40,6 +40,14 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
   const OPERATION_DOWNGRADE_TO_NORMAL_EVENT = 'downgrade_to_normal_event';
 
   /**
+   * Set variables up before form is built.
+   */
+  public function preProcess() {
+    parent::preProcess();
+    $this->setSelectedChild('membersonlyevent');
+  }
+
+  /**
    * @inheritdoc
    */
   public function buildQuickForm() {
