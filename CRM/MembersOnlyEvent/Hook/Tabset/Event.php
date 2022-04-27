@@ -21,6 +21,7 @@ class CRM_MembersOnlyEvent_Hook_Tabset_Event {
 
     if (empty($context['event_id'])) {
       $this->addMembersOnlyEventLinkToContextMenu($tabs);
+
       return;
     }
 
@@ -81,7 +82,7 @@ class CRM_MembersOnlyEvent_Hook_Tabset_Event {
     $tab['membersonlyevent'] = [
       'title' => ts('Members Only Event Settings'),
       'url' => $url,
-      'field' => 'id',
+      'field' => 'is_online_registration',
     ];
 
     //Insert this tab into position 4 (after `Online Registration` tab)
