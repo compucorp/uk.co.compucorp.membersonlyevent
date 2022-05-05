@@ -19,6 +19,12 @@ class CRM_MembersOnlyEvent_Hook_Tabset_Event {
       return;
     }
 
+    if (empty($context['event_id'])) {
+      $this->addMembersOnlyEventLinkToContextMenu($tabs);
+
+      return;
+    }
+
     $eventID = $context['event_id'];
     $this->addMembersOnlyEventTab($eventID, $tabs);
   }
@@ -35,7 +41,7 @@ class CRM_MembersOnlyEvent_Hook_Tabset_Event {
   private function shouldHandle($tabsetName, &$tabs, $context) {
     $canEditAllEvents = CRM_Core_Permission::check(['edit all events']);
     $isManageEventTabset = ($tabsetName === 'civicrm/event/manage');
-    if (!empty($context['event_id']) && $isManageEventTabset && $canEditAllEvents) {
+    if ($isManageEventTabset && $canEditAllEvents) {
       return TRUE;
     }
     return FALSE;
@@ -57,6 +63,26 @@ class CRM_MembersOnlyEvent_Hook_Tabset_Event {
       'active' => TRUE,
       'current' => FALSE,
       'class' => 'ajaxForm',
+    ];
+
+    //Insert this tab into position 4 (after `Online Registration` tab)
+    $tabs = array_merge(
+      array_slice($tabs, 0, 4),
+      $tab,
+      array_slice($tabs, 4)
+    );
+  }
+
+  /**
+   * @param $tabs
+   */
+  public function addMembersOnlyEventLinkToContextMenu(&$tabs) {
+    $url = 'civicrm/event/manage/membersonlyevent';
+
+    $tab['membersonlyevent'] = [
+      'title' => ts('Members Only Event Settings'),
+      'url' => $url,
+      'field' => 'is_online_registration',
     ];
 
     //Insert this tab into position 4 (after `Online Registration` tab)
