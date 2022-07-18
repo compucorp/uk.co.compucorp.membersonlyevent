@@ -19,4 +19,16 @@ class CRM_MembersOnlyEvent_Upgrader extends CRM_MembersOnlyEvent_Upgrader_Base {
     return TRUE;
   }
 
+  /**
+   * This upgrade does the following :
+   * - Renames is_groups_only column to event_access_type.
+   * - Changes the type to int unsigned.
+   */
+  public function upgrade_0002() {
+    $this->ctx->log->info('Applying update 0002');
+    $this->executeSqlFile('sql/upgrade_0002.sql');
+
+    return TRUE;
+  }
+
 }
