@@ -5,7 +5,7 @@
   </div>
 
   <div class="crm-section" id="event-access-type">
-    <div class="label"></div>
+    <div class="label">{$form.event_access_type.label}</div>
     <div class="content">
       {$form.event_access_type.html}
     </div>
