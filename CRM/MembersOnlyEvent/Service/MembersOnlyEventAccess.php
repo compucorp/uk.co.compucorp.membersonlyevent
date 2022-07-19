@@ -69,11 +69,13 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
       return TRUE;
     }
 
-    if (empty($this->membersOnlyEvent->is_groups_only)) {
+    if ($this->membersOnlyEvent->event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY) {
       return !empty($this->contactActiveAllowedMemberships);
     }
 
-    return !empty($this->contactAllowedGroups);
+    if ($this->membersOnlyEvent->event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY) {
+      return !empty($this->contactAllowedGroups);
+    }
   }
 
   /**

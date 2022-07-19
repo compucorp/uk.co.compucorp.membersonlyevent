@@ -5,6 +5,9 @@ jQuery(document).ready(function(){
   var LINK_TYPE_CONTRIBUTION_PAGE = '0';
   var LINK_TYPE_URL = '1';
 
+  var EVENT_ACCESS_TYPE_MEMBERS_ONLY = '1';
+  var EVENT_ACCESS_TYPE_GROUPS_ONLY = '2';
+
   var eventAccessTypeField = jQuery("#event-access-type");
   var membersOnlyEventSection = jQuery("#members-only-event-section");
   var allowedMembershipTypesField = jQuery("#allowed-membership-types-field");
@@ -59,12 +62,12 @@ jQuery(document).ready(function(){
    * value.
    */
   function toggleTabFields() {
-    if (eventAccessTypeField.find(':checked').val() === 'members_only') {
+    if (eventAccessTypeField.find(':checked').val() === EVENT_ACCESS_TYPE_MEMBERS_ONLY) {
       membersOnlyEventSection.show();
       allowedMembershipTypesField.show();
       allowedGroupsField.hide();
       purchaseMembershipButtonField.show();
-    } else if (eventAccessTypeField.find(':checked').val() === 'groups_only') {
+    } else if (eventAccessTypeField.find(':checked').val() === EVENT_ACCESS_TYPE_GROUPS_ONLY) {
       membersOnlyEventSection.show();
       allowedMembershipTypesField.hide();
       allowedGroupsField.show();

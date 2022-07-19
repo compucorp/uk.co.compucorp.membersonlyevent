@@ -1,5 +1,7 @@
 <?php
 
+use CRM_MembersOnlyEvent_BAO_MembersOnlyEvent as MembersOnlyEvent;
+
 class CRM_MembersOnlyEvent_Test_Fabricator_MembersOnlyEvent {
 
   /**
@@ -33,6 +35,7 @@ class CRM_MembersOnlyEvent_Test_Fabricator_MembersOnlyEvent {
       'purchase_membership_link_type' => 1,
       'contribution_page_id' => NULL,
       'purchase_membership_url' => NULL,
+      'event_access_type' => MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY,
     ];
   }
 

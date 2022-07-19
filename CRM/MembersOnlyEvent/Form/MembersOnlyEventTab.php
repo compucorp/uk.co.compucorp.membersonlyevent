@@ -66,8 +66,8 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       'event_access_type',
       '',
       [
-        'members_only' => ts('Only allow members to register for this event?'),
-        'groups_only' => ts('Only allow contacts in groups to register for this event?'),
+        MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY => ts('Only allow members to register for this event?'),
+        MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY => ts('Only allow contacts in groups to register for this event?'),
       ],
       [
         'allowClear' => TRUE,
@@ -155,19 +155,22 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       return $errors;
     }
 
-    $isGroupsOnlyEvent = $values['event_access_type'] === 'groups_only';
+    $isGroupsOnlyEvent = $values['event_access_type'] === MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY;
     if ($isGroupsOnlyEvent) {
       $this->validateForEmptyAllowedGroups($values, $errors);
     }
 
-    switch ($values['purchase_membership_button']) {
-      case self::NO_SELECTED:
-        $this->validateForDisabledPurchaseButton($values, $errors);
-        break;
+    $isMembersOnlyEvent = $values['event_access_type'] === MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY;
+    if ($isMembersOnlyEvent) {
+      switch ($values['purchase_membership_button']) {
+        case self::NO_SELECTED:
+          $this->validateForDisabledPurchaseButton($values, $errors);
+          break;
 
-      case self::YES_SELECTED:
-        $this->validateForEnabledPurchaseButton($values, $errors);
-        break;
+        case self::YES_SELECTED:
+          $this->validateForEnabledPurchaseButton($values, $errors);
+          break;
+      }
     }
 
     return $errors ?: TRUE;
@@ -250,7 +253,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
 
     $membersOnlyEvent = MembersOnlyEvent::getMembersOnlyEvent($this->_id);
     if ($membersOnlyEvent) {
-      $defaultValues['event_access_type'] = $membersOnlyEvent->is_groups_only ? 'groups_only' : 'members_only';
+      $defaultValues['event_access_type'] = $membersOnlyEvent->event_access_type;
       $defaultValues['allowed_membership_types'] = EventMembershipType::getAllowedMembershipTypeIDs($membersOnlyEvent->id);
       $defaultValues['allowed_groups'] = EventGroup::getAllowedGroupIDs($membersOnlyEvent->id);
       $defaultValues['purchase_membership_button'] = $membersOnlyEvent->purchase_membership_button;
@@ -284,25 +287,18 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
     $params = $this->exportValues();
     $params['event_id'] = $this->_id;
 
-    $eventSetToMembersOnly = $params['event_access_type'] === 'members_only';
-    $eventSetToGroupsOnly = $params['event_access_type'] === 'groups_only';
-    $isTabEnabled = $eventSetToMembersOnly || $eventSetToGroupsOnly;
-
-    // Skip if both are true. We don't want to handle this edge case.
-    if ($eventSetToMembersOnly && $eventSetToGroupsOnly) {
-      return FALSE;
-    }
+    $isTabEnabled = (bool) $params['event_access_type'];
 
     $membersOnlyEvent = MembersOnlyEvent::getMembersOnlyEvent($params['event_id']);
     $submitOperation = $this->getSubmitOperation($isTabEnabled, $membersOnlyEvent);
     switch ($submitOperation) {
       case self::OPERATION_CREATE:
-        $this->saveFormData($params, $eventSetToMembersOnly, $eventSetToGroupsOnly);
+        $this->saveFormData($params);
         break;
 
       case self::OPERATION_UPDATE:
         $params['id'] = $membersOnlyEvent->id;
-        $this->saveFormData($params, $eventSetToMembersOnly, $eventSetToGroupsOnly);
+        $this->saveFormData($params);
         break;
 
       case self::OPERATION_DOWNGRADE_TO_NORMAL_EVENT:
@@ -359,11 +355,11 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
    * members-only event,
    *
    * @param $params
-   * @param $eventSetToMembersOnly
-   * @param $eventSetToGroupsOnly
    */
-  private function saveFormData($params, $eventSetToMembersOnly, $eventSetToGroupsOnly) {
-    $params['is_groups_only'] = $eventSetToGroupsOnly;
+  private function saveFormData($params) {
+    $eventSetToMembersOnly = $params['event_access_type'] === MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY;
+    $eventSetToGroupsOnly = $params['event_access_type'] === MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY;
+
     $membersOnlyEvent = MembersOnlyEvent::create($params);
     if (!empty($membersOnlyEvent->id)) {
       $allowedMembershipTypeIDs = [];

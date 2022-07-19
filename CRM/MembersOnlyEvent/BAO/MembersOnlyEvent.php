@@ -17,6 +17,20 @@ class CRM_MembersOnlyEvent_BAO_MembersOnlyEvent extends CRM_MembersOnlyEvent_DAO
   const LINK_TYPE_URL = 1;
 
   /**
+   * Event access type for 'members only events'.
+   *
+   * @const int
+   */
+  const EVENT_ACCESS_TYPE_MEMBERS_ONLY = 1;
+
+  /**
+   * Event access type for 'groups only events'.
+   *
+   * @const int
+   */
+  const EVENT_ACCESS_TYPE_GROUPS_ONLY = 2;
+
+  /**
    * Creates a new Members-Only Event record
    * based on array-data
    *
