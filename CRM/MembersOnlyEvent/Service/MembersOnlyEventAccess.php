@@ -76,6 +76,10 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
     if ($this->membersOnlyEvent->event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY) {
       return !empty($this->contactAllowedGroups);
     }
+
+    if ($this->membersOnlyEvent->event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY) {
+      return !empty($this->contactID);
+    }
   }
 
   /**
