@@ -7,6 +7,7 @@ jQuery(document).ready(function(){
 
   var EVENT_ACCESS_TYPE_MEMBERS_ONLY = '1';
   var EVENT_ACCESS_TYPE_GROUPS_ONLY = '2';
+  var EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY = '3';
 
   var eventAccessTypeField = jQuery("#event-access-type");
   var membersOnlyEventSection = jQuery("#members-only-event-section");
