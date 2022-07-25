@@ -62,22 +62,23 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
   public function userHasEventAccess() {
     if (
       empty($this->membersOnlyEvent) ||
-      CRM_Core_Permission::check('members only event registration')
+      ($this->contactID && CRM_Core_Permission::check('members only event registration'))
     ) {
       // Any user (including anonymous) with 'members only event registration' permission
       // can access any members-only event.
       return TRUE;
     }
 
-    if ($this->membersOnlyEvent->event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY) {
+    $event_access_type = (int) $this->membersOnlyEvent->event_access_type;
+    if ($event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY) {
       return !empty($this->contactActiveAllowedMemberships);
     }
 
-    if ($this->membersOnlyEvent->event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY) {
+    if ($event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY) {
       return !empty($this->contactAllowedGroups);
     }
 
-    if ($this->membersOnlyEvent->event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY) {
+    if ($event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY) {
       return !empty($this->contactID);
     }
   }
