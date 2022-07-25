@@ -66,9 +66,9 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       'event_access_type',
       ts('Who will have access to this event?'),
       [
-        MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY => ts('Only allow members to register for this event?'),
-        MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY => ts('Only allow contacts in groups to register for this event?'),
-        MembersOnlyEvent::EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY => ts('Only allow authenticated users to register for this event?'),
+        MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY => ts('Only allow members to register for this event'),
+        MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY => ts('Only allow contacts in groups to register for this event'),
+        MembersOnlyEvent::EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY => ts('Only allow authenticated users to register for this event'),
       ],
       [
         'allowClear' => TRUE,
