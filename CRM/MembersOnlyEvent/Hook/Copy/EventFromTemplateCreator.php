@@ -41,12 +41,14 @@ class CRM_MembersOnlyEvent_Hook_Copy_EventFromTemplateCreator {
 
     $params = [
       'event_id' => $this->eventId,
+      'is_showing_custom_access_denied_message' => $memberOnlyEventTemplate->is_showing_custom_access_denied_message,
       'notice_for_access_denied' => strip_tags($memberOnlyEventTemplate->notice_for_access_denied),
       'contribution_page_id' => $memberOnlyEventTemplate->contribution_page_id,
       'purchase_membership_url' => $memberOnlyEventTemplate->purchase_membership_url,
       'purchase_membership_button' => $memberOnlyEventTemplate->purchase_membership_button,
       'purchase_membership_button_label' => $memberOnlyEventTemplate->purchase_membership_button_label,
       'purchase_membership_link_type' => $memberOnlyEventTemplate->purchase_membership_link_type,
+      'event_access_type' => $memberOnlyEventTemplate->event_access_type,
     ];
 
     $membersOnlyEvent = MemberOnlyEvent::create($params);

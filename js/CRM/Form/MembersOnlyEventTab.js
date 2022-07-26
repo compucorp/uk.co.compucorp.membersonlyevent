@@ -9,6 +9,9 @@ jQuery(document).ready(function(){
   var EVENT_ACCESS_TYPE_GROUPS_ONLY = CRM.vars.MembersOnlyEvent.EVENT_ACCESS_TYPE_GROUPS_ONLY;
   var EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY = CRM.vars.MembersOnlyEvent.EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY;
 
+  var customAccessDeniedMessageCheckbox = jQuery("#is_showing_custom_access_denied_message");
+  var customAccessDeniedMessageSection = jQuery("#notice_for_access_denied").closest('.crm-section');
+
   var eventAccessTypeField = jQuery("#event-access-type");
   var membersOnlyEventSection = jQuery("#members-only-event-section");
   var allowedMembershipTypesField = jQuery("#allowed-membership-types-field");
@@ -29,6 +32,8 @@ jQuery(document).ready(function(){
    * the needed fields.
    */
   function setInitialFieldValues() {
+    toggleCustomAccessDeniedMessageField();
+
     toggleTabFields();
 
     togglePurchaseButtonFields();
@@ -41,6 +46,8 @@ jQuery(document).ready(function(){
    * Sets the fields event listeners
    */
   function setFieldListeners() {
+    customAccessDeniedMessageCheckbox.change(toggleCustomAccessDeniedMessageField);
+
     eventAccessTypeField.change(toggleTabFields);
 
     eventAccessTypeField.click(function(e){
@@ -107,7 +114,7 @@ jQuery(document).ready(function(){
   }
 
   /**
-   * Shows contribution selectttion field
+   * Shows contribution selection field
    * and hide the url field or vice-versa
    * based on the selected link type.
    *
@@ -123,6 +130,18 @@ jQuery(document).ready(function(){
         contributionPageField.hide();
         purchaseURLField.show();
         break;
+    }
+  }
+
+  /**
+   * Shows/Hides the related custom access denied
+   * message field.
+   */
+  function toggleCustomAccessDeniedMessageField() {
+    if (customAccessDeniedMessageCheckbox.is(':checked')) {
+      customAccessDeniedMessageSection.show();
+    } else {
+      customAccessDeniedMessageSection.hide();
     }
   }
 });

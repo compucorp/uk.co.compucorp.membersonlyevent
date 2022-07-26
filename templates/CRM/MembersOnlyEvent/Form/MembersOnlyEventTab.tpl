@@ -31,12 +31,19 @@
       <div class="clear"></div>
     </div>
 
-    <div id="purchase-button-disabled-section">
+    <div class="members-only-event-section">
+
       <div class="crm-section">
+        {$form.is_showing_custom_access_denied_message.html} {$form.is_showing_custom_access_denied_message.label} {help id="is-showing-custom-access-denied-message" file="CRM/MembersOnlyEvent/Form/MembersOnlyEventTab"}
+        <div class="clear"></div>
+      </div>
+
+      <div class="crm-section members-only-event-sub-section">
         <div class="label">{$form.notice_for_access_denied.label}</div>
         <div class="content">{$form.notice_for_access_denied.html}</div>
         <div class="clear"></div>
       </div>
+
     </div>
 
     <div id="purchase-button-enabled-section">

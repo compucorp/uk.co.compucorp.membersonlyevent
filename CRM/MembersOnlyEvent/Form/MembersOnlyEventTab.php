@@ -108,6 +108,13 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       ts('Provide Purchase Membership Button when access denied ?')
     );
 
+    $this->addElement(
+      'checkbox',
+      'is_showing_custom_access_denied_message',
+      NULL,
+      ts('Show a custom access denied message')
+    );
+
     $this->add(
       'wysiwyg',
       'notice_for_access_denied',
@@ -264,6 +271,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       $defaultValues['allowed_membership_types'] = EventMembershipType::getAllowedMembershipTypeIDs($membersOnlyEvent->id);
       $defaultValues['allowed_groups'] = EventGroup::getAllowedGroupIDs($membersOnlyEvent->id);
       $defaultValues['purchase_membership_button'] = $membersOnlyEvent->purchase_membership_button;
+      $defaultValues['is_showing_custom_access_denied_message'] = $membersOnlyEvent->is_showing_custom_access_denied_message;
       $defaultValues['notice_for_access_denied'] = $membersOnlyEvent->notice_for_access_denied;
       $defaultValues['purchase_membership_button_label'] = $membersOnlyEvent->purchase_membership_button_label;
       $defaultValues['purchase_membership_link_type'] = $membersOnlyEvent->purchase_membership_link_type;
@@ -282,6 +290,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
   private function setInitialValues(&$defaultValues) {
     $defaultValues['event_access_type'] = self::NO_SELECTED;
     $defaultValues['purchase_membership_button'] = self::NO_SELECTED;
+    $defaultValues['is_showing_custom_access_denied_message'] = self::NO_SELECTED;
     $defaultValues['notice_for_access_denied'] = ts('Access Denied');
     $defaultValues['purchase_membership_button_label'] = ts('Purchase membership to book the event');
     $defaultValues['purchase_membership_link_type'] = MembersOnlyEvent::LINK_TYPE_URL;
@@ -366,6 +375,9 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
   private function saveFormData($params) {
     $eventSetToMembersOnly = $params['event_access_type'] === MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY;
     $eventSetToGroupsOnly = $params['event_access_type'] === MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY;
+
+    // The checkbox values are not submitted when unchecked.
+    $params['is_showing_custom_access_denied_message'] = $params['is_showing_custom_access_denied_message'] ?? 0;
 
     $membersOnlyEvent = MembersOnlyEvent::create($params);
     if (!empty($membersOnlyEvent->id)) {
