@@ -294,7 +294,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
     $params = $this->exportValues();
     $params['event_id'] = $this->_id;
 
-    $isTabEnabled = (bool) $params['event_access_type'];
+    $isTabEnabled = !empty($params['event_access_type']);
 
     $membersOnlyEvent = MembersOnlyEvent::getMembersOnlyEvent($params['event_id']);
     $submitOperation = $this->getSubmitOperation($isTabEnabled, $membersOnlyEvent);
