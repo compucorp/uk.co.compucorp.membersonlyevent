@@ -25,12 +25,6 @@
       <div class="clear"></div>
     </div>
 
-    <div class="crm-section" id="purchase-membership-button">
-      <div class="label">{$form.purchase_membership_button.label}</div>
-      <div class="content">{$form.purchase_membership_button.html}</div>
-      <div class="clear"></div>
-    </div>
-
     <div class="members-only-event-section">
 
       <div class="crm-section">

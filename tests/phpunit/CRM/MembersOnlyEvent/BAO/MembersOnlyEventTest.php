@@ -21,7 +21,6 @@ class CRM_MembersOnlyEvent_BAO_MembersOnlyEventTest extends BaseHeadlessTest {
 
     $params = [
       'event_id' => $event->id,
-      'purchase_membership_button' => FALSE,
       'is_showing_custom_access_denied_message' => 1,
       'notice_for_access_denied' => '<p>Access Denied</p>',
       'is_showing_login_block' => 1,

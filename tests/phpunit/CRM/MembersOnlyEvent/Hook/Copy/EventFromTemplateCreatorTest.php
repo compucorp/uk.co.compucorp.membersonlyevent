@@ -45,7 +45,6 @@ class CRM_MembersOnlyEvent_Hook_Copy_EventFromTemplateCreatorTest extends BaseHe
       'block_type',
       'login_block_message',
       'is_showing_purchase_membership_block',
-      'purchase_membership_button',
       'purchase_membership_button_label',
       'purchase_membership_body_text',
       'purchase_membership_link_type',

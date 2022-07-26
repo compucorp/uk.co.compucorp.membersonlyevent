@@ -49,7 +49,6 @@ class CRM_MembersOnlyEvent_Hook_Copy_EventFromTemplateCreator {
       'is_showing_purchase_membership_block' => $memberOnlyEventTemplate->is_showing_purchase_membership_block,
       'contribution_page_id' => $memberOnlyEventTemplate->contribution_page_id,
       'purchase_membership_url' => $memberOnlyEventTemplate->purchase_membership_url,
-      'purchase_membership_button' => $memberOnlyEventTemplate->purchase_membership_button,
       'purchase_membership_button_label' => $memberOnlyEventTemplate->purchase_membership_button_label,
       'purchase_membership_body_text' => strip_tags($memberOnlyEventTemplate->purchase_membership_body_text),
       'purchase_membership_link_type' => $memberOnlyEventTemplate->purchase_membership_link_type,

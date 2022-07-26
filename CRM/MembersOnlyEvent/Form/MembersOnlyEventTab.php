@@ -103,11 +103,6 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       ]
     );
 
-    $this->addYesNo(
-      'purchase_membership_button',
-      ts('Provide Purchase Membership Button when access denied ?')
-    );
-
     $this->addElement(
       'checkbox',
       'is_showing_custom_access_denied_message',
@@ -209,7 +204,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
 
     $isMembersOnlyEvent = $values['event_access_type'] === MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY;
     if ($isMembersOnlyEvent) {
-      switch ($values['purchase_membership_button']) {
+      switch ($values['is_showing_purchase_membership_block']) {
         case self::NO_SELECTED:
           $this->validateForDisabledPurchaseButton($values, $errors);
           break;
@@ -303,7 +298,6 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       $defaultValues['event_access_type'] = $membersOnlyEvent->event_access_type;
       $defaultValues['allowed_membership_types'] = EventMembershipType::getAllowedMembershipTypeIDs($membersOnlyEvent->id);
       $defaultValues['allowed_groups'] = EventGroup::getAllowedGroupIDs($membersOnlyEvent->id);
-      $defaultValues['purchase_membership_button'] = $membersOnlyEvent->purchase_membership_button;
       $defaultValues['is_showing_custom_access_denied_message'] = $membersOnlyEvent->is_showing_custom_access_denied_message;
       $defaultValues['notice_for_access_denied'] = $membersOnlyEvent->notice_for_access_denied;
       $defaultValues['is_showing_login_block'] = $membersOnlyEvent->is_showing_login_block;
@@ -327,7 +321,6 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
    */
   private function setInitialValues(&$defaultValues) {
     $defaultValues['event_access_type'] = self::NO_SELECTED;
-    $defaultValues['purchase_membership_button'] = self::NO_SELECTED;
     $defaultValues['is_showing_custom_access_denied_message'] = self::NO_SELECTED;
     $defaultValues['notice_for_access_denied'] = ts('Access Denied');
     $defaultValues['is_showing_login_block'] = self::NO_SELECTED;
