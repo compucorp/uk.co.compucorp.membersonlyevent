@@ -16,6 +16,11 @@ jQuery(document).ready(function(){
   var loginBlockTypeSection = jQuery("#block_type").closest('.crm-section');
   var loginBlockMessageSection = jQuery("#login_block_message").closest('.crm-section');
 
+  var purchaseMembershipCheckbox = jQuery("#is_showing_purchase_membership_block");
+  var purchaseMembershipButtonSection = jQuery("#purchase_membership_button_label").closest('.crm-section');
+  var purchaseMembershipBodyTextSection = jQuery("#purchase_membership_body_text").closest('.crm-section');
+  var contributionPageSection = jQuery("#contribution_page_id").closest('.crm-section');
+
   var eventAccessTypeField = jQuery("#event-access-type");
   var membersOnlyEventSection = jQuery("#members-only-event-section");
   var allowedMembershipTypesField = jQuery("#allowed-membership-types-field");
@@ -40,6 +45,8 @@ jQuery(document).ready(function(){
 
     toggleLoginBlockFields();
 
+    togglePurchaseMembershipFields();
+
     toggleTabFields();
 
     togglePurchaseButtonFields();
@@ -55,6 +62,8 @@ jQuery(document).ready(function(){
     customAccessDeniedMessageCheckbox.change(toggleCustomAccessDeniedMessageField);
 
     loginBlockMessageCheckbox.change(toggleLoginBlockFields);
+
+    purchaseMembershipCheckbox.change(togglePurchaseMembershipFields);
 
     eventAccessTypeField.change(toggleTabFields);
 
@@ -163,6 +172,21 @@ jQuery(document).ready(function(){
     } else {
       loginBlockTypeSection.hide();
       loginBlockMessageSection.hide();
+    }
+  }
+
+  /**
+   * Shows/Hides the related membership block fields.
+   */
+  function togglePurchaseMembershipFields() {
+    if (purchaseMembershipCheckbox.is(':checked')) {
+      purchaseMembershipButtonSection.show();
+      purchaseMembershipBodyTextSection.show();
+      contributionPageSection.show();
+    } else {
+      purchaseMembershipButtonSection.hide();
+      purchaseMembershipBodyTextSection.hide();
+      contributionPageSection.hide();
     }
   }
 });

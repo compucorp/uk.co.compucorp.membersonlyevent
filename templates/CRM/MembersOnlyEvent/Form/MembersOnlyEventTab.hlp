@@ -26,3 +26,10 @@
 {capture assign=membersOnlyEventConfigPath}{crmURL p="civicrm/admin/membersonlyevent"}{/capture}
 {ts 1=$membersOnlyEventConfigPath}This allows you to choose a Login block to display and add a custom message to be displayed on the block for anonymous users{/ts}
 {/htxt}
+{htxt id="is-showing-purchase-membership-block-title"}
+  {ts}Show a purchase membership block when access denied{/ts}
+{/htxt}
+{htxt id="is-showing-purchase-membership-block"}
+{capture assign=membersOnlyEventConfigPath}{crmURL p="civicrm/admin/membersonlyevent"}{/capture}
+{ts 1=$membersOnlyEventConfigPath}This allows you to add a label, custom message and  link to be displayed on the event{/ts}
+{/htxt}

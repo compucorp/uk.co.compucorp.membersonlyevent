@@ -61,16 +61,24 @@
         <div class="clear"></div>
       </div>
 
-    </div>
-
-    <div id="purchase-button-enabled-section">
       <div class="crm-section">
+        {$form.is_showing_purchase_membership_block.html} {$form.is_showing_purchase_membership_block.label} {help id="is-showing-purchase-membership-block" file="CRM/MembersOnlyEvent/Form/MembersOnlyEventTab"}
+        <div class="clear"></div>
+      </div>
+
+      <div class="crm-section members-only-event-sub-section">
         <div class="label">{$form.purchase_membership_button_label.label}</div>
         <div class="content">{$form.purchase_membership_button_label.html}</div>
         <div class="clear"></div>
       </div>
 
-      <div class="crm-section">
+      <div class="crm-section members-only-event-sub-section">
+        <div class="label">{$form.purchase_membership_body_text.label}</div>
+        <div class="content">{$form.purchase_membership_body_text.html}</div>
+        <div class="clear"></div>
+      </div>
+
+      <div class="crm-section members-only-event-sub-section">
         <div class="label">{$form.purchase_membership_link_type.label}</div>
         <div class="content">
           {$form.purchase_membership_link_type.html}
@@ -79,7 +87,9 @@
         </div>
         <div class="clear"></div>
       </div>
+
     </div>
+
   </div>
 
   {* FOOTER *}
