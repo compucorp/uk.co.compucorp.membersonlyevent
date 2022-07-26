@@ -55,6 +55,12 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
 
     $this->addFormRule([$this, 'formRules']);
 
+    Civi::resources()->addVars('MembersOnlyEvent', [
+      'EVENT_ACCESS_TYPE_MEMBERS_ONLY' => MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY,
+      'EVENT_ACCESS_TYPE_GROUPS_ONLY' => MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY,
+      'EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY' => MembersOnlyEvent::EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY,
+    ]);
+
     parent::buildQuickForm();
   }
 

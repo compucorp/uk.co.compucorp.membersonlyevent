@@ -5,9 +5,9 @@ jQuery(document).ready(function(){
   var LINK_TYPE_CONTRIBUTION_PAGE = '0';
   var LINK_TYPE_URL = '1';
 
-  var EVENT_ACCESS_TYPE_MEMBERS_ONLY = '1';
-  var EVENT_ACCESS_TYPE_GROUPS_ONLY = '2';
-  var EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY = '3';
+  var EVENT_ACCESS_TYPE_MEMBERS_ONLY = CRM.vars.MembersOnlyEvent.EVENT_ACCESS_TYPE_MEMBERS_ONLY;
+  var EVENT_ACCESS_TYPE_GROUPS_ONLY = CRM.vars.MembersOnlyEvent.EVENT_ACCESS_TYPE_GROUPS_ONLY;
+  var EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY = CRM.vars.MembersOnlyEvent.EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY;
 
   var eventAccessTypeField = jQuery("#event-access-type");
   var membersOnlyEventSection = jQuery("#members-only-event-section");
@@ -63,12 +63,13 @@ jQuery(document).ready(function(){
    * value.
    */
   function toggleTabFields() {
-    if (eventAccessTypeField.find(':checked').val() === EVENT_ACCESS_TYPE_MEMBERS_ONLY) {
+    var eventAccessTypeValue = parseInt(eventAccessTypeField.find(':checked').val());
+    if (eventAccessTypeValue === EVENT_ACCESS_TYPE_MEMBERS_ONLY) {
       membersOnlyEventSection.show();
       allowedMembershipTypesField.show();
       allowedGroupsField.hide();
       purchaseMembershipButtonField.show();
-    } else if (eventAccessTypeField.find(':checked').val() === EVENT_ACCESS_TYPE_GROUPS_ONLY) {
+    } else if (eventAccessTypeValue === EVENT_ACCESS_TYPE_GROUPS_ONLY) {
       membersOnlyEventSection.show();
       allowedMembershipTypesField.hide();
       allowedGroupsField.show();
