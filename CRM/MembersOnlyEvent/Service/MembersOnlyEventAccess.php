@@ -213,7 +213,7 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
    * @throws \CRM_Core_Exception
    */
   public static function getEventAccessDetails($eventIDs) {
-    $membersOnlyEvents = MembersOnlyEvent::getMembersOnlyEvents($eventIDs);
+    $membersOnlyEvents = MembersOnlyEvent::getMembersOnlyEvents($eventIDs, MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY);
     $membersOnlyEvents = ArrayUtils::keyBy($membersOnlyEvents, 'id');
     $eventIDAndMembersOnlyEventIDMap = array_column($membersOnlyEvents, 'id', 'event_id');
     $eventGroups = EventGroup::getEventGroups(array_keys($membersOnlyEvents));
