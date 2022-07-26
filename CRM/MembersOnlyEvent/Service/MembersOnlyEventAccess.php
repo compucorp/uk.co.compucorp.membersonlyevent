@@ -62,18 +62,25 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
   public function userHasEventAccess() {
     if (
       empty($this->membersOnlyEvent) ||
-      CRM_Core_Permission::check('members only event registration')
+      ($this->contactID && CRM_Core_Permission::check('members only event registration'))
     ) {
       // Any user (including anonymous) with 'members only event registration' permission
       // can access any members-only event.
       return TRUE;
     }
 
-    if (empty($this->membersOnlyEvent->is_groups_only)) {
+    $event_access_type = (int) $this->membersOnlyEvent->event_access_type;
+    if ($event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY) {
       return !empty($this->contactActiveAllowedMemberships);
     }
 
-    return !empty($this->contactAllowedGroups);
+    if ($event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY) {
+      return !empty($this->contactAllowedGroups);
+    }
+
+    if ($event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY) {
+      return !empty($this->contactID);
+    }
   }
 
   /**
@@ -206,7 +213,7 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
    * @throws \CRM_Core_Exception
    */
   public static function getEventAccessDetails($eventIDs) {
-    $membersOnlyEvents = MembersOnlyEvent::getMembersOnlyEvents($eventIDs);
+    $membersOnlyEvents = MembersOnlyEvent::getMembersOnlyEvents($eventIDs, MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY);
     $membersOnlyEvents = ArrayUtils::keyBy($membersOnlyEvents, 'id');
     $eventIDAndMembersOnlyEventIDMap = array_column($membersOnlyEvents, 'id', 'event_id');
     $eventGroups = EventGroup::getEventGroups(array_keys($membersOnlyEvents));

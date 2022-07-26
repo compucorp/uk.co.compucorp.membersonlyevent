@@ -7,6 +7,7 @@ use CRM_MembersOnlyEvent_Test_Fabricator_Contact as ContactFabricator;
 use CRM_MembersOnlyEvent_Test_Fabricator_MembershipType as MembershipTypeFabricator;
 use CRM_MembersOnlyEvent_Test_Fabricator_Membership as MembershipFabricator;
 use CRM_MembersOnlyEvent_BAO_EventMembershipType as EventMembershipType;
+use CRM_MembersOnlyEvent_BAO_MembersOnlyEvent as MembersOnlyEvent;
 
 require_once __DIR__ . '/../../../BaseHeadlessTest.php';
 
@@ -117,6 +118,48 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccessTest extends BaseHeadle
     $membersOnlyEventAccessService = new MembersOnlyEventAccessService($membersOnlyEvent->event_id);
 
     $this->assertTrue($membersOnlyEventAccessService->hasMembership());
+
+    CRM_Utils_GlobalStack::singleton()->pop();
+  }
+
+  /**
+   * Tests authenticated only 'event access type' for anonymous user.
+   */
+  public function testAnonymousUserWithAuthenticatedOnlyEvent() {
+    $membersOnlyEvent = MembersOnlyEventFabricator::fabricate([
+      'event_access_type' => MembersOnlyEvent::EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY,
+    ]);
+
+    $config = CRM_Core_Config::singleton();
+    $tmpGlobals = [];
+    $tmpGlobals['_GET'][$config->userFrameworkURLVar] = 'civicrm/event/register';
+    CRM_Utils_GlobalStack::singleton()->push($tmpGlobals);
+
+    $membersOnlyEventAccessService = new MembersOnlyEventAccessService($membersOnlyEvent->event_id);
+
+    $this->assertFalse($membersOnlyEventAccessService->userHasEventAccess());
+
+    CRM_Utils_GlobalStack::singleton()->pop();
+  }
+
+  /**
+   * Tests authenticated only 'event access type' for logged user.
+   */
+  public function testLoggedUserWithAuthenticatedOnlyEvent() {
+    $this->createLoggedInUser();
+
+    $membersOnlyEvent = MembersOnlyEventFabricator::fabricate([
+      'event_access_type' => MembersOnlyEvent::EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY,
+    ]);
+
+    $config = CRM_Core_Config::singleton();
+    $tmpGlobals = [];
+    $tmpGlobals['_GET'][$config->userFrameworkURLVar] = 'civicrm/event/register';
+    CRM_Utils_GlobalStack::singleton()->push($tmpGlobals);
+
+    $membersOnlyEventAccessService = new MembersOnlyEventAccessService($membersOnlyEvent->event_id);
+
+    $this->assertTrue($membersOnlyEventAccessService->userHasEventAccess());
 
     CRM_Utils_GlobalStack::singleton()->pop();
   }

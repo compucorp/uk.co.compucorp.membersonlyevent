@@ -27,6 +27,7 @@ class CRM_MembersOnlyEvent_BAO_MembersOnlyEventTest extends BaseHeadlessTest {
       'purchase_membership_link_type' => 1,
       'contribution_page_id' => NULL,
       'purchase_membership_url' => NULL,
+      'event_access_type' => MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY,
     ];
 
     $memberOnlyEvent = MembersOnlyEvent::create($params);
