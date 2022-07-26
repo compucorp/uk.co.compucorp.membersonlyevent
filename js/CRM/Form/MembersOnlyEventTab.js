@@ -12,6 +12,10 @@ jQuery(document).ready(function(){
   var customAccessDeniedMessageCheckbox = jQuery("#is_showing_custom_access_denied_message");
   var customAccessDeniedMessageSection = jQuery("#notice_for_access_denied").closest('.crm-section');
 
+  var loginBlockMessageCheckbox = jQuery("#is_showing_login_block");
+  var loginBlockTypeSection = jQuery("#block_type").closest('.crm-section');
+  var loginBlockMessageSection = jQuery("#login_block_message").closest('.crm-section');
+
   var eventAccessTypeField = jQuery("#event-access-type");
   var membersOnlyEventSection = jQuery("#members-only-event-section");
   var allowedMembershipTypesField = jQuery("#allowed-membership-types-field");
@@ -34,6 +38,8 @@ jQuery(document).ready(function(){
   function setInitialFieldValues() {
     toggleCustomAccessDeniedMessageField();
 
+    toggleLoginBlockFields();
+
     toggleTabFields();
 
     togglePurchaseButtonFields();
@@ -47,6 +53,8 @@ jQuery(document).ready(function(){
    */
   function setFieldListeners() {
     customAccessDeniedMessageCheckbox.change(toggleCustomAccessDeniedMessageField);
+
+    loginBlockMessageCheckbox.change(toggleLoginBlockFields);
 
     eventAccessTypeField.change(toggleTabFields);
 
@@ -142,6 +150,19 @@ jQuery(document).ready(function(){
       customAccessDeniedMessageSection.show();
     } else {
       customAccessDeniedMessageSection.hide();
+    }
+  }
+
+  /**
+   * Shows/Hides the related login block fields.
+   */
+  function toggleLoginBlockFields() {
+    if (loginBlockMessageCheckbox.is(':checked')) {
+      loginBlockTypeSection.show();
+      loginBlockMessageSection.show();
+    } else {
+      loginBlockTypeSection.hide();
+      loginBlockMessageSection.hide();
     }
   }
 });

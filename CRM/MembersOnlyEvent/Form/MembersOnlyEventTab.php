@@ -121,6 +121,26 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       ts('Notice for access denied')
     );
 
+    $this->addElement(
+      'checkbox',
+      'is_showing_login_block',
+      NULL,
+      ts('Show login block to anonymous users')
+    );
+
+    $this->add(
+      'select',
+      'block_type',
+      ts('Block type'),
+      $this->getBlockTypes()
+    );
+
+    $this->add(
+      'wysiwyg',
+      'login_block_message',
+      ts('Login block message')
+    );
+
     $this->add(
       'text',
       'purchase_membership_button_label',
@@ -273,6 +293,9 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       $defaultValues['purchase_membership_button'] = $membersOnlyEvent->purchase_membership_button;
       $defaultValues['is_showing_custom_access_denied_message'] = $membersOnlyEvent->is_showing_custom_access_denied_message;
       $defaultValues['notice_for_access_denied'] = $membersOnlyEvent->notice_for_access_denied;
+      $defaultValues['is_showing_login_block'] = $membersOnlyEvent->is_showing_login_block;
+      $defaultValues['block_type'] = $membersOnlyEvent->block_type;
+      $defaultValues['login_block_message'] = $membersOnlyEvent->login_block_message;
       $defaultValues['purchase_membership_button_label'] = $membersOnlyEvent->purchase_membership_button_label;
       $defaultValues['purchase_membership_link_type'] = $membersOnlyEvent->purchase_membership_link_type;
       $defaultValues['contribution_page_id'] = $membersOnlyEvent->contribution_page_id;
@@ -292,6 +315,9 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
     $defaultValues['purchase_membership_button'] = self::NO_SELECTED;
     $defaultValues['is_showing_custom_access_denied_message'] = self::NO_SELECTED;
     $defaultValues['notice_for_access_denied'] = ts('Access Denied');
+    $defaultValues['is_showing_login_block'] = self::NO_SELECTED;
+    $defaultValues['block_type'] = 1;
+    $defaultValues['login_block_message'] = '';
     $defaultValues['purchase_membership_button_label'] = ts('Purchase membership to book the event');
     $defaultValues['purchase_membership_link_type'] = MembersOnlyEvent::LINK_TYPE_URL;
   }
@@ -378,6 +404,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
 
     // The checkbox values are not submitted when unchecked.
     $params['is_showing_custom_access_denied_message'] = $params['is_showing_custom_access_denied_message'] ?? 0;
+    $params['is_showing_login_block'] = $params['is_showing_login_block'] ?? 0;
 
     $membersOnlyEvent = MembersOnlyEvent::create($params);
     if (!empty($membersOnlyEvent->id)) {
@@ -407,6 +434,21 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
     $membersOnlyEvent = new MembersOnlyEvent();
     $membersOnlyEvent->id = $membersOnlyEventID;
     $membersOnlyEvent->delete();
+  }
+
+  /**
+   * Gets block types.
+   */
+  private function getBlockTypes() {
+    $block_types = [
+      '1' => ts('Login only'),
+    ];
+
+    if (function_exists('module_exists') && module_exists('ssp_core_user')) {
+      $block_types['2'] = ts('Login or register block');
+    }
+
+    return $block_types;
   }
 
 }

@@ -44,6 +44,23 @@
         <div class="clear"></div>
       </div>
 
+      <div class="crm-section">
+        {$form.is_showing_login_block.html} {$form.is_showing_login_block.label} {help id="is-showing-login-block" file="CRM/MembersOnlyEvent/Form/MembersOnlyEventTab"}
+        <div class="clear"></div>
+      </div>
+
+      <div class="crm-section members-only-event-sub-section">
+        <div class="label">{$form.block_type.label}</div>
+        <div class="content">{$form.block_type.html}</div>
+        <div class="clear"></div>
+      </div>
+
+      <div class="crm-section members-only-event-sub-section">
+        <div class="label">{$form.login_block_message.label}</div>
+        <div class="content">{$form.login_block_message.html}</div>
+        <div class="clear"></div>
+      </div>
+
     </div>
 
     <div id="purchase-button-enabled-section">

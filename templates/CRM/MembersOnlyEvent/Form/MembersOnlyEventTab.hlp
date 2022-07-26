@@ -19,3 +19,10 @@
 {capture assign=membersOnlyEventConfigPath}{crmURL p="civicrm/admin/membersonlyevent"}{/capture}
 {ts 1=$membersOnlyEventConfigPath}This allows you to add a custom access denied message for this event.{/ts}
 {/htxt}
+{htxt id="is-showing-login-block-title"}
+  {ts}Show login block to anonymous users{/ts}
+{/htxt}
+{htxt id="is-showing-login-block"}
+{capture assign=membersOnlyEventConfigPath}{crmURL p="civicrm/admin/membersonlyevent"}{/capture}
+{ts 1=$membersOnlyEventConfigPath}This allows you to choose a Login block to display and add a custom message to be displayed on the block for anonymous users{/ts}
+{/htxt}
