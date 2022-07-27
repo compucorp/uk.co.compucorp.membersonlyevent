@@ -2,9 +2,6 @@ jQuery(document).ready(function(){
   var NO_SELECTED = '0';
   var YES_SELECTED = '1';
 
-  var LINK_TYPE_CONTRIBUTION_PAGE = '0';
-  var LINK_TYPE_URL = '1';
-
   var EVENT_ACCESS_TYPE_MEMBERS_ONLY = CRM.vars.MembersOnlyEvent.EVENT_ACCESS_TYPE_MEMBERS_ONLY;
   var EVENT_ACCESS_TYPE_GROUPS_ONLY = CRM.vars.MembersOnlyEvent.EVENT_ACCESS_TYPE_GROUPS_ONLY;
   var EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY = CRM.vars.MembersOnlyEvent.EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY;
@@ -26,9 +23,6 @@ jQuery(document).ready(function(){
   var allowedMembershipTypesField = jQuery("#allowed-membership-types-field");
   var allowedGroupsField = jQuery("#allowed-groups-field");
 
-  var contributionPageField = jQuery("#field-contribution-page-id");
-  var purchaseURLField = jQuery("#field-purchase-membership-url");
-
   setInitialFieldValues();
   setFieldListeners();
 
@@ -44,9 +38,6 @@ jQuery(document).ready(function(){
     togglePurchaseMembershipFields();
 
     toggleTabFields();
-
-    var purchaseLinkType = jQuery("input[name='purchase_membership_link_type']:checked").val();
-    toggleLinkTypeFields(purchaseLinkType);
   }
 
   /**
@@ -67,10 +58,6 @@ jQuery(document).ready(function(){
         membersOnlyEventSection.hide();
       }
     });
-
-    jQuery("input[name='purchase_membership_link_type']").click(function(){
-      toggleLinkTypeFields(jQuery(this).val());
-    });
   }
 
   /**
@@ -90,26 +77,6 @@ jQuery(document).ready(function(){
       allowedGroupsField.show();
     } else {
       membersOnlyEventSection.hide();
-    }
-  }
-
-  /**
-   * Shows contribution selection field
-   * and hide the url field or vice-versa
-   * based on the selected link type.
-   *
-   * @param linkType
-   */
-  function toggleLinkTypeFields(linkType) {
-    switch (linkType) {
-      case LINK_TYPE_CONTRIBUTION_PAGE:
-        contributionPageField.show();
-        purchaseURLField.hide();
-        break;
-      case LINK_TYPE_URL:
-        contributionPageField.hide();
-        purchaseURLField.show();
-        break;
     }
   }
 

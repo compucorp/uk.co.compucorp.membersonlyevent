@@ -17,3 +17,14 @@
 .crm-container #allowed-groups-field.crm-section {
   margin-bottom: 2em;
 }
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 10px;
+}
+.flex-container > div {
+  flex: 0 0 32%;
+}
+#field-purchase-membership-url > input {
+  width: 100%;
+}

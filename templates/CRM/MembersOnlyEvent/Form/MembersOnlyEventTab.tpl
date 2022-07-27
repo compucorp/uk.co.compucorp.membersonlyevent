@@ -82,10 +82,21 @@
 
       <div class="crm-section members-only-event-sub-section">
         <div class="label">{$form.purchase_membership_link_type.label}</div>
-        <div class="content">
-          {$form.purchase_membership_link_type.html}
-          <span id="field-contribution-page-id">{$form.contribution_page_id.html}</span>
-          <span id="field-purchase-membership-url">{$form.purchase_membership_url.html}</span>
+        <div class="content flex-container">
+          <div>
+            {$form.purchase_membership_link_type[0].html}
+          </div>
+          <div id="field-contribution-page-id">
+            {$form.contribution_page_id.html}
+          </div>
+          <div></div>
+          <div>
+            {$form.purchase_membership_link_type[1].html}
+          </div>
+          <div id="field-purchase-membership-url">
+            {$form.purchase_membership_url.html}
+          </div>
+          <div></div>
         </div>
         <div class="clear"></div>
       </div>
