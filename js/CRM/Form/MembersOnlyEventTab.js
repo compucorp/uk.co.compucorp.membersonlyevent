@@ -19,7 +19,6 @@ jQuery(document).ready(function(){
   var contributionPageSection = jQuery("#contribution_page_id").closest('.crm-section');
 
   var eventAccessTypeField = jQuery("#event-access-type");
-  var membersOnlyEventSection = jQuery("#members-only-event-section");
   var allowedMembershipTypesField = jQuery("#allowed-membership-types-field");
   var allowedGroupsField = jQuery("#allowed-groups-field");
 
@@ -55,7 +54,8 @@ jQuery(document).ready(function(){
     eventAccessTypeField.click(function(e){
       // Checks if target is the crm-clear-link.
       if (jQuery(e.target).hasClass('crm-clear-link') || jQuery(e.target).hasClass('fa-times')) {
-        membersOnlyEventSection.hide();
+        allowedMembershipTypesField.hide();
+        allowedGroupsField.hide();
       }
     });
   }
@@ -68,15 +68,14 @@ jQuery(document).ready(function(){
   function toggleTabFields() {
     var eventAccessTypeValue = parseInt(eventAccessTypeField.find(':checked').val());
     if (eventAccessTypeValue === EVENT_ACCESS_TYPE_MEMBERS_ONLY) {
-      membersOnlyEventSection.show();
       allowedMembershipTypesField.show();
       allowedGroupsField.hide();
     } else if (eventAccessTypeValue === EVENT_ACCESS_TYPE_GROUPS_ONLY) {
-      membersOnlyEventSection.show();
       allowedMembershipTypesField.hide();
       allowedGroupsField.show();
     } else {
-      membersOnlyEventSection.hide();
+      allowedMembershipTypesField.hide();
+      allowedGroupsField.hide();
     }
   }
 
