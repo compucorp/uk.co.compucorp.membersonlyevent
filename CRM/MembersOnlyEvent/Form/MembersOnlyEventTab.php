@@ -197,12 +197,13 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       return $errors;
     }
 
-    $isGroupsOnlyEvent = $values['event_access_type'] === MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY;
+    $event_access_type = (int) $values['event_access_type'];
+    $isGroupsOnlyEvent = $event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY;
     if ($isGroupsOnlyEvent) {
       $this->validateForEmptyAllowedGroups($values, $errors);
     }
 
-    $isMembersOnlyEvent = $values['event_access_type'] === MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY;
+    $isMembersOnlyEvent = $event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY;
     if ($isMembersOnlyEvent) {
       switch ($values['is_showing_purchase_membership_block']) {
         case self::NO_SELECTED:
@@ -337,6 +338,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
    */
   public function postProcess() {
     $params = $this->exportValues();
+    $params['event_access_type'] = (int) $params['event_access_type'];
     $params['event_id'] = $this->_id;
 
     $isTabEnabled = !empty($params['event_access_type']);
