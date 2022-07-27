@@ -28,6 +28,8 @@ class CRM_MembersOnlyEvent_Upgrader extends CRM_MembersOnlyEvent_Upgrader_Base {
    * - Add is_showing_login_block column.
    * - Add block_type column.
    * - Add login_block_message column.
+   * - Add is_showing_purchase_membership_block column.
+   * - Add purchase_membership_body_text column.
    */
   public function upgrade_0002() {
     $this->ctx->log->info('Applying update 0002');
