@@ -4,15 +4,15 @@
     {include file="CRM/common/formButtons.tpl" location="top"}
   </div>
 
-  <div class="crm-section" id="event-access-type">
-    <div class="label">{$form.event_access_type.label}</div>
-    <div class="content">
-      {$form.event_access_type.html}
+  <div class="members-only-event-section">
+    <div class="crm-section" id="event-access-type">
+      <div class="label">{$form.event_access_type.label}</div>
+      <div class="content">
+        {$form.event_access_type.html}
+      </div>
+      <div class="clear"></div>
     </div>
-    <div class="clear"></div>
-  </div>
 
-  <div id="members-only-event-section">
     <div class="crm-section" id="allowed-membership-types-field">
       <div class="label">{$form.allowed_membership_types.label} {help id="allowed-membership-types" file="CRM/MembersOnlyEvent/Form/MembersOnlyEventTab"}</div>
       <div class="content">{$form.allowed_membership_types.html}</div>
@@ -25,6 +25,14 @@
       <div class="clear"></div>
     </div>
 
+  </div>
+
+  <hr>
+  <fieldset>
+    <legend>{ts}Additional settings{/ts}</legend>
+  </fieldset>
+
+  <div>
     <div class="members-only-event-section">
 
       <div class="crm-section">
