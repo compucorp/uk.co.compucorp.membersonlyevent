@@ -32,7 +32,6 @@ SET FOREIGN_KEY_CHECKS=1;
 CREATE TABLE `membersonlyevent` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `event_id` int unsigned NOT NULL COMMENT 'Foreign key for the Event',
-  `purchase_membership_button` tinyint DEFAULT 0 COMMENT 'Should we provide membership purchase button when access to event denied ?',
   `is_showing_custom_access_denied_message` tinyint DEFAULT 0 COMMENT 'This allows you to add a custom access denied message for members-only event.',
   `notice_for_access_denied` text DEFAULT NULL COMMENT 'Notice message to show to the user when the access to members-only event denied.',
   `is_showing_login_block` tinyint DEFAULT 0 COMMENT 'This allows you to choose a Login block to display and add a custom message to be displayed on the block for anonymous users',

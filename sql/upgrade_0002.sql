@@ -48,3 +48,14 @@ ALTER TABLE `membersonlyevent` ADD `login_block_message` text DEFAULT NULL COMME
 -- *******************************************************/
 ALTER TABLE `membersonlyevent` ADD `is_showing_purchase_membership_block` tinyint DEFAULT 0 COMMENT 'This allows you to add a label, custom message and  link to be displayed on the event.' AFTER `login_block_message`;
 ALTER TABLE `membersonlyevent` ADD `purchase_membership_body_text` text DEFAULT NULL COMMENT 'Custom message to show to the user when access to members-only event denied.' AFTER `purchase_membership_button_label`;
+
+-- /*******************************************************
+-- *
+-- * membersonlyevent
+-- *
+-- * Migrate purchase_membership_button column values to is_showing_purchase_membership_block column
+-- * Drop purchase_membership_button column
+-- *
+-- *******************************************************/
+UPDATE `membersonlyevent` SET `is_showing_purchase_membership_block` = `purchase_membership_button`;
+ALTER TABLE `membersonlyevent` DROP COLUMN purchase_membership_button;
