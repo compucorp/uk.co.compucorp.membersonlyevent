@@ -44,6 +44,15 @@
   </field>
 
   <field>
+    <name>is_showing_custom_access_denied_message</name>
+    <title>Show a custom access denied message</title>
+    <type>boolean</type>
+    <default>0</default>
+    <comment>This allows you to add a custom access denied message for members-only event.</comment>
+    <add>5.39</add>
+  </field>
+
+  <field>
     <name>notice_for_access_denied</name>
     <title>Notice for access denied</title>
     <type>text</type>

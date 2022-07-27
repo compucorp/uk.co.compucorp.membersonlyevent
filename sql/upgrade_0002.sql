@@ -15,3 +15,12 @@ ALTER TABLE `membersonlyevent` CHANGE `is_groups_only` `event_access_type` int u
 -- *
 -- *******************************************************/
 UPDATE `membersonlyevent` SET `event_access_type` = `event_access_type` + 1;
+
+-- /*******************************************************
+-- *
+-- * membersonlyevent
+-- *
+-- * Add is_showing_custom_access_denied_message column
+-- *
+-- *******************************************************/
+ALTER TABLE `membersonlyevent` ADD `is_showing_custom_access_denied_message` tinyint DEFAULT 0 COMMENT 'This allows you to add a custom access denied message for members-only event.' AFTER `purchase_membership_button`;

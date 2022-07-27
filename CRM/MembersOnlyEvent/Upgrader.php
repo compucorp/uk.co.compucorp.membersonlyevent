@@ -24,6 +24,7 @@ class CRM_MembersOnlyEvent_Upgrader extends CRM_MembersOnlyEvent_Upgrader_Base {
    * - Renames is_groups_only column to event_access_type.
    * - Changes the type to int unsigned.
    * - Increments event_access_type column to start from 1.
+   * - Add is_showing_custom_access_denied_message column.
    */
   public function upgrade_0002() {
     $this->ctx->log->info('Applying update 0002');
