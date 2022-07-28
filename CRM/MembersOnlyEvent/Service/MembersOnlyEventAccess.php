@@ -188,8 +188,15 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
    */
   public function redirectUsersWithoutEventAccess() {
     if (!$this->userHasEventAccess()) {
-      // if the user has no access, redirect to the main page
-      CRM_Utils_System::redirect('/');
+      // if the user has no access, redirect to the event info page.
+      $id = CRM_Utils_Request::retrieve('id', 'Positive');
+      $params = 'id=' . $id;
+      if ($reset = CRM_Utils_Request::retrieve('reset', 'Positive')) {
+        $params .= '&reset=' . $reset;
+      }
+
+      $url = CRM_Utils_System::url('civicrm/event/info', $params);
+      CRM_Utils_System::redirect($url);
     }
   }
 
