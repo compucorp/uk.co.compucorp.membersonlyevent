@@ -43,8 +43,7 @@ class CRM_MembersOnlyEvent_Hook_PreProcess_Register extends PreProcessBase {
    * Hence that users are supposed to register for events
    * from the info page, so in case the user tired to access
    * the registration page directly we will just redirect him
-   * to the main page instead of showing any error or buttons to
-   * login or buy membership.
+   * to the info page.
    *
    * @param $formName
    * @param CRM_Event_Form_Registration_Register $form

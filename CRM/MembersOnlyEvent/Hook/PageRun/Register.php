@@ -1,7 +1,6 @@
 <?php
 
 use CRM_MembersOnlyEvent_Hook_PageRun_Base as PageRunBase;
-use CRM_MembersOnlyEvent_BAO_MembersOnlyEvent as MembersOnlyEvent;
 use CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess as MembersOnlyEventAccessService;
 
 /**
@@ -46,8 +45,6 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
     }
 
     $this->hideEventInfoPageRegisterButton();
-
-    $this->handleAccessOptionForUser();
   }
 
   /**
@@ -88,58 +85,6 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
       ->update('default', [
         'disabled' => TRUE,
       ]);
-  }
-
-  /**
-   * Handles access options for logged / anonymous user.
-   */
-  private function handleAccessOptionForUser() {
-    $membersOnlyEvent = $this->membersOnlyEventAccessService->getMembersOnlyEvent();
-
-    if ($membersOnlyEvent->is_showing_purchase_membership_block) {
-      $this->addMembershipPurchaseButtonToEventInfoPage($membersOnlyEvent);
-      $userLoggedIn = CRM_Core_Session::getLoggedInContactID();
-      if ($userLoggedIn) {
-        return;
-      }
-      $loginURL = CRM_Core_Config::singleton()->userSystem->getLoginURL();
-      $infoText = 'This event is for members only, if you have a current, pending or former membership
-                 please log in before purchase membership. If you are not a current member you will be charged
-                 an additional membership fee. <a href="' . $loginURL . '">Click here to login </a>';
-      CRM_Core_Session::setStatus(ts($infoText));
-
-    }
-    else {
-      // Purchase membership button is disabled, so we will just show the configured notice message
-      CRM_Core_Session::setStatus($membersOnlyEvent->notice_for_access_denied);
-    }
-  }
-
-  /**
-   * Adds membership purchase button based
-   * on the members-only event configurations to
-   * the header and the footer of the event info page.
-   *
-   * @param \CRM_MembersOnlyEvent_DAO_MembersOnlyEvent $membersOnlyEvent
-   */
-  private function addMembershipPurchaseButtonToEventInfoPage($membersOnlyEvent) {
-    switch ($membersOnlyEvent->purchase_membership_link_type) {
-      case MembersOnlyEvent::LINK_TYPE_CONTRIBUTION_PAGE:
-        $contributionPageID = $membersOnlyEvent->contribution_page_id;
-        $path = 'civicrm/contribute/transact';
-        $params = 'reset=1&id=' . $contributionPageID;
-        $membershipPurchaseURL = CRM_Utils_System::url($path, $params);
-        break;
-
-      case MembersOnlyEvent::LINK_TYPE_URL:
-      default:
-        $membershipPurchaseURL = $membersOnlyEvent->purchase_membership_url;
-        break;
-    }
-
-    $buttonText = $membersOnlyEvent->purchase_membership_button_label;
-
-    $this->addActionButtonToEventInfoPage($membershipPurchaseURL, $buttonText);
   }
 
   /**
