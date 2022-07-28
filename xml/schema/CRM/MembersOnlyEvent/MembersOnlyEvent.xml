@@ -35,12 +35,12 @@
   </foreignKey>
 
   <field>
-    <name>purchase_membership_button</name>
-    <title>Purchase membership button</title>
+    <name>is_showing_custom_access_denied_message</name>
+    <title>Show a custom access denied message</title>
     <type>boolean</type>
     <default>0</default>
-    <comment>Should we provide membership purchase button when access to event denied ?</comment>
-    <add>4.4</add>
+    <comment>This allows you to add a custom access denied message for members-only event.</comment>
+    <add>5.39</add>
   </field>
 
   <field>
@@ -48,13 +48,53 @@
     <title>Notice for access denied</title>
     <type>text</type>
     <default>NULL</default>
-    <comment>Notice message to show to the user when the access to members-only event denied.</comment>
+    <comment>Notice message to show to the user when access to members-only event denied.</comment>
     <html>
       <type>TextArea</type>
       <rows>4</rows>
       <cols>80</cols>
     </html>
     <add>4.4</add>
+  </field>
+
+  <field>
+    <name>is_showing_login_block</name>
+    <title>Show a custom access denied message</title>
+    <type>boolean</type>
+    <default>0</default>
+    <comment>This allows you to choose a Login block to display and add a custom message to be displayed on the block for anonymous users</comment>
+    <add>5.39</add>
+  </field>
+
+  <field>
+    <name>block_type</name>
+    <type>int unsigned</type>
+    <default>1</default>
+    <comment>Login block type</comment>
+    <add>5.39</add>
+  </field>
+
+  <field>
+    <name>login_block_message</name>
+    <title>Login block message</title>
+    <type>text</type>
+    <default>NULL</default>
+    <comment>Login block message to show to the user when access to members-only event denied.</comment>
+    <html>
+      <type>TextArea</type>
+      <rows>4</rows>
+      <cols>80</cols>
+    </html>
+    <add>5.39</add>
+  </field>
+
+  <field>
+    <name>is_showing_purchase_membership_block</name>
+    <title>Show a purchase membership block when access denied</title>
+    <type>boolean</type>
+    <default>0</default>
+    <comment>This allows you to add a label, custom message and  link to be displayed on the event.</comment>
+    <add>5.39</add>
   </field>
 
   <field>
@@ -65,6 +105,20 @@
     <length>255</length>
     <comment>Purchase membership button label if it is enabled</comment>
     <add>4.4</add>
+  </field>
+
+  <field>
+    <name>purchase_membership_body_text</name>
+    <title>Membership block body text</title>
+    <type>text</type>
+    <default>NULL</default>
+    <comment>Custom message to show to the user when access to members-only event denied.</comment>
+    <html>
+      <type>TextArea</type>
+      <rows>4</rows>
+      <cols>80</cols>
+    </html>
+    <add>5.39</add>
   </field>
 
   <field>

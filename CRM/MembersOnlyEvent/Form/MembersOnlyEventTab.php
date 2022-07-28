@@ -103,9 +103,11 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       ]
     );
 
-    $this->addYesNo(
-      'purchase_membership_button',
-      ts('Provide Purchase Membership Button when access denied ?')
+    $this->addElement(
+      'checkbox',
+      'is_showing_custom_access_denied_message',
+      NULL,
+      ts('Show a custom access denied message')
     );
 
     $this->add(
@@ -114,10 +116,43 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       ts('Notice for access denied')
     );
 
+    $this->addElement(
+      'checkbox',
+      'is_showing_login_block',
+      NULL,
+      ts('Show login block to anonymous users')
+    );
+
+    $this->add(
+      'select',
+      'block_type',
+      ts('Block type'),
+      $this->getBlockTypes()
+    );
+
+    $this->add(
+      'wysiwyg',
+      'login_block_message',
+      ts('Login block message')
+    );
+
+    $this->addElement(
+      'checkbox',
+      'is_showing_purchase_membership_block',
+      NULL,
+      ts('Show a purchase membership block when access denied')
+    );
+
     $this->add(
       'text',
       'purchase_membership_button_label',
       ts('Purchase Membership Button Label')
+    );
+
+    $this->add(
+      'wysiwyg',
+      'purchase_membership_body_text',
+      ts('Body text')
     );
 
     $this->addRadio(
@@ -162,14 +197,15 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       return $errors;
     }
 
-    $isGroupsOnlyEvent = $values['event_access_type'] === MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY;
+    $event_access_type = (int) $values['event_access_type'];
+    $isGroupsOnlyEvent = $event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY;
     if ($isGroupsOnlyEvent) {
       $this->validateForEmptyAllowedGroups($values, $errors);
     }
 
-    $isMembersOnlyEvent = $values['event_access_type'] === MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY;
+    $isMembersOnlyEvent = $event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY;
     if ($isMembersOnlyEvent) {
-      switch ($values['purchase_membership_button']) {
+      switch ($values['is_showing_purchase_membership_block']) {
         case self::NO_SELECTED:
           $this->validateForDisabledPurchaseButton($values, $errors);
           break;
@@ -263,9 +299,14 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
       $defaultValues['event_access_type'] = $membersOnlyEvent->event_access_type;
       $defaultValues['allowed_membership_types'] = EventMembershipType::getAllowedMembershipTypeIDs($membersOnlyEvent->id);
       $defaultValues['allowed_groups'] = EventGroup::getAllowedGroupIDs($membersOnlyEvent->id);
-      $defaultValues['purchase_membership_button'] = $membersOnlyEvent->purchase_membership_button;
+      $defaultValues['is_showing_custom_access_denied_message'] = $membersOnlyEvent->is_showing_custom_access_denied_message;
       $defaultValues['notice_for_access_denied'] = $membersOnlyEvent->notice_for_access_denied;
+      $defaultValues['is_showing_login_block'] = $membersOnlyEvent->is_showing_login_block;
+      $defaultValues['block_type'] = $membersOnlyEvent->block_type;
+      $defaultValues['login_block_message'] = $membersOnlyEvent->login_block_message;
+      $defaultValues['is_showing_purchase_membership_block'] = $membersOnlyEvent->is_showing_purchase_membership_block;
       $defaultValues['purchase_membership_button_label'] = $membersOnlyEvent->purchase_membership_button_label;
+      $defaultValues['purchase_membership_body_text'] = $membersOnlyEvent->purchase_membership_body_text;
       $defaultValues['purchase_membership_link_type'] = $membersOnlyEvent->purchase_membership_link_type;
       $defaultValues['contribution_page_id'] = $membersOnlyEvent->contribution_page_id;
       $defaultValues['purchase_membership_url'] = $membersOnlyEvent->purchase_membership_url;
@@ -281,9 +322,14 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
    */
   private function setInitialValues(&$defaultValues) {
     $defaultValues['event_access_type'] = self::NO_SELECTED;
-    $defaultValues['purchase_membership_button'] = self::NO_SELECTED;
+    $defaultValues['is_showing_custom_access_denied_message'] = self::NO_SELECTED;
     $defaultValues['notice_for_access_denied'] = ts('Access Denied');
+    $defaultValues['is_showing_login_block'] = self::NO_SELECTED;
+    $defaultValues['block_type'] = 1;
+    $defaultValues['login_block_message'] = '';
+    $defaultValues['is_showing_purchase_membership_block'] = self::NO_SELECTED;
     $defaultValues['purchase_membership_button_label'] = ts('Purchase membership to book the event');
+    $defaultValues['purchase_membership_body_text'] = '';
     $defaultValues['purchase_membership_link_type'] = MembersOnlyEvent::LINK_TYPE_URL;
   }
 
@@ -292,6 +338,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
    */
   public function postProcess() {
     $params = $this->exportValues();
+    $params['event_access_type'] = (int) $params['event_access_type'];
     $params['event_id'] = $this->_id;
 
     $isTabEnabled = !empty($params['event_access_type']);
@@ -367,6 +414,11 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
     $eventSetToMembersOnly = $params['event_access_type'] === MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY;
     $eventSetToGroupsOnly = $params['event_access_type'] === MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY;
 
+    // The checkbox values are not submitted when unchecked.
+    $params['is_showing_custom_access_denied_message'] = $params['is_showing_custom_access_denied_message'] ?? 0;
+    $params['is_showing_login_block'] = $params['is_showing_login_block'] ?? 0;
+    $params['is_showing_purchase_membership_block'] = $params['is_showing_purchase_membership_block'] ?? 0;
+
     $membersOnlyEvent = MembersOnlyEvent::create($params);
     if (!empty($membersOnlyEvent->id)) {
       $allowedMembershipTypeIDs = [];
@@ -395,6 +447,21 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
     $membersOnlyEvent = new MembersOnlyEvent();
     $membersOnlyEvent->id = $membersOnlyEventID;
     $membersOnlyEvent->delete();
+  }
+
+  /**
+   * Gets block types.
+   */
+  private function getBlockTypes() {
+    $block_types = [
+      '1' => ts('Login only'),
+    ];
+
+    if (function_exists('module_exists') && module_exists('ssp_core_user')) {
+      $block_types['2'] = ts('Login or register block');
+    }
+
+    return $block_types;
   }
 
 }

@@ -29,9 +29,14 @@ class CRM_MembersOnlyEvent_Test_Fabricator_MembersOnlyEvent {
 
   private static function getDefaultParams() {
     return [
-      'purchase_membership_button' => TRUE,
+      'is_showing_custom_access_denied_message' => 1,
       'notice_for_access_denied' => 'Access Denied',
+      'is_showing_login_block' => 1,
+      'block_type' => 1,
+      'login_block_message' => 'Please Login',
+      'is_showing_purchase_membership_block' => 1,
       'purchase_membership_button_label' => 'Purchase membership to book the event',
+      'purchase_membership_body_text' => 'Buy a membership',
       'purchase_membership_link_type' => 1,
       'contribution_page_id' => NULL,
       'purchase_membership_url' => NULL,

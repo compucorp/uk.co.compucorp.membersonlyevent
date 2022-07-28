@@ -39,11 +39,17 @@ class CRM_MembersOnlyEvent_Hook_Copy_EventFromTemplateCreatorTest extends BaseHe
 
     $templateKeys = [
       'contribution_page_id',
+      'is_showing_custom_access_denied_message',
       'notice_for_access_denied',
-      'purchase_membership_button',
+      'is_showing_login_block',
+      'block_type',
+      'login_block_message',
+      'is_showing_purchase_membership_block',
       'purchase_membership_button_label',
+      'purchase_membership_body_text',
       'purchase_membership_link_type',
       'purchase_membership_url',
+      'event_access_type',
     ];
     foreach ($templateKeys as $templateKey) {
       $this->assertEquals($this->membersOnlyEventTemplate->{$templateKey}, $membersOnlyEvent->{$templateKey});

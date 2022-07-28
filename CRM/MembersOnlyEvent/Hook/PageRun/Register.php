@@ -96,7 +96,7 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
   private function handleAccessOptionForUser() {
     $membersOnlyEvent = $this->membersOnlyEventAccessService->getMembersOnlyEvent();
 
-    if ($membersOnlyEvent->purchase_membership_button) {
+    if ($membersOnlyEvent->is_showing_purchase_membership_block) {
       $this->addMembershipPurchaseButtonToEventInfoPage($membersOnlyEvent);
       $userLoggedIn = CRM_Core_Session::getLoggedInContactID();
       if ($userLoggedIn) {

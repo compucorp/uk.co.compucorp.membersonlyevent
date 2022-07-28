@@ -1,3 +1,30 @@
 .crm-event-manage-membersonlyevent-form-help {
   padding-bottom: 1px;
 }
+.crm-event-manage-membersonlyevent-form-block fieldset legend {
+  padding: 2em;
+}
+.members-only-event-section {
+  padding: 0px 2em 0px 4em;
+}
+.members-only-event-sub-section {
+  padding: 0px 2em 2em 4em;
+}
+.crm-container .members-only-event-section .crm-section .label {
+  text-align: left;
+}
+.crm-container #event-access-type.crm-section,
+.crm-container #allowed-groups-field.crm-section {
+  margin-bottom: 2em;
+}
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 10px;
+}
+.flex-container > div {
+  flex: 0 0 32%;
+}
+#field-purchase-membership-url > input {
+  width: 100%;
+}
