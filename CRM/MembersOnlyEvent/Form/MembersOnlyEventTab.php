@@ -323,13 +323,13 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
   private function setInitialValues(&$defaultValues) {
     $defaultValues['event_access_type'] = self::NO_SELECTED;
     $defaultValues['is_showing_custom_access_denied_message'] = self::NO_SELECTED;
-    $defaultValues['notice_for_access_denied'] = ts('Access Denied');
+    $defaultValues['notice_for_access_denied'] = ts('Access to this event is restricted');
     $defaultValues['is_showing_login_block'] = self::NO_SELECTED;
     $defaultValues['block_type'] = 1;
-    $defaultValues['login_block_message'] = '';
+    $defaultValues['login_block_message'] = ts('To access this event, please login below');
     $defaultValues['is_showing_purchase_membership_block'] = self::NO_SELECTED;
     $defaultValues['purchase_membership_button_label'] = ts('Purchase membership to book the event');
-    $defaultValues['purchase_membership_body_text'] = '';
+    $defaultValues['purchase_membership_body_text'] = ts('Become a member to get access to this event');
     $defaultValues['purchase_membership_link_type'] = MembersOnlyEvent::LINK_TYPE_URL;
   }
 
