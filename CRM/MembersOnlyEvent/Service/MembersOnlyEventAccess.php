@@ -230,7 +230,11 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
         if ($config->userSystem->is_drupal) {
           $user_login_form = drupal_get_form('user_login');
           $register_page = '/civicrm/event/register?reset=1&id=' . $membersOnlyEvent['event_id'];
-          $user_login_form['#action'] .= '?destination=' . urlencode($register_page);
+          $query_string_prefix = "?";
+          if (strpos($user_login_form['#action'], '?') !== FALSE) {
+            $query_string_prefix = "&";
+          }
+          $user_login_form['#action'] .= $query_string_prefix . 'destination=' . urlencode($register_page);
           $user_login_form_content = drupal_render($user_login_form);
         }
         $membersOnlyEvent['login_block_content'] = $user_login_form_content;
