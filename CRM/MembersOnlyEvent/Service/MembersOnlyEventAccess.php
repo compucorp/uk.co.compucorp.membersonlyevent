@@ -213,6 +213,35 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
   }
 
   /**
+   * Prepares members-only event for template.
+   *
+   * @return array
+   *   The membersOnlyEvent details.
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function prepareMembersOnlyEventForTemplate() {
+    $membersOnlyEvent = (array) $this->membersOnlyEvent;
+
+    if (!empty($membersOnlyEvent['is_showing_login_block'])) {
+      if ($membersOnlyEvent['block_type'] === "1") {
+        $user_login_form = drupal_get_form('user_login');
+        $register_page = '/civicrm/event/register?reset=1&id=' . $membersOnlyEvent['event_id'];
+        $user_login_form['#action'] .= '?destination=' . urlencode($register_page);
+        $membersOnlyEvent['login_block_content'] = drupal_render($user_login_form);
+        $membersOnlyEvent['login_block_header'] = '<h2>' . ts('Login') . '</h2>';
+      }
+      else {
+        $user_login_form = drupal_get_form('ssp_core_user_login_or_register_form');
+        $membersOnlyEvent['login_block_content'] = drupal_render($user_login_form);
+        $membersOnlyEvent['login_block_header'] = '<h2>' . ts('Login or Register') . '</h2>';
+      }
+    }
+
+    return $membersOnlyEvent;
+  }
+
+  /**
    * Gets event access details for a given event ids
    *
    * @param array $eventIDs

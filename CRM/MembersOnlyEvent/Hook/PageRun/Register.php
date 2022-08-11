@@ -93,12 +93,12 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
    * Adds the access denied, login and membership blocks.
    */
   private function addbocks() {
-    $membersOnlyEvent = $this->membersOnlyEventAccessService->getMembersOnlyEvent();
+    $membersOnlyEvent = $this->membersOnlyEventAccessService->prepareMembersOnlyEventForTemplate();
 
     CRM_Core_Region::instance('event-page-eventinfo-actionlinks-bottom')
       ->add([
         'template' => 'CRM/Event/Page/blocks.tpl',
-        'membersOnlyEvent' => (array) $membersOnlyEvent,
+        'membersOnlyEvent' => $membersOnlyEvent,
       ]);
   }
 
