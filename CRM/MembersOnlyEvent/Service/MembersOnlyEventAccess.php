@@ -238,6 +238,14 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
       }
     }
 
+    if (!empty($membersOnlyEvent['is_showing_purchase_membership_block'])) {
+      if ($membersOnlyEvent['purchase_membership_link_type'] === "0") {
+        $path = 'civicrm/contribute/transact';
+        $params = 'reset=1&id=' . $membersOnlyEvent['contribution_page_id'];
+        $membersOnlyEvent['purchase_membership_url'] = CRM_Utils_System::url($path, $params);
+      }
+    }
+
     return $membersOnlyEvent;
   }
 
