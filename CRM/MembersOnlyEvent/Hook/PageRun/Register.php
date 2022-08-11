@@ -45,6 +45,8 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
     }
 
     $this->hideEventInfoPageRegisterButton();
+
+    $this->addbocks();
   }
 
   /**
@@ -84,6 +86,19 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
     CRM_Core_Region::instance('event-page-eventinfo-actionlinks-bottom')
       ->update('default', [
         'disabled' => TRUE,
+      ]);
+  }
+
+  /**
+   * Adds the access denied, login and membership blocks.
+   */
+  private function addbocks() {
+    $membersOnlyEvent = $this->membersOnlyEventAccessService->getMembersOnlyEvent();
+
+    CRM_Core_Region::instance('event-page-eventinfo-actionlinks-bottom')
+      ->add([
+        'template' => 'CRM/Event/Page/blocks.tpl',
+        'membersOnlyEvent' => (array) $membersOnlyEvent,
       ]);
   }
 
