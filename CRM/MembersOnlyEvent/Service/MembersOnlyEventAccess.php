@@ -224,6 +224,12 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
     $membersOnlyEvent = (array) $this->membersOnlyEvent;
     $config = CRM_Core_Config::singleton();
 
+    $contactId = CRM_Core_Session::getLoggedInContactID();
+    if ($contactId) {
+      // Logged in users cannot see the login form and will be redirected.
+      $membersOnlyEvent['is_showing_login_block'] = "0";
+    }
+
     if (!empty($membersOnlyEvent['is_showing_login_block'])) {
       if ($membersOnlyEvent['block_type'] === "1") {
         $user_login_form_content = '';
