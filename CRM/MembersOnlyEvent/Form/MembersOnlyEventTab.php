@@ -325,7 +325,7 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
     $defaultValues['is_showing_custom_access_denied_message'] = self::NO_SELECTED;
     $defaultValues['notice_for_access_denied'] = ts('Access to this event is restricted');
     $defaultValues['is_showing_login_block'] = self::NO_SELECTED;
-    $defaultValues['block_type'] = 1;
+    $defaultValues['block_type'] = MembersOnlyEvent::BLOCK_TYPE_LOGIN_ONLY;
     $defaultValues['login_block_message'] = ts('To access this event, please login below');
     $defaultValues['is_showing_purchase_membership_block'] = self::NO_SELECTED;
     $defaultValues['purchase_membership_button_label'] = ts('Purchase membership to book the event');
@@ -454,11 +454,11 @@ class CRM_MembersOnlyEvent_Form_MembersOnlyEventTab extends CRM_Event_Form_Manag
    */
   private function getBlockTypes() {
     $block_types = [
-      '1' => ts('Login only'),
+      MembersOnlyEvent::BLOCK_TYPE_LOGIN_ONLY => ts('Login only'),
     ];
 
     if (function_exists('module_exists') && module_exists('ssp_core_user')) {
-      $block_types['2'] = ts('Login or register block');
+      $block_types[MembersOnlyEvent::BLOCK_TYPE_LOGIN_OR_REGISTER_BLOCK] = ts('Login or register block');
     }
 
     return $block_types;

@@ -231,7 +231,8 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
     }
 
     if (!empty($membersOnlyEvent['is_showing_login_block'])) {
-      if ($membersOnlyEvent['block_type'] === "1") {
+      $block_type = (int) $membersOnlyEvent['block_type'];
+      if ($block_type === MembersOnlyEvent::BLOCK_TYPE_LOGIN_ONLY) {
         $user_login_form_content = '';
         if ($config->userSystem->is_drupal) {
           $user_login_form = drupal_get_form('user_login');
@@ -243,6 +244,7 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
           $user_login_form['#action'] .= $query_string_prefix . 'destination=' . urlencode($register_page);
           $user_login_form_content = drupal_render($user_login_form);
         }
+
         $membersOnlyEvent['login_block_content'] = $user_login_form_content;
         $membersOnlyEvent['login_block_header'] = '<h2>' . ts('Login') . '</h2>';
       }
@@ -252,6 +254,7 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
           $user_login_form = drupal_get_form('ssp_core_user_login_or_register_form');
           $user_login_form_content = drupal_render($user_login_form);
         }
+
         $membersOnlyEvent['login_block_content'] = $user_login_form_content;
         $membersOnlyEvent['login_block_header'] = '<h2>' . ts('Login or Register') . '</h2>';
       }
