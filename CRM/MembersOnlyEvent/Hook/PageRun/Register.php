@@ -127,29 +127,4 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
       ]);
   }
 
-  /**
-   * Adds a button with the specified
-   * url and text to the header and the footer
-   * of the event info page.
-   *
-   * @param $url
-   * @param $buttonText
-   */
-  public function addActionButtonToEventInfoPage($url, $buttonText) {
-    $buttonToAdd = [
-      'template' => 'CRM/Event/Page/members-event-button.tpl',
-      'button_text' => ts($buttonText),
-      'position' => 'top',
-      'url' => $url,
-      'weight' => -10,
-    ];
-
-    CRM_Core_Region::instance('event-page-eventinfo-actionlinks-top')
-      ->add($buttonToAdd);
-
-    $buttonToAdd['position'] = 'bottom';
-    CRM_Core_Region::instance('event-page-eventinfo-actionlinks-bottom')
-      ->add($buttonToAdd);
-  }
-
 }
