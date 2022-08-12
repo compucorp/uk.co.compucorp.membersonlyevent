@@ -45,6 +45,8 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
     }
 
     $this->hideEventInfoPageRegisterButton();
+
+    $this->addbocks();
   }
 
   /**
@@ -88,28 +90,41 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
   }
 
   /**
-   * Adds a button with the specified
-   * url and text to the header and the footer
-   * of the event info page.
-   *
-   * @param $url
-   * @param $buttonText
+   * Checks whether the ssp_bootstrap is the active theme or not.
    */
-  public function addActionButtonToEventInfoPage($url, $buttonText) {
-    $buttonToAdd = [
-      'template' => 'CRM/Event/Page/members-event-button.tpl',
-      'button_text' => ts($buttonText),
-      'position' => 'top',
-      'url' => $url,
-      'weight' => -10,
-    ];
+  private function isSSPBootstrapTheActiveTheme() {
+    $config = CRM_Core_Config::singleton();
 
-    CRM_Core_Region::instance('event-page-eventinfo-actionlinks-top')
-      ->add($buttonToAdd);
+    if (!$config->userSystem->is_drupal) {
+      return FALSE;
+    }
 
-    $buttonToAdd['position'] = 'bottom';
+    // Connot trust the value of `variable_get('theme_default')` if the module
+    // themekey was enabled because the module switch the theme without updating
+    // the `theme_default` variable.
+    if ($GLOBALS['theme_key'] !== 'ssp_bootstrap') {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Adds the access denied, login and membership blocks.
+   */
+  private function addbocks() {
+    if ($this->isSSPBootstrapTheActiveTheme()) {
+      // Skip adding the blocks, the theme uses a custom template.
+      return;
+    }
+
+    $membersOnlyEvent = $this->membersOnlyEventAccessService->prepareMembersOnlyEventForTemplate();
+
     CRM_Core_Region::instance('event-page-eventinfo-actionlinks-bottom')
-      ->add($buttonToAdd);
+      ->add([
+        'template' => 'CRM/Event/Page/blocks.tpl',
+        'membersOnlyEvent' => $membersOnlyEvent,
+      ]);
   }
 
 }

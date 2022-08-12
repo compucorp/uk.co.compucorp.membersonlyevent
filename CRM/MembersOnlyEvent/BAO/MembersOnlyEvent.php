@@ -38,6 +38,20 @@ class CRM_MembersOnlyEvent_BAO_MembersOnlyEvent extends CRM_MembersOnlyEvent_DAO
   const EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY = 3;
 
   /**
+   * Block type for 'Login block only'.
+   *
+   * @const int
+   */
+  const BLOCK_TYPE_LOGIN_ONLY = 1;
+
+  /**
+   * Block type for 'Login or register block'.
+   *
+   * @const int
+   */
+  const BLOCK_TYPE_LOGIN_OR_REGISTER_BLOCK = 2;
+
+  /**
    * Creates a new Members-Only Event record
    * based on array-data
    *

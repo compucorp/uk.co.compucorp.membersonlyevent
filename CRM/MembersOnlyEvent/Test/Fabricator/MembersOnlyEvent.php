@@ -32,7 +32,7 @@ class CRM_MembersOnlyEvent_Test_Fabricator_MembersOnlyEvent {
       'is_showing_custom_access_denied_message' => 1,
       'notice_for_access_denied' => 'Access Denied',
       'is_showing_login_block' => 1,
-      'block_type' => 1,
+      'block_type' => MembersOnlyEvent::BLOCK_TYPE_LOGIN_ONLY,
       'login_block_message' => 'Please Login',
       'is_showing_purchase_membership_block' => 1,
       'purchase_membership_button_label' => 'Purchase membership to book the event',

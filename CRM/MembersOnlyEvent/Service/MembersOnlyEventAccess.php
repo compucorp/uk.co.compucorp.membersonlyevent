@@ -213,6 +213,65 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
   }
 
   /**
+   * Prepares members-only event for template.
+   *
+   * @return array
+   *   The membersOnlyEvent details.
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function prepareMembersOnlyEventForTemplate() {
+    $membersOnlyEvent = (array) $this->membersOnlyEvent;
+    $config = CRM_Core_Config::singleton();
+
+    $contactId = CRM_Core_Session::getLoggedInContactID();
+    if ($contactId) {
+      // Logged in users cannot see the login form and will be redirected.
+      $membersOnlyEvent['is_showing_login_block'] = "0";
+    }
+
+    if (!empty($membersOnlyEvent['is_showing_login_block'])) {
+      $block_type = (int) $membersOnlyEvent['block_type'];
+      if ($block_type === MembersOnlyEvent::BLOCK_TYPE_LOGIN_ONLY) {
+        $user_login_form_content = '';
+        if ($config->userSystem->is_drupal) {
+          $user_login_form = drupal_get_form('user_login');
+          $register_page = '/civicrm/event/register?reset=1&id=' . $membersOnlyEvent['event_id'];
+          $query_string_prefix = "?";
+          if (strpos($user_login_form['#action'], '?') !== FALSE) {
+            $query_string_prefix = "&";
+          }
+          $user_login_form['#action'] .= $query_string_prefix . 'destination=' . urlencode($register_page);
+          $user_login_form_content = drupal_render($user_login_form);
+        }
+
+        $membersOnlyEvent['login_block_content'] = $user_login_form_content;
+        $membersOnlyEvent['login_block_header'] = '<h2>' . ts('Login') . '</h2>';
+      }
+      else {
+        $user_login_form_content = '';
+        if ($config->userSystem->is_drupal) {
+          $user_login_form = drupal_get_form('ssp_core_user_login_or_register_form');
+          $user_login_form_content = drupal_render($user_login_form);
+        }
+
+        $membersOnlyEvent['login_block_content'] = $user_login_form_content;
+        $membersOnlyEvent['login_block_header'] = '<h2>' . ts('Login or Register') . '</h2>';
+      }
+    }
+
+    if (!empty($membersOnlyEvent['is_showing_purchase_membership_block'])) {
+      if ($membersOnlyEvent['purchase_membership_link_type'] === "0") {
+        $path = 'civicrm/contribute/transact';
+        $params = 'reset=1&id=' . $membersOnlyEvent['contribution_page_id'];
+        $membersOnlyEvent['purchase_membership_url'] = CRM_Utils_System::url($path, $params);
+      }
+    }
+
+    return $membersOnlyEvent;
+  }
+
+  /**
    * Gets event access details for a given event ids
    *
    * @param array $eventIDs
