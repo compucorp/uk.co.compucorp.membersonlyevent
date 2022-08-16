@@ -53,9 +53,10 @@ function civicrm_api3_members_only_event_get($params) {
     $membersOnlyEventAccessService = new MembersOnlyEventAccessService($value['event_id']);
     $membersOnlyEvent = $membersOnlyEventAccessService->prepareMembersOnlyEventForTemplate();
 
+    $result['values'][$key]['is_showing_login_block'] = $membersOnlyEvent['is_showing_login_block'];
     $result['values'][$key]['login_block_content'] = $membersOnlyEvent['login_block_content'] ?? '';
     $result['values'][$key]['login_block_header'] = $membersOnlyEvent['login_block_header'] ?? '';
-    $result['values'][$key]['purchase_membership_url'] = $membersOnlyEvent['purchase_membership_url'] ?? '';
+    $result['values'][$key]['purchase_membership_url'] = $membersOnlyEvent['purchase_membership_url'];
     $result['values'][$key]['is_user_allowed'] = $membersOnlyEventAccessService->userHasEventAccess();
   }
 
