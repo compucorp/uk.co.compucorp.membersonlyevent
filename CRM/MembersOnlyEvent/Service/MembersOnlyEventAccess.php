@@ -62,18 +62,25 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
   public function userHasEventAccess() {
     if (
       empty($this->membersOnlyEvent) ||
-      CRM_Core_Permission::check('members only event registration')
+      ($this->contactID && CRM_Core_Permission::check('members only event registration'))
     ) {
       // Any user (including anonymous) with 'members only event registration' permission
       // can access any members-only event.
       return TRUE;
     }
 
-    if (empty($this->membersOnlyEvent->is_groups_only)) {
+    $event_access_type = (int) $this->membersOnlyEvent->event_access_type;
+    if ($event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_MEMBERS_ONLY) {
       return !empty($this->contactActiveAllowedMemberships);
     }
 
-    return !empty($this->contactAllowedGroups);
+    if ($event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY) {
+      return !empty($this->contactAllowedGroups);
+    }
+
+    if ($event_access_type === MembersOnlyEvent::EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY) {
+      return !empty($this->contactID);
+    }
   }
 
   /**
@@ -181,8 +188,15 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
    */
   public function redirectUsersWithoutEventAccess() {
     if (!$this->userHasEventAccess()) {
-      // if the user has no access, redirect to the main page
-      CRM_Utils_System::redirect('/');
+      // if the user has no access, redirect to the event info page.
+      $id = CRM_Utils_Request::retrieve('id', 'Positive');
+      $params = 'id=' . $id;
+      if ($reset = CRM_Utils_Request::retrieve('reset', 'Positive')) {
+        $params .= '&reset=' . $reset;
+      }
+
+      $url = CRM_Utils_System::url('civicrm/event/info', $params);
+      CRM_Utils_System::redirect($url);
     }
   }
 
@@ -199,6 +213,65 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
   }
 
   /**
+   * Prepares members-only event for template.
+   *
+   * @return array
+   *   The membersOnlyEvent details.
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function prepareMembersOnlyEventForTemplate() {
+    $membersOnlyEvent = (array) $this->membersOnlyEvent;
+    $config = CRM_Core_Config::singleton();
+
+    $contactId = CRM_Core_Session::getLoggedInContactID();
+    if ($contactId) {
+      // Logged in users cannot see the login form and will be redirected.
+      $membersOnlyEvent['is_showing_login_block'] = "0";
+    }
+
+    if (!empty($membersOnlyEvent['is_showing_login_block'])) {
+      $block_type = (int) $membersOnlyEvent['block_type'];
+      if ($block_type === MembersOnlyEvent::BLOCK_TYPE_LOGIN_ONLY) {
+        $user_login_form_content = '';
+        if ($config->userSystem->is_drupal) {
+          $user_login_form = drupal_get_form('user_login');
+          $register_page = '/civicrm/event/register?reset=1&id=' . $membersOnlyEvent['event_id'];
+          $query_string_prefix = "?";
+          if (strpos($user_login_form['#action'], '?') !== FALSE) {
+            $query_string_prefix = "&";
+          }
+          $user_login_form['#action'] .= $query_string_prefix . 'destination=' . urlencode($register_page);
+          $user_login_form_content = drupal_render($user_login_form);
+        }
+
+        $membersOnlyEvent['login_block_content'] = $user_login_form_content;
+        $membersOnlyEvent['login_block_header'] = '<h2>' . ts('Login') . '</h2>';
+      }
+      else {
+        $user_login_form_content = '';
+        if ($config->userSystem->is_drupal) {
+          $user_login_form = drupal_get_form('ssp_core_user_login_or_register_form');
+          $user_login_form_content = drupal_render($user_login_form);
+        }
+
+        $membersOnlyEvent['login_block_content'] = $user_login_form_content;
+        $membersOnlyEvent['login_block_header'] = '<h2>' . ts('Login or Register') . '</h2>';
+      }
+    }
+
+    if (!empty($membersOnlyEvent['is_showing_purchase_membership_block'])) {
+      if ($membersOnlyEvent['purchase_membership_link_type'] === "0") {
+        $path = 'civicrm/contribute/transact';
+        $params = 'reset=1&id=' . $membersOnlyEvent['contribution_page_id'];
+        $membersOnlyEvent['purchase_membership_url'] = CRM_Utils_System::url($path, $params);
+      }
+    }
+
+    return $membersOnlyEvent;
+  }
+
+  /**
    * Gets event access details for a given event ids
    *
    * @param array $eventIDs
@@ -206,7 +279,7 @@ class CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess {
    * @throws \CRM_Core_Exception
    */
   public static function getEventAccessDetails($eventIDs) {
-    $membersOnlyEvents = MembersOnlyEvent::getMembersOnlyEvents($eventIDs);
+    $membersOnlyEvents = MembersOnlyEvent::getMembersOnlyEvents($eventIDs, MembersOnlyEvent::EVENT_ACCESS_TYPE_GROUPS_ONLY);
     $membersOnlyEvents = ArrayUtils::keyBy($membersOnlyEvents, 'id');
     $eventIDAndMembersOnlyEventIDMap = array_column($membersOnlyEvents, 'id', 'event_id');
     $eventGroups = EventGroup::getEventGroups(array_keys($membersOnlyEvents));

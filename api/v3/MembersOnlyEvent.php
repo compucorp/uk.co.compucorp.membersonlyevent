@@ -1,5 +1,7 @@
 <?php
 
+use CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess as MembersOnlyEventAccessService;
+
 /**
  * MembersOnlyEvent.create API specification (optional)
  * This is used for documentation and validation.
@@ -42,5 +44,21 @@ function civicrm_api3_members_only_event_delete($params) {
  * @throws API_Exception
  */
 function civicrm_api3_members_only_event_get($params) {
-  return _civicrm_api3_basic_get(_civicrm_api3_get_BAO(__FUNCTION__), $params);
+  $result = _civicrm_api3_basic_get(_civicrm_api3_get_BAO(__FUNCTION__), $params);
+  if ($result['count'] < 1) {
+    return $result;
+  }
+
+  foreach ($result['values'] as $key => $value) {
+    $membersOnlyEventAccessService = new MembersOnlyEventAccessService($value['event_id']);
+    $membersOnlyEvent = $membersOnlyEventAccessService->prepareMembersOnlyEventForTemplate();
+
+    $result['values'][$key]['is_showing_login_block'] = $membersOnlyEvent['is_showing_login_block'];
+    $result['values'][$key]['login_block_content'] = $membersOnlyEvent['login_block_content'] ?? '';
+    $result['values'][$key]['login_block_header'] = $membersOnlyEvent['login_block_header'] ?? '';
+    $result['values'][$key]['purchase_membership_url'] = $membersOnlyEvent['purchase_membership_url'];
+    $result['values'][$key]['is_user_allowed'] = $membersOnlyEventAccessService->userHasEventAccess();
+  }
+
+  return $result;
 }

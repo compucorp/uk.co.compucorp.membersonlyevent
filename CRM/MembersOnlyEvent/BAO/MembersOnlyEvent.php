@@ -17,6 +17,41 @@ class CRM_MembersOnlyEvent_BAO_MembersOnlyEvent extends CRM_MembersOnlyEvent_DAO
   const LINK_TYPE_URL = 1;
 
   /**
+   * Event access type for 'members only events'.
+   *
+   * @const int
+   */
+  const EVENT_ACCESS_TYPE_MEMBERS_ONLY = 1;
+
+  /**
+   * Event access type for 'groups only events'.
+   *
+   * @const int
+   */
+  const EVENT_ACCESS_TYPE_GROUPS_ONLY = 2;
+
+  /**
+   * Event access type for 'authenticated users only events'.
+   *
+   * @const int
+   */
+  const EVENT_ACCESS_TYPE_AUTHENTICATED_ONLY = 3;
+
+  /**
+   * Block type for 'Login block only'.
+   *
+   * @const int
+   */
+  const BLOCK_TYPE_LOGIN_ONLY = 1;
+
+  /**
+   * Block type for 'Login or register block'.
+   *
+   * @const int
+   */
+  const BLOCK_TYPE_LOGIN_OR_REGISTER_BLOCK = 2;
+
+  /**
    * Creates a new Members-Only Event record
    * based on array-data
    *
@@ -64,18 +99,19 @@ class CRM_MembersOnlyEvent_BAO_MembersOnlyEvent extends CRM_MembersOnlyEvent_DAO
    * Gets the members-only events given the event IDs
    *
    * @param $eventIDs
+   * @param $eventAccessType
    *
    * @return array
    * @throws \CiviCRM_API3_Exception
    */
-  public static function getMembersOnlyEvents($eventIDs) {
+  public static function getMembersOnlyEvents($eventIDs, int $eventAccessType) {
     if (empty($eventIDs)) {
       return [];
     }
 
     $result = civicrm_api3('MembersOnlyEvent', 'get', [
       'sequential' => 1,
-      'is_groups_only' => 1,
+      'event_access_type' => $eventAccessType,
       'event_id' => ['IN' => $eventIDs],
       'return' => ['id', 'event_id', 'notice_for_access_denied'],
       'options' => ['limit' => 0],

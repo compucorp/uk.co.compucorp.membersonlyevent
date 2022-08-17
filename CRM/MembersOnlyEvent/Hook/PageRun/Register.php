@@ -1,7 +1,6 @@
 <?php
 
 use CRM_MembersOnlyEvent_Hook_PageRun_Base as PageRunBase;
-use CRM_MembersOnlyEvent_BAO_MembersOnlyEvent as MembersOnlyEvent;
 use CRM_MembersOnlyEvent_Service_MembersOnlyEventAccess as MembersOnlyEventAccessService;
 
 /**
@@ -47,7 +46,7 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
 
     $this->hideEventInfoPageRegisterButton();
 
-    $this->handleAccessOptionForUser();
+    $this->addbocks();
   }
 
   /**
@@ -91,80 +90,41 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
   }
 
   /**
-   * Handles access options for logged / anonymous user.
+   * Checks whether the ssp_bootstrap is the active theme or not.
    */
-  private function handleAccessOptionForUser() {
-    $membersOnlyEvent = $this->membersOnlyEventAccessService->getMembersOnlyEvent();
+  private function isSSPBootstrapTheActiveTheme() {
+    $config = CRM_Core_Config::singleton();
 
-    if ($membersOnlyEvent->purchase_membership_button) {
-      $this->addMembershipPurchaseButtonToEventInfoPage($membersOnlyEvent);
-      $userLoggedIn = CRM_Core_Session::getLoggedInContactID();
-      if ($userLoggedIn) {
-        return;
-      }
-      $loginURL = CRM_Core_Config::singleton()->userSystem->getLoginURL();
-      $infoText = 'This event is for members only, if you have a current, pending or former membership
-                 please log in before purchase membership. If you are not a current member you will be charged
-                 an additional membership fee. <a href="' . $loginURL . '">Click here to login </a>';
-      CRM_Core_Session::setStatus(ts($infoText));
+    if (!$config->userSystem->is_drupal) {
+      return FALSE;
+    }
 
+    // Connot trust the value of `variable_get('theme_default')` if the module
+    // themekey was enabled because the module switch the theme without updating
+    // the `theme_default` variable.
+    if ($GLOBALS['theme_key'] !== 'ssp_bootstrap') {
+      return FALSE;
     }
-    else {
-      // Purchase membership button is disabled, so we will just show the configured notice message
-      CRM_Core_Session::setStatus($membersOnlyEvent->notice_for_access_denied);
-    }
+
+    return TRUE;
   }
 
   /**
-   * Adds membership purchase button based
-   * on the members-only event configurations to
-   * the header and the footer of the event info page.
-   *
-   * @param \CRM_MembersOnlyEvent_DAO_MembersOnlyEvent $membersOnlyEvent
+   * Adds the access denied, login and membership blocks.
    */
-  private function addMembershipPurchaseButtonToEventInfoPage($membersOnlyEvent) {
-    switch ($membersOnlyEvent->purchase_membership_link_type) {
-      case MembersOnlyEvent::LINK_TYPE_CONTRIBUTION_PAGE:
-        $contributionPageID = $membersOnlyEvent->contribution_page_id;
-        $path = 'civicrm/contribute/transact';
-        $params = 'reset=1&id=' . $contributionPageID;
-        $membershipPurchaseURL = CRM_Utils_System::url($path, $params);
-        break;
-
-      case MembersOnlyEvent::LINK_TYPE_URL:
-      default:
-        $membershipPurchaseURL = $membersOnlyEvent->purchase_membership_url;
-        break;
+  private function addbocks() {
+    if ($this->isSSPBootstrapTheActiveTheme()) {
+      // Skip adding the blocks, the theme uses a custom template.
+      return;
     }
 
-    $buttonText = $membersOnlyEvent->purchase_membership_button_label;
+    $membersOnlyEvent = $this->membersOnlyEventAccessService->prepareMembersOnlyEventForTemplate();
 
-    $this->addActionButtonToEventInfoPage($membershipPurchaseURL, $buttonText);
-  }
-
-  /**
-   * Adds a button with the specified
-   * url and text to the header and the footer
-   * of the event info page.
-   *
-   * @param $url
-   * @param $buttonText
-   */
-  public function addActionButtonToEventInfoPage($url, $buttonText) {
-    $buttonToAdd = [
-      'template' => 'CRM/Event/Page/members-event-button.tpl',
-      'button_text' => ts($buttonText),
-      'position' => 'top',
-      'url' => $url,
-      'weight' => -10,
-    ];
-
-    CRM_Core_Region::instance('event-page-eventinfo-actionlinks-top')
-      ->add($buttonToAdd);
-
-    $buttonToAdd['position'] = 'bottom';
     CRM_Core_Region::instance('event-page-eventinfo-actionlinks-bottom')
-      ->add($buttonToAdd);
+      ->add([
+        'template' => 'CRM/Event/Page/blocks.tpl',
+        'membersOnlyEvent' => $membersOnlyEvent,
+      ]);
   }
 
 }
