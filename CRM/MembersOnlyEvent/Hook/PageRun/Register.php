@@ -90,19 +90,15 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
   }
 
   /**
-   * Checks whether the ssp_bootstrap is the active theme or not.
+   * Checks whether the ssp_core is enabled or not.
    */
-  private function isSSPBootstrapTheActiveTheme() {
+  private function isSSPCoreEnabled() {
     $config = CRM_Core_Config::singleton();
-
     if (!$config->userSystem->is_drupal) {
       return FALSE;
     }
 
-    // Connot trust the value of `variable_get('theme_default')` if the module
-    // themekey was enabled because the module switch the theme without updating
-    // the `theme_default` variable.
-    if ($GLOBALS['theme_key'] !== 'ssp_bootstrap') {
+    if (!module_exists('ssp_core')) {
       return FALSE;
     }
 
@@ -113,8 +109,8 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
    * Adds the access denied, login and membership blocks.
    */
   private function addbocks() {
-    if ($this->isSSPBootstrapTheActiveTheme()) {
-      // Skip adding the blocks, the theme uses a custom template.
+    if ($this->isSSPCoreEnabled()) {
+      // Skip adding the blocks, the module uses a custom template.
       return;
     }
 
