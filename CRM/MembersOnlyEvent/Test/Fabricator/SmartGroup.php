@@ -19,10 +19,11 @@ class CRM_MembersOnlyEvent_Test_Fabricator_SmartGroup {
       $params['title'] = $params['name'];
     }
 
-    // CiviCRM uses this methods in GroupContactCache tests to create a smart
-    // group in the file
-    // tests/phpunit/CRM/Contact/BAO/GroupContactCacheTest.php.
     $group = Group::createSmartGroup($params);
+
+    // Rebuilding the group to add the matching contacts
+    // to it.
+    civicrm_api3('Job', 'group_rebuild');
 
     return $group;
   }
