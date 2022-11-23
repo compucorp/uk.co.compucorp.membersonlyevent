@@ -15,7 +15,7 @@ class CRM_MembersOnlyEvent_Hook_Copy_Event {
    */
   public function handle(&$object) {
     $templateId = CRM_Utils_Request::retrieve('template_id', 'Int');
-    if (empty(templateId)) {
+    if (empty($templateId)) {
       return;
     }
     $eventFromTemplateCreator = new CRM_MembersOnlyEvent_Hook_Copy_EventFromTemplateCreator($object->id, $templateId);
