@@ -7,15 +7,15 @@
     <author>Compuco</author>
     <email>hello@compuco.io</email>
   </maintainer>
-  <releaseDate>2023-01-06</releaseDate>
-  <version>3.5.0</version>
+  <releaseDate>2023-01-19</releaseDate>
+  <version>3.6.0</version>
   <develStage>stable</develStage>
   <compatibility>
-    <ver>5.39</ver>
+    <ver>5.51</ver>
   </compatibility>
   <comments>
     Supported CiviCRM versions  :
-    - 5.39.1
+    - 5.51.3
   </comments>
   <civix>
     <namespace>CRM/MembersOnlyEvent</namespace>
