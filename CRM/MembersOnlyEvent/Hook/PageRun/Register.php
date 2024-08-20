@@ -34,7 +34,7 @@ class CRM_MembersOnlyEvent_Hook_PageRun_Register extends PageRunBase {
    * @param $page
    */
   protected function pageRun(&$page) {
-    $eventID = $page->_id;
+    $eventID = $page->getVar('_id');
     $this->membersOnlyEventAccessService = new MembersOnlyEventAccessService($eventID);
 
     $this->showSessionMessageWhenRegisteringAnotherParticipant();
