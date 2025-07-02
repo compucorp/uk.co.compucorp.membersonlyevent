@@ -36,7 +36,10 @@ function membersonlyevent_civicrm_enable() {
  */
 function membersonlyevent_civicrm_permission(&$permissions) {
   $prefix = ts('Members-Only Event') . ': ';
-  $permissions['members only event registration'] = $prefix . ts('Can register for members-only events irrespective of membership status');
+  $permissions['members only event registration'] = [
+    'label' => $prefix . ts('Can register for members-only events irrespective of membership status'),
+    'description' => $prefix . ts('Can register for members-only events irrespective of membership status'),
+  ];
 }
 
 /**
